@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HIMER Neural Grid - Rețea DePIN pentru calcul distribuit. Calculatorul tău contribuie, tu primești partea ta. Zero acces la datele tale personale.">
+<meta name="theme-color" content="#05060a">
+<title>HIMER Neural Grid · Distributed Compute Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #05060a;
+  --bg-2: #0a0d18;
+  --surface: rgba(15, 20, 35, 0.7);
+  --line: rgba(120, 200, 255, 0.12);
+  --line-strong: rgba(120, 200, 255, 0.3);
+  --text: #e6ecf5;
+  --text-dim: #7a8499;
+  --neon: #00f0c8;
+  --neon-2: #ff3d80;
+  --neon-3: #6b8cff;
+  --warn: #ffb547;
+  --success: #00f0c8;
+  --danger: #ff3d80;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow-x: hidden; scroll-behavior: smooth; }
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(0,240,200,0.08), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255,61,128,0.06), transparent 50%),
+    linear-gradient(rgba(120,200,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,200,255,0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.4'/></svg>");
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+}
+
+h1, h2, h3, .display {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  letter-spacing: -0.02em; line-height: 1.05;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+.label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--text-dim);
+}
+
+/* ========= NAV ========= */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 32px;
+  background: rgba(5,6,10,0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line);
+}
+.logo {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px;
+  letter-spacing: 0.05em; cursor: pointer;
+}
+.logo-mark {
+  width: 32px; height: 32px;
+  background: conic-gradient(from 0deg, var(--neon), var(--neon-3), var(--neon-2), var(--neon));
+  mask: radial-gradient(circle at center, transparent 30%, black 32%, black 48%, transparent 50%), linear-gradient(black, black);
+  -webkit-mask: radial-gradient(circle at center, transparent 30%, black 32%, black 48%, transparent 50%), linear-gradient(black, black);
+  mask-composite: intersect; -webkit-mask-composite: source-in;
+  animation: spin 8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  color: var(--text-dim); text-decoration: none; font-size: 13px;
+  font-weight: 600; letter-spacing: 0.05em; cursor: pointer;
+  transition: color 0.2s; position: relative;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--neon); }
+.nav-bell {
+  position: relative; cursor: pointer; padding: 8px;
+  color: var(--text-dim); transition: color 0.2s;
+}
+.nav-bell:hover { color: var(--neon); }
+.nav-bell.has-unread::after {
+  content: ''; position: absolute; top: 6px; right: 4px;
+  width: 8px; height: 8px; background: var(--neon-2); border-radius: 50%;
+  box-shadow: 0 0 8px var(--neon-2);
+}
+.nav-cta {
+  padding: 10px 28px;
+  background: var(--neon); color: #000; border: none;
+  font-family: inherit; font-weight: 700; font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+  transition: all 0.2s;
+}
+.nav-cta:hover { background: #fff; transform: translateY(-1px); }
+.menu-toggle { display: none; background: none; border: none; color: var(--text); cursor: pointer; font-size: 22px; }
+
+/* ========= PAGES ========= */
+.page { display: none; position: relative; z-index: 2; padding-top: 80px; }
+.page.active { display: block; }
+
+/* ========= HERO ========= */
+.hero {
+  min-height: 100vh; padding: 80px 32px 60px;
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px;
+  align-items: center; max-width: 1400px; margin: 0 auto;
+  position: relative;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 14px; border: 1px solid var(--line-strong);
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--neon); margin-bottom: 32px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--neon); box-shadow: 0 0 12px var(--neon);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 50% { opacity: 0.4; } }
+.hero h1 { font-size: clamp(48px, 8vw, 96px); margin-bottom: 24px; }
+.hero h1 .stroke {
+  -webkit-text-stroke: 2px var(--neon); color: transparent; font-style: italic;
+}
+.hero p.lead {
+  font-size: 17px; color: var(--text-dim); max-width: 540px;
+  margin-bottom: 40px; line-height: 1.7;
+}
+.hero-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px;
+}
+.hero-stat .num {
+  font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
+  color: var(--neon); line-height: 1;
+}
+.hero-stat .lab { font-size: 10px; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 6px; }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 18px 36px; background: var(--neon); color: #000;
+  border: none; font-family: inherit; font-weight: 800;
+  font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+  transition: all 0.3s; position: relative;
+}
+.btn-primary:hover { background: #fff; gap: 18px; }
+.btn-primary::after { content: '→'; font-size: 18px; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 18px 28px; background: transparent; color: var(--text);
+  border: 1px solid var(--line-strong); font-family: inherit;
+  font-weight: 600; font-size: 13px; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+}
+.btn-ghost:hover { border-color: var(--neon); color: var(--neon); }
+.btn-group { display: flex; gap: 16px; flex-wrap: wrap; }
+
+.hero-visual { position: relative; aspect-ratio: 1; max-width: 500px; margin: 0 auto; }
+#hero-network { width: 100%; height: 100%; }
+
+/* ========= SECTIONS ========= */
+section.bloc {
+  padding: 100px 32px; max-width: 1400px; margin: 0 auto; position: relative;
+}
+.section-head { margin-bottom: 60px; max-width: 720px; }
+.section-head .label { color: var(--neon); margin-bottom: 16px; display: block; }
+.section-head h2 { font-size: clamp(32px, 5vw, 56px); margin-bottom: 20px; }
+.section-head p { color: var(--text-dim); font-size: 16px; line-height: 1.7; }
+
+.how-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  background: var(--line); border: 1px solid var(--line);
+}
+.how-step { background: var(--bg); padding: 40px 32px; transition: background 0.3s; }
+.how-step:hover { background: var(--bg-2); }
+.how-step .num {
+  font-family: 'Syne', sans-serif; font-size: 64px; font-weight: 800;
+  color: var(--neon); opacity: 0.3; line-height: 1; margin-bottom: 20px;
+}
+.how-step h3 { font-size: 22px; margin-bottom: 14px; }
+.how-step p { color: var(--text-dim); font-size: 14px; line-height: 1.7; }
+
+.features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.feature {
+  border: 1px solid var(--line); padding: 32px;
+  background: var(--surface); backdrop-filter: blur(10px);
+  position: relative; overflow: hidden;
+}
+.feature::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 0;
+  background: var(--neon); transition: height 0.4s;
+}
+.feature:hover::before { height: 100%; }
+.feature h3 { font-size: 20px; margin-bottom: 12px; }
+.feature p { color: var(--text-dim); font-size: 14px; line-height: 1.7; }
+.feature .icon { width: 40px; height: 40px; margin-bottom: 20px; color: var(--neon); }
+
+/* ========= PRIVACY BLOCK ========= */
+.privacy-block {
+  background: linear-gradient(135deg, rgba(0,240,200,0.05), rgba(107,140,255,0.05));
+  border: 1px solid var(--line-strong);
+  padding: 48px;
+  position: relative;
+}
+.privacy-block::before {
+  content: ''; position: absolute; top: -1px; left: -1px; right: -1px; height: 2px;
+  background: linear-gradient(90deg, var(--neon), transparent);
+}
+.privacy-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 32px;
+}
+.privacy-col h4 {
+  font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px;
+}
+.privacy-col.no h4 { color: var(--neon-2); }
+.privacy-col.yes h4 { color: var(--neon); }
+.privacy-col ul { list-style: none; }
+.privacy-col li {
+  padding: 10px 0 10px 28px; position: relative; font-size: 14px;
+  color: var(--text-dim); line-height: 1.5;
+}
+.privacy-col.no li::before {
+  content: '✕'; position: absolute; left: 0; top: 10px;
+  color: var(--neon-2); font-weight: 700;
+}
+.privacy-col.yes li::before {
+  content: '✓'; position: absolute; left: 0; top: 10px;
+  color: var(--neon); font-weight: 700;
+}
+
+/* ========= AD SLOTS ========= */
+.ad-slot {
+  border: 1px dashed var(--line-strong); padding: 20px; text-align: center;
+  color: var(--text-dim); font-size: 11px; letter-spacing: 0.15em;
+  text-transform: uppercase; margin: 24px 0; min-height: 90px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.3); cursor: pointer; transition: all 0.3s;
+  position: relative;
+}
+.ad-slot:hover { border-color: var(--neon); }
+.ad-slot.sticky {
+  position: sticky; bottom: 0; z-index: 50;
+  background: rgba(5,6,10,0.95); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line-strong); border-radius: 0;
+}
+.ad-tag {
+  position: absolute; top: 4px; left: 8px; font-size: 9px;
+  color: var(--text-dim); opacity: 0.5;
+}
+
+/* ========= DASHBOARD ========= */
+.dash-wrap {
+  display: grid; grid-template-columns: 240px 1fr 320px;
+  min-height: calc(100vh - 80px);
+}
+.dash-side {
+  border-right: 1px solid var(--line); padding: 24px 0; background: var(--bg-2);
+}
+.dash-side .label { padding: 0 24px 12px; }
+.dash-side a {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 24px; color: var(--text-dim); font-size: 13px;
+  cursor: pointer; transition: all 0.2s; border-left: 2px solid transparent;
+}
+.dash-side a:hover, .dash-side a.active {
+  color: var(--neon); background: rgba(0,240,200,0.05); border-left-color: var(--neon);
+}
+.dash-main { padding: 32px; overflow-x: hidden; }
+.dash-right {
+  border-left: 1px solid var(--line); padding: 32px 24px; background: var(--bg-2);
+}
+
+.dash-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 32px; flex-wrap: wrap; gap: 20px;
+}
+.dash-header h2 { font-size: 32px; }
+.live-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border: 1px solid var(--neon);
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--neon);
+}
+.live-badge .dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--neon);
+  box-shadow: 0 0 10px var(--neon); animation: pulse 1.5s infinite;
+}
+
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;
+}
+.kpi {
+  border: 1px solid var(--line); background: var(--surface);
+  padding: 20px; position: relative;
+}
+.kpi .label { font-size: 10px; margin-bottom: 10px; }
+.kpi .val {
+  font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
+  color: var(--text); line-height: 1;
+}
+.kpi .delta { font-size: 11px; color: var(--neon); margin-top: 6px; }
+
+.grid-viz {
+  border: 1px solid var(--line); background: var(--bg-2);
+  padding: 20px; margin-bottom: 24px; position: relative;
+}
+.grid-viz-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+}
+.grid-viz-header h3 { font-size: 16px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+#neural-canvas { width: 100%; height: 420px; display: block; }
+
+.region-list {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px;
+}
+.region-item {
+  padding: 12px; border: 1px solid var(--line); background: var(--bg); font-size: 11px;
+}
+.region-item .name { color: var(--text); font-weight: 600; margin-bottom: 4px; }
+.region-item .nums { color: var(--text-dim); font-size: 10px; }
+
+/* ========= ACTIVITY FEED ========= */
+.feed-item {
+  padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 12px;
+}
+.feed-item:last-child { border-bottom: none; }
+.feed-item .time { color: var(--text-dim); font-size: 10px; }
+.feed-item .action { margin-top: 4px; }
+.feed-item.success .action { color: var(--neon); }
+.feed-item.warn .action { color: var(--warn); }
+
+/* ========= USER PANEL ========= */
+.user-card {
+  border: 1px solid var(--line); background: var(--surface);
+  padding: 32px; margin-bottom: 24px; position: relative;
+}
+.user-card.featured { border-color: var(--line-strong); }
+.wallet-balance {
+  font-family: 'Syne', sans-serif; font-size: 64px; font-weight: 800;
+  color: var(--neon); line-height: 1; margin: 16px 0;
+}
+.wallet-balance .currency { font-size: 24px; opacity: 0.6; }
+.boost-slider { margin: 20px 0; }
+.boost-slider input[type=range] {
+  width: 100%; -webkit-appearance: none; appearance: none;
+  background: var(--bg); height: 6px;
+}
+.boost-slider input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 20px; height: 20px; background: var(--neon);
+  cursor: pointer; border-radius: 0; box-shadow: 0 0 10px var(--neon);
+}
+.boost-slider input[type=range]::-moz-range-thumb {
+  width: 20px; height: 20px; background: var(--neon);
+  cursor: pointer; border-radius: 0; border: none; box-shadow: 0 0 10px var(--neon);
+}
+
+/* ========= CALCULATION DETAILS ========= */
+.calc-row {
+  display: grid; grid-template-columns: 1fr auto; gap: 16px;
+  padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: 13px;
+}
+.calc-row:last-child { border-bottom: none; }
+.calc-row.total { padding-top: 16px; border-top: 1px solid var(--line); margin-top: 8px; border-bottom: none; font-weight: 700; }
+.calc-row .formula { font-family: 'JetBrains Mono'; color: var(--text-dim); font-size: 11px; }
+
+/* ========= NOTIFICATIONS PANEL ========= */
+.notif-panel {
+  position: fixed; top: 80px; right: 24px; z-index: 95;
+  width: 380px; max-width: calc(100vw - 32px);
+  background: var(--bg-2); border: 1px solid var(--line-strong);
+  max-height: 70vh; overflow-y: auto;
+  transform: translateX(420px); opacity: 0; pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+.notif-panel.open { transform: translateX(0); opacity: 1; pointer-events: auto; }
+.notif-header {
+  padding: 20px; border-bottom: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.notif-header h3 { font-size: 16px; }
+.notif-empty { padding: 40px 20px; text-align: center; color: var(--text-dim); font-size: 13px; }
+.notif-item {
+  padding: 16px 20px; border-bottom: 1px solid var(--line);
+  transition: background 0.2s; position: relative;
+}
+.notif-item:hover { background: rgba(0,240,200,0.03); }
+.notif-item.unread::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--neon);
+}
+.notif-item .icon-wrap {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; margin-right: 12px;
+  font-size: 12px; font-weight: 700;
+  border: 1px solid; vertical-align: middle;
+}
+.notif-item.contract_signed .icon-wrap { color: var(--neon-3); border-color: var(--neon-3); }
+.notif-item.contract_completed .icon-wrap { color: var(--neon); border-color: var(--neon); }
+.notif-item.payment .icon-wrap { color: var(--warn); border-color: var(--warn); }
+.notif-item.system .icon-wrap { color: var(--text-dim); border-color: var(--text-dim); }
+.notif-title { font-weight: 700; font-size: 13px; display: inline-block; vertical-align: middle; }
+.notif-msg { color: var(--text-dim); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+.notif-time { font-size: 10px; color: var(--text-dim); margin-top: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ========= TOAST ========= */
+.toast-container {
+  position: fixed; top: 100px; right: 24px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 12px;
+  pointer-events: none; max-width: 380px;
+}
+.toast {
+  pointer-events: auto;
+  background: rgba(10, 13, 24, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--line-strong); border-left: 3px solid var(--neon);
+  padding: 16px 20px; display: flex; gap: 14px; align-items: flex-start;
+  min-width: 280px; animation: toastIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+}
+.toast.success { border-left-color: var(--neon); }
+.toast.error { border-left-color: var(--neon-2); }
+.toast.warn { border-left-color: var(--warn); }
+.toast.info { border-left-color: var(--neon-3); }
+.toast.contract { border-left-color: var(--neon-3); }
+.toast.exit { animation: toastOut 0.3s ease-in forwards; }
+@keyframes toastIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes toastOut { to { transform: translateX(40px); opacity: 0; } }
+.toast-icon { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }
+.toast.success .toast-icon { color: var(--neon); }
+.toast.error .toast-icon { color: var(--neon-2); }
+.toast.warn .toast-icon { color: var(--warn); }
+.toast.info .toast-icon, .toast.contract .toast-icon { color: var(--neon-3); }
+.toast-body { flex: 1; }
+.toast-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+.toast-message { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+.toast-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 16px; padding: 0; line-height: 1; }
+.toast-close:hover { color: var(--text); }
+
+/* ========= MODAL ========= */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(5, 6, 10, 0.85); backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+  animation: fadeIn 0.3s;
+}
+.modal-backdrop.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--bg-2); border: 1px solid var(--line-strong);
+  max-width: 520px; width: 100%; position: relative;
+  animation: modalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  max-height: 90vh; overflow-y: auto;
+}
+@keyframes modalIn { from { transform: scale(0.92) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+.modal-header { padding: 28px 32px 16px; border-bottom: 1px solid var(--line); }
+.modal-header h3 { font-family: 'Syne'; font-size: 22px; font-weight: 800; }
+.modal-header p { color: var(--text-dim); font-size: 13px; margin-top: 8px; }
+.modal-body { padding: 24px 32px; }
+.modal-footer { padding: 16px 32px 28px; display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; }
+.modal-close {
+  position: absolute; top: 20px; right: 20px;
+  background: none; border: 1px solid var(--line);
+  color: var(--text-dim); width: 32px; height: 32px;
+  cursor: pointer; font-size: 16px; transition: all 0.2s;
+}
+.modal-close:hover { color: var(--neon-2); border-color: var(--neon-2); }
+
+/* ========= ADMIN ========= */
+.admin-login-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 40px 20px;
+}
+.admin-login-box {
+  width: 100%; max-width: 420px;
+  background: var(--bg-2); border: 1px solid var(--line-strong);
+  padding: 40px; position: relative;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+}
+.admin-login-box::before {
+  content: ''; position: absolute; top: -1px; left: -1px; right: -1px; height: 3px;
+  background: linear-gradient(90deg, var(--neon), var(--neon-3), var(--neon-2));
+}
+.admin-icon-lock {
+  width: 56px; height: 56px; border: 1px solid var(--neon);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px; color: var(--neon);
+}
+.admin-attempts { font-size: 11px; color: var(--warn); margin-top: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+.admin-shake { animation: shake 0.4s; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+
+.admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+.split-viz {
+  display: grid; grid-template-columns: 60fr 40fr; gap: 0;
+  margin: 16px 0 0; border: 1px solid var(--line-strong);
+}
+.split-viz > div { padding: 32px; }
+.split-viz .platform { background: linear-gradient(135deg, rgba(0,240,200,0.1), transparent); border-right: 1px solid var(--line); }
+.split-viz .user { background: linear-gradient(135deg, rgba(255,61,128,0.1), transparent); }
+.split-viz .pct { font-family: 'Syne'; font-size: 48px; font-weight: 800; line-height: 1; }
+.split-viz .platform .pct { color: var(--neon); }
+.split-viz .user .pct { color: var(--neon-2); }
+.split-viz h4 { margin: 12px 0 8px; font-size: 16px; }
+.split-viz p { color: var(--text-dim); font-size: 12px; }
+
+table.data { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.data th, table.data td { padding: 10px; text-align: left; border-bottom: 1px solid var(--line); }
+table.data th { color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; }
+table.data tr:hover { background: rgba(0,240,200,0.03); }
+
+input.field, select.field, textarea.field {
+  width: 100%; padding: 12px 16px; background: var(--bg);
+  border: 1px solid var(--line); color: var(--text);
+  font-family: inherit; font-size: 13px; margin-bottom: 12px;
+}
+input.field:focus { outline: none; border-color: var(--neon); }
+
+/* ========= FOOTER ========= */
+footer {
+  border-top: 1px solid var(--line); padding: 40px 32px; text-align: center;
+  font-size: 12px; color: var(--text-dim); position: relative; z-index: 2;
+}
+
+/* ========= MOBILE ========= */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; padding: 60px 20px; }
+  .hero-visual { max-width: 340px; }
+  .how-grid, .features, .privacy-grid { grid-template-columns: 1fr; }
+  .dash-wrap { grid-template-columns: 1fr; }
+  .dash-side, .dash-right { display: none; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .admin-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; background: var(--bg-2); padding: 20px;
+    border-bottom: 1px solid var(--line); gap: 16px;
+  }
+  .menu-toggle { display: block; }
+  .split-viz { grid-template-columns: 1fr; }
+  .split-viz .platform { border-right: none; border-bottom: 1px solid var(--line); }
+  .nav { padding: 16px 20px; }
+  section.bloc { padding: 60px 20px; }
+  .dash-main { padding: 20px; }
+  .privacy-block { padding: 28px; }
+  .notif-panel { top: 70px; right: 16px; left: 16px; width: auto; }
+}
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .wallet-balance { font-size: 48px; }
+}
+
+.gap-2 { gap: 8px; } .gap-3 { gap: 16px; } .gap-4 { gap: 24px; }
+.mt-3 { margin-top: 16px; } .mt-4 { margin-top: 24px; }
+.flex { display: flex; } .flex-col { flex-direction: column; }
+.items-center { align-items: center; } .justify-between { justify-content: space-between; }
+.text-dim { color: var(--text-dim); } .text-neon { color: var(--neon); } .text-pink { color: var(--neon-2); }
+.text-sm { font-size: 12px; } .text-xs { font-size: 11px; }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="logo" onclick="goPage('home')">
+    <div class="logo-mark"></div>
+    HIMER
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a data-page="home" class="active">Home</a>
+    <a data-page="how">Cum Functioneaza</a>
+    <a data-page="privacy">Privacy</a>
+    <a data-page="about">About</a>
+    <a data-page="dashboard">Dashboard</a>
+    <a data-page="user">Panel</a>
+    <div class="nav-bell" id="navBell" onclick="toggleNotifications()" title="Notificări">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+    </div>
+    <button class="nav-cta" id="joinBtn">Alătură-te</button>
+  </div>
+  <button class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+</nav>
+
+<!-- ============ NOTIF PANEL ============ -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-header">
+    <h3>Notificări</h3>
+    <button class="modal-close" style="position: static;" onclick="toggleNotifications()">✕</button>
+  </div>
+  <div id="notifList"></div>
+</div>
+
+<!-- ============ HOME ============ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div>
+      <div class="hero-eyebrow">Decentralized Compute · Proof-of-Compute</div>
+      <h1>
+        Calculatorul tău,<br>
+        <span class="stroke">conectat</span> la<br>
+        rețeaua viitorului.
+      </h1>
+      <p class="lead">
+        HIMER este o rețea neuronală distribuită care folosește puterea de procesare nefolosită
+        a calculatoarelor din lume. Tu pui la dispoziție capacitate — noi o vindem companiilor pentru
+        calcule complexe, antrenare AI și randări. Tu primești partea ta, direct în wallet.
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num" id="heroStat1">—</div><div class="lab">Noduri Active</div></div>
+        <div class="hero-stat"><div class="num" id="heroStat2">—</div><div class="lab">GFLOPS / sec</div></div>
+        <div class="hero-stat"><div class="num" id="heroStat3">—</div><div class="lab">Contracte Finalizate</div></div>
+      </div>
+      <div class="btn-group">
+        <button class="btn-primary" onclick="joinNetwork()">Conectează-te Acum</button>
+        <button class="btn-ghost" onclick="goPage('how')">Cum funcționează</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg id="hero-network" viewBox="0 0 500 500"></svg>
+    </div>
+  </section>
+
+  <section class="bloc">
+    <div class="section-head">
+      <span class="label">— Cum participi</span>
+      <h2>Trei pași. Zero efort.</h2>
+      <p>Nu trebuie să înțelegi blockchain, GPU-uri sau infrastructură. Conectezi browserul sau instalezi agentul, iar nodul tău intră automat în rețea.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="num">01</div>
+        <h3>Te alături</h3>
+        <p>Un click și browserul tău devine nod în rețea. Opțional, instalezi agent desktop pentru calcul intens (CPU + GPU). Sandboxed, izolat de sistemul tău.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">02</div>
+        <h3>Decizi cât oferi</h3>
+        <p>Tu controlezi cât din puterea calculatorului și lățimea de bandă oferi: 10%, 50%, 100%. Programezi pe ore. Oprești oricând, fără penalizări.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">03</div>
+        <h3>Câștigi automat</h3>
+        <p>Orchestratorul atribuie sarcini către nodul tău. Pentru fiecare unitate de calcul procesată, primești partea ta în wallet — direct, transparent.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AD SLOT 1 -->
+  <section class="bloc" style="padding: 20px 32px;">
+    <div class="ad-slot" data-slot="home-1">
+      <span class="ad-tag">// AdSense Slot</span>
+      <span>Spațiu Reclamă · 728×90 sau Responsive</span>
+    </div>
+  </section>
+
+  <section class="bloc">
+    <div class="section-head">
+      <span class="label">— Algoritm Reward · Proof-of-Compute</span>
+      <h2>Transparent. Automat. Verificabil.</h2>
+      <p>Fiecare unitate de calcul (GFLOP-secundă) e măsurată criptografic. Plata se face automat, fără intermediari, fără surprize. Vezi în timp real cât ai câștigat și pentru ce sarcină.</p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <h3>Măsurare criptografică</h3>
+        <p>Fiecare GFLOP procesat e semnat și verificat. Nimeni nu poate trișa, nici platforma, nici utilizatorii.</p>
+      </div>
+      <div class="feature">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <h3>Plată în timp real</h3>
+        <p>Wallet-ul tău crește la fiecare secundă în care nodul lucrează. Fără așteptare, fără batch-uri.</p>
+      </div>
+      <div class="feature">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+        <h3>Trust score per nod</h3>
+        <p>Nodurile fiabile primesc mai multe sarcini. Cele care trișează sunt blacklist. Ecosistem auto-reglat.</p>
+      </div>
+      <div class="feature">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <h3>Withdraw oricând</h3>
+        <p>De la $1 minim. Stripe, USDC sau credit intern. Procesare rapidă, fee minim de 2%.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY HIGHLIGHT -->
+  <section class="bloc">
+    <div class="privacy-block">
+      <span class="label" style="color: var(--neon);">— Privacy First</span>
+      <h2 style="font-size: clamp(28px, 4vw, 44px); margin: 12px 0 16px;">Zero acces la datele tale.</h2>
+      <p style="color: var(--text-dim); font-size: 15px; line-height: 1.7; max-width: 720px;">
+        Agentul HIMER rulează într-un sandbox complet izolat. Procesează doar pachete de calcul anonimizate trimise de orchestrator.
+        Nu poate citi fișierele tale, nu poate accesa browserul, nu poate atinge contul tău bancar sau parolele.
+        Open-source, auditabil, oprit dintr-un click.
+      </p>
+      <div class="privacy-grid">
+        <div class="privacy-col no">
+          <h4>Ce NU face HIMER</h4>
+          <ul>
+            <li>Nu accesează fișierele tale personale, fotografii sau documente</li>
+            <li>Nu citește parolele, cookies-urile sau datele din browser</li>
+            <li>Nu colectează istoric de navigare sau date biometrice</li>
+            <li>Nu vinde, nu transmite, nu stochează date despre tine către terți</li>
+            <li>Nu rulează cod arbitrar — doar containere semnate criptografic</li>
+            <li>Nu accesează webcam, microfon sau dispozitive periferice</li>
+          </ul>
+        </div>
+        <div class="privacy-col yes">
+          <h4>Ce face HIMER</h4>
+          <ul>
+            <li>Procesează doar pachete de calcul matematic, anonimizate</li>
+            <li>Rulează în sandbox izolat (WebAssembly / container)</li>
+            <li>Raportează doar metrici tehnice: CPU, RAM, GFLOPS</li>
+            <li>Folosește max 1 ID intern HIMER pentru wallet (anonim)</li>
+            <li>Open-source — codul agentului poate fi inspectat oricând</li>
+            <li>Oprire instant: un click și nodul tău se deconectează</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 32px;">
+        <button class="btn-ghost" onclick="goPage('privacy')">Citește politica completă</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc">
+    <div class="section-head">
+      <span class="label">— Ce putem face cu rețeaua</span>
+      <h2>Infrastructură DePIN pentru orice calcul.</h2>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19"/></svg>
+        <h3>Antrenare AI distribuită</h3>
+        <p>Companii antrenează modele de machine learning folosind mii de noduri simultan, la fracțiune din costul AWS.</p>
+      </div>
+      <div class="feature">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M9 3v18"/></svg>
+        <h3>Randări 3D & video</h3>
+        <p>Studiouri animație distribuie frame-urile către rețea, primesc rezultatele în minute, nu zile.</p>
+      </div>
+      <div class="feature">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <h3>Calcul științific</h3>
+        <p>Cercetători accesează putere pentru simulări climatice, biologie moleculară, fizică cuantică.</p>
+      </div>
+      <div class="feature">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M3.6 9h16.8M3.6 15h16.8"/></svg>
+        <h3>Edge computing & CDN</h3>
+        <p>Aplicații folosesc rețeaua ca CDN distribuit pentru livrare conținut la latență minimă oriunde.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <section class="bloc" style="padding: 20px 32px;">
+    <div class="ad-slot" data-slot="home-2">
+      <span class="ad-tag">// AdSense Slot</span>
+      <span>Sponsored · Premium Display · 970×250</span>
+    </div>
+  </section>
+</div>
+
+<!-- ============ HOW ============ -->
+<div class="page" id="page-how">
+  <section class="bloc">
+    <div class="section-head">
+      <span class="label">— Documentație tehnică</span>
+      <h2>Cum funcționează HIMER din interior.</h2>
+      <p>Pentru cei care vor să înțeleagă mecanica. Nimic ascuns, totul explicat.</p>
+    </div>
+    <div style="display: grid; gap: 32px;">
+      <div class="feature">
+        <h3 class="text-neon">1. Proof-of-Compute (PoC)</h3>
+        <p style="margin-top: 12px;">
+          Fiecare nod raportează heartbeat la 1Hz către orchestrator. Pentru fiecare sarcină atribuită, nodul trebuie să returneze rezultatul + un hash criptografic al pașilor intermediari. Orchestratorul verifică un sample aleatoriu (5%) prin re-calculare pe noduri-martor. Dacă rezultatul diferă, nodul pierde trust score și e blacklist temporar.
+        </p>
+      </div>
+      <div class="feature">
+        <h3 class="text-neon">2. Job assignment inteligent</h3>
+        <p style="margin-top: 12px;">
+          Orchestratorul scorează nodurile după formula: <strong>trustScore × GFLOPS / (load + 1)</strong>. Sarcinile high-priority merg către top nodes. Sarcinile redundante (care necesită consens) sunt distribuite geografic divers pentru rezistență.
+        </p>
+      </div>
+      <div class="feature">
+        <h3 class="text-neon">3. Scaling fără limită</h3>
+        <p style="margin-top: 12px;">
+          Backend-ul folosește <strong>delta updates</strong> (doar nodurile schimbate sunt trimise la 1Hz) și <strong>sampling</strong> (frontend-ul afișează 500 noduri reprezentative + agregate pe regiuni). Astfel, 100,000 noduri active = ~50KB/s pe WebSocket. Când depășim 1M noduri, sharding pe Cloudflare Durable Objects.
+        </p>
+      </div>
+      <div class="feature">
+        <h3 class="text-neon">4. Formula de calcul earnings</h3>
+        <p style="margin-top: 12px; margin-bottom: 16px;">
+          Calculul este complet transparent. La fiecare secundă în care nodul tău e activ, contribuția se măsoară astfel:
+        </p>
+        <div style="background: var(--bg); padding: 20px; border: 1px solid var(--line); font-family: 'JetBrains Mono'; font-size: 12px;">
+          <div class="calc-row"><span>GFLOP-secunde</span><span class="formula">= GFLOPS_nod × (load / 100)</span></div>
+          <div class="calc-row"><span>Brut generat</span><span class="formula">= GFLOP-sec × $0.0001 × boost</span></div>
+          <div class="calc-row"><span>Partea ta</span><span class="formula">= Brut × user_share</span></div>
+          <div class="calc-row total"><span>Wallet update</span><span class="text-neon">automat, instant</span></div>
+        </div>
+        <p style="margin-top: 16px; color: var(--text-dim); font-size: 12px;">
+          Exemplu: un nod cu 6 GFLOPS care lucrează 1 oră la 50% load generează ~10,800 GFLOP-secunde = ~$1.08 brut → contribuția ta ajunge direct în wallet, conform split-ului platformei.
+        </p>
+      </div>
+      <div class="feature">
+        <h3 class="text-neon">5. Reward & withdraw</h3>
+        <p style="margin-top: 12px;">
+          La fiecare tick (1s), earnings se acumulează în wallet-ul tău. Minim withdraw: $1.00. Fee procesare: 2% (acoperă Stripe/USDC fees). Plata se face prin Stripe (USD), USDC (crypto Polygon/Base), sau credit intern HIMER. Notificare instantă la withdraw.
+        </p>
+      </div>
+      <div class="feature">
+        <h3 class="text-neon">6. Cum se susține platforma</h3>
+        <p style="margin-top: 12px;">
+          O parte din valoarea generată de fiecare sarcină susține infrastructura, dezvoltarea și expansiunea rețelei. Restul merge la contribuitori. Surse de venit: API public pentru clienți business, fee withdraw, abonamente premium, sponsored jobs, reclame (AdSense), marketplace fee. Niciodată nu plătești ca să folosești HIMER ca contribuitor — câștigi.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PRIVACY ============ -->
+<div class="page" id="page-privacy">
+  <section class="bloc">
+    <div class="section-head">
+      <span class="label" style="color: var(--neon);">— Politica de confidențialitate</span>
+      <h2>Privacy by Design.</h2>
+      <p>Construit de la zero cu principiul: datele tale rămân ale tale. Nu doar pe hârtie, ci tehnic imposibil de accesat.</p>
+    </div>
+
+    <div class="privacy-block" style="margin-bottom: 32px;">
+      <h3 style="font-size: 24px; margin-bottom: 20px;">Arhitectura de izolare</h3>
+      <p style="color: var(--text-dim); line-height: 1.7;">
+        Agentul HIMER care rulează pe calculatorul tău este un proces sandboxed cu permissions minime:
+      </p>
+      <ul style="margin-top: 20px; list-style: none;">
+        <li style="padding: 12px 0; border-bottom: 1px solid var(--line);">
+          <strong class="text-neon">→ Sandbox WebAssembly / Docker:</strong>
+          <span class="text-dim text-sm" style="display: block; margin-top: 4px;">Codul execută într-un environment izolat, fără acces la sistemul de operare gazdă.</span>
+        </li>
+        <li style="padding: 12px 0; border-bottom: 1px solid var(--line);">
+          <strong class="text-neon">→ Network whitelisting:</strong>
+          <span class="text-dim text-sm" style="display: block; margin-top: 4px;">Agentul comunică DOAR cu serverele HIMER. Orice tentativă de conectare la alte adrese e blocată.</span>
+        </li>
+        <li style="padding: 12px 0; border-bottom: 1px solid var(--line);">
+          <strong class="text-neon">→ Filesystem read-only:</strong>
+          <span class="text-dim text-sm" style="display: block; margin-top: 4px;">Agentul nu poate scrie sau citi fișiere în afara propriului folder de lucru.</span>
+        </li>
+        <li style="padding: 12px 0; border-bottom: 1px solid var(--line);">
+          <strong class="text-neon">→ Container semnat criptografic:</strong>
+          <span class="text-dim text-sm" style="display: block; margin-top: 4px;">Toate sarcinile sunt pachete semnate de orchestrator. Cod nesemnat e respins automat.</span>
+        </li>
+        <li style="padding: 12px 0;">
+          <strong class="text-neon">→ Open-source verificabil:</strong>
+          <span class="text-dim text-sm" style="display: block; margin-top: 4px;">Codul agentului este pe GitHub. Oricine poate audita, recompila și verifica că face exact ce promitem.</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <h3 class="text-pink">Ce date colectăm</h3>
+        <p style="margin-top: 12px;">
+          <strong>Doar metrici tehnice anonime:</strong> CPU usage, RAM disponibil, GFLOPS estimate, regiunea geografică (țară, nu adresă exactă), uptime al nodului. Niciun nume, email opțional, fără IP stocat permanent.
+        </p>
+      </div>
+      <div class="feature">
+        <h3 class="text-pink">Identificator HIMER</h3>
+        <p style="margin-top: 12px;">
+          Primești un ID unic (ex: U-A3F8B2C9...) folosit doar pentru wallet și statistici. Nu e legat de identitatea ta reală decât dacă activezi voluntar Stripe/KYC pentru retragere fiat.
+        </p>
+      </div>
+      <div class="feature">
+        <h3 class="text-pink">Ștergere completă</h3>
+        <p style="margin-top: 12px;">
+          La cerere, contul tău și toate datele asociate sunt șterse permanent în max 7 zile. Trimite request la <span class="text-neon">privacy@himer.network</span> sau folosește butonul de șters din settings.
+        </p>
+      </div>
+      <div class="feature">
+        <h3 class="text-pink">GDPR Compliant</h3>
+        <p style="margin-top: 12px;">
+          Respectăm regulamentul european GDPR și California CCPA. Ai drept la portabilitate, ștergere, rectificare. Niciun broker de date, niciun analytics third-party în agent.
+        </p>
+      </div>
+    </div>
+
+    <div class="user-card" style="margin-top: 32px;">
+      <h3 style="margin-bottom: 16px;">Întrebări frecvente</h3>
+      <div style="display: grid; gap: 16px;">
+        <details style="border: 1px solid var(--line); padding: 16px; cursor: pointer;">
+          <summary style="font-weight: 600; cursor: pointer;">HIMER poate intra în contul meu bancar?</summary>
+          <p class="text-dim text-sm mt-3">Nu. Agentul rulează izolat, fără acces la browser sau aplicații. Tehnic imposibil.</p>
+        </details>
+        <details style="border: 1px solid var(--line); padding: 16px; cursor: pointer;">
+          <summary style="font-weight: 600; cursor: pointer;">Calculatorul meu va merge mai încet?</summary>
+          <p class="text-dim text-sm mt-3">Doar dacă alegi tu să fie așa. Slider-ul de boost îți permite să oferi între 10% și 100% din capacitate. Recomandăm 30-50% pentru utilizare casuală — nu o să simți diferența.</p>
+        </details>
+        <details style="border: 1px solid var(--line); padding: 16px; cursor: pointer;">
+          <summary style="font-weight: 600; cursor: pointer;">Ce se întâmplă dacă închid calculatorul?</summary>
+          <p class="text-dim text-sm mt-3">Nodul tău intră în standby. Câștigurile acumulate rămân intacte în wallet. La următoarea pornire, te reconectezi automat.</p>
+        </details>
+        <details style="border: 1px solid var(--line); padding: 16px; cursor: pointer;">
+          <summary style="font-weight: 600; cursor: pointer;">Pot da seama pe ce sarcină lucrează nodul meu?</summary>
+          <p class="text-dim text-sm mt-3">Da. Fiecare contract semnat declanșează o notificare cu tipul de sarcină (ai-training, 3d-render, scientific etc.). Vezi istoricul complet în Panel.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<div class="page" id="page-about">
+  <section class="bloc">
+    <div class="section-head">
+      <span class="label">— Despre proiect</span>
+      <h2>De ce HIMER?</h2>
+    </div>
+    <div style="max-width: 720px; font-size: 16px; line-height: 1.8; color: var(--text-dim);">
+      <p style="margin-bottom: 24px;">
+        Trăim într-o eră în care AI-ul și calculul intensiv determină economia. Dar puterea de procesare e concentrată în mâinile a 5 companii (AWS, Azure, GCP, Oracle, Alibaba). Asta înseamnă prețuri mari, dependență, și o oportunitate ratată pentru milioane de oameni care au calculatoare puternice ce stau nefolosite 80% din timp.
+      </p>
+      <p style="margin-bottom: 24px; color: var(--text);">
+        <strong>Scopul nostru:</strong> Construim o alternativă deschisă, în care oricine cu un calculator devine furnizor de cloud. Tu câștigi bani din ceea ce oricum stă nefolosit. Companiile primesc calcul ieftin și rapid. Open-source, transparent, fără gatekeepers.
+      </p>
+      <p style="margin-bottom: 24px;">
+        HIMER nu e o promisiune crypto vagă. E o platformă cu cod open-source, plăți reale, agent sandboxed care nu îți atinge datele personale, și o filosofie clară: <strong class="text-neon">contribui — primești. Atât.</strong>
+      </p>
+      <p>
+        Începem mic. Cu sute de noduri. Apoi mii. Apoi sute de mii. Fiecare contributor primește partea lui din valoarea generată de nodul propriu. Restul reinvestim în infrastructură și expansiune, pentru ca rețeaua să devină într-o zi cea mai mare alternativă DePIN la cloud-ul centralizat.
+      </p>
+    </div>
+  </section>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div class="page" id="page-dashboard">
+  <div class="dash-wrap">
+    <aside class="dash-side">
+      <span class="label">Network</span>
+      <a class="active">⬢ Live Grid</a>
+      <a>◇ Regiuni</a>
+      <a>↗ Jobs</a>
+      <a>$ Performance</a>
+      <span class="label" style="margin-top: 24px; display: block;">Tools</span>
+      <a>⚙ Settings</a>
+      <a>? Docs</a>
+    </aside>
+    <main class="dash-main">
+      <div class="dash-header">
+        <div>
+          <span class="label">Job Dispatch & Control</span>
+          <h2>Neural Grid · Live</h2>
+        </div>
+        <div class="live-badge"><span class="dot"></span> Live · WebSocket</div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="label">Noduri Totale</div><div class="val" id="kpiTotal">—</div><div class="delta">↗ live</div></div>
+        <div class="kpi"><div class="label">Active acum</div><div class="val" id="kpiActive">—</div><div class="delta">computing</div></div>
+        <div class="kpi"><div class="label">GFLOPS / sec</div><div class="val" id="kpiGflops">—</div><div class="delta">throughput</div></div>
+        <div class="kpi"><div class="label">Contracte Finalizate</div><div class="val" id="kpiJobs">—</div><div class="delta">total</div></div>
+      </div>
+
+      <div class="grid-viz">
+        <div class="grid-viz-header">
+          <h3>// Global Neural Grid</h3>
+          <span class="text-dim text-xs" id="renderInfo">— noduri afișate · sampling</span>
+        </div>
+        <canvas id="neural-canvas"></canvas>
+        <div class="region-list" id="regionList"></div>
+      </div>
+
+      <!-- AD SLOT in-dashboard -->
+      <div class="ad-slot" data-slot="dash-1">
+        <span class="ad-tag">// AdSense Slot</span>
+        <span>In-app Display · 728×90</span>
+      </div>
+    </main>
+    <aside class="dash-right">
+      <span class="label">Activitate Live</span>
+      <div id="feed" style="margin-top: 16px;"></div>
+    </aside>
+  </div>
+</div>
+
+<!-- ============ USER PANEL ============ -->
+<div class="page" id="page-user">
+  <section class="bloc">
+    <div class="section-head">
+      <span class="label">— Panou Personal</span>
+      <h2>Wallet & Noduri tale</h2>
+    </div>
+
+    <div id="userNotConnected" class="user-card" style="text-align: center; padding: 80px 32px;">
+      <div style="width: 80px; height: 80px; margin: 0 auto 24px; border: 1px solid var(--line-strong); display: flex; align-items: center; justify-content: center; color: var(--neon);">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>
+        </svg>
+      </div>
+      <h3 style="font-size: 24px; margin-bottom: 12px;">Nu ești încă în rețea</h3>
+      <p class="text-dim" style="max-width: 400px; margin: 0 auto 32px; font-size: 14px;">Un singur click și calculatorul tău devine nod activ. Nu te angajezi la nimic — poți opri oricând.</p>
+      <button class="btn-primary" onclick="joinNetwork()">Conectează-te acum</button>
+    </div>
+
+    <div id="userConnected" style="display: none;">
+      <div class="user-card featured">
+        <span class="label">— Wallet · Retragibil</span>
+        <div class="wallet-balance"><span class="currency">$</span><span id="walletAmount">0.0000</span></div>
+        <div class="flex gap-3" style="flex-wrap: wrap;">
+          <button class="btn-primary" onclick="withdraw()">Retrage</button>
+          <button class="btn-ghost" onclick="document.getElementById('boostSec').scrollIntoView({behavior: 'smooth'})">Setări Boost</button>
+        </div>
+        <div class="mt-4 text-sm text-dim">
+          User ID: <span class="text-neon mono" id="uidDisplay">—</span> ·
+          Total acumulat: $<span id="totalEarned">0</span> ·
+          Joined: <span id="joinedAt">—</span>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="label">Nodurile mele</div><div class="val" id="myNodes">0</div></div>
+        <div class="kpi"><div class="label">Active acum</div><div class="val" id="myActive">0</div></div>
+        <div class="kpi"><div class="label">GFLOP-sec procesate</div><div class="val" id="myGflopSec">0</div></div>
+        <div class="kpi"><div class="label">Contracte finalizate</div><div class="val" id="myContracts">0</div></div>
+      </div>
+
+      <div class="user-card">
+        <span class="label">— Calcul Earnings (live)</span>
+        <h3 style="margin: 12px 0 16px;">Formula contribuției tale</h3>
+        <div style="background: var(--bg); padding: 20px; border: 1px solid var(--line); font-size: 13px;">
+          <div class="calc-row"><span>GFLOPS nod (sumă)</span><span class="text-neon mono" id="calcGflops">—</span></div>
+          <div class="calc-row"><span>Load mediu</span><span class="mono" id="calcLoad">—</span></div>
+          <div class="calc-row"><span>GFLOP-secunde acumulate</span><span class="mono" id="calcGflopSec">—</span></div>
+          <div class="calc-row"><span>Preț unitar (per GFLOP-sec)</span><span class="mono">$0.0001</span></div>
+          <div class="calc-row total"><span>Acumulat în wallet</span><span class="text-neon" id="calcEarnings">$—</span></div>
+        </div>
+        <p class="text-dim text-xs mt-3">Calculul se actualizează în timp real. Plata este în USD echivalent — convertibilă în Stripe sau USDC.</p>
+      </div>
+
+      <div class="user-card" id="boostSec">
+        <span class="label">— Boost & Setări</span>
+        <h3 style="margin: 12px 0 4px;">Cât oferi din calculator?</h3>
+        <p class="text-dim text-sm">Mai mult oferi, mai mult câștigi. Recomandăm 30-50% pentru utilizare casuală — nodul lucrează discret în background.</p>
+        <div class="boost-slider">
+          <input type="range" min="10" max="100" value="50" id="boostRange" oninput="document.getElementById('boostVal').textContent = this.value + '%'">
+          <div class="flex justify-between text-xs text-dim mt-3">
+            <span>10% (minim)</span>
+            <span class="text-neon" style="font-size: 18px; font-weight: 700;" id="boostVal">50%</span>
+            <span>100% (maxim)</span>
+          </div>
+        </div>
+        <div class="mt-4" style="padding-top: 20px; border-top: 1px solid var(--line);">
+          <h4 style="margin-bottom: 8px;">Premium Boost <span class="text-pink text-xs" style="margin-left: 8px;">$5/lună</span></h4>
+          <p class="text-dim text-sm">Multiplicator de câștiguri și prioritate la sarcinile high-value.
+          <button class="btn-ghost" style="padding: 8px 16px; font-size: 11px; margin-top: 12px;" onclick="toast('info', 'În curând', 'Sistemul de abonamente Premium va fi disponibil în versiunea următoare.')">Activează</button></p>
+        </div>
+      </div>
+
+      <div class="user-card">
+        <span class="label">— Nodurile tale</span>
+        <h3 style="margin: 12px 0 16px;">Status în timp real</h3>
+        <div style="overflow-x: auto;">
+          <table class="data">
+            <thead><tr><th>ID</th><th>Status</th><th>Load</th><th>GFLOPS</th><th>Contracte</th><th>Acumulat</th></tr></thead>
+            <tbody id="myNodesTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AD SLOT user -->
+      <div class="ad-slot" data-slot="user-1">
+        <span class="ad-tag">// AdSense Slot</span>
+        <span>User Panel Display · Responsive</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ADMIN ============ -->
+<div class="page" id="page-admin">
+  <div class="admin-login-screen" id="adminLogin">
+    <div class="admin-login-box" id="adminLoginBox">
+      <div class="admin-icon-lock">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+      </div>
+      <span class="label" style="color: var(--neon);">— Restricted Access</span>
+      <h2 style="font-size: 28px; margin: 12px 0 8px;">Admin Console</h2>
+      <p class="text-dim text-sm" style="margin-bottom: 28px;">Zonă privată. Necesită cheie de acces.</p>
+      <input type="password" class="field" id="adminKey" placeholder="Admin access key" autocomplete="off" onkeydown="if(event.key==='Enter') adminLogin()">
+      <button class="btn-primary" onclick="adminLogin()" style="width: 100%; justify-content: center;">Acces Console</button>
+      <div class="admin-attempts" id="adminAttempts" style="display: none;"></div>
+    </div>
+  </div>
+
+  <section class="bloc" id="adminUnlocked" style="display: none;">
+    <div class="dash-header" style="margin-bottom: 32px;">
+      <div>
+        <span class="label">— Admin Console · Confidential</span>
+        <h2 style="font-size: 32px;">Orchestrator Overview</h2>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <div class="live-badge"><span class="dot"></span> Authenticated</div>
+        <button class="btn-ghost" style="padding: 10px 18px;" onclick="adminLogout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- REVENUE SPLIT - DOAR ADMIN -->
+    <div class="user-card" style="margin-bottom: 24px;">
+      <span class="label">— Revenue Split · Confidential</span>
+      <h3 style="margin: 12px 0 4px;">Distribuție venituri 60/40</h3>
+      <p class="text-dim text-sm">Calcul automat la fiecare GFLOP-secundă procesată.</p>
+      <div class="split-viz">
+        <div class="platform">
+          <div class="label" style="color: var(--neon);">Platform Share · 60%</div>
+          <div class="pct" id="admPlat">$0.00</div>
+          <p style="margin-top: 12px;">Reinvestit în infrastructură și expansiune rețea.</p>
+        </div>
+        <div class="user">
+          <div class="label" style="color: var(--neon-2);">Users Pool · 40%</div>
+          <div class="pct" id="admUsers">$0.00</div>
+          <p style="margin-top: 12px;">Distribuit automat în wallet-urile contribuitorilor.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Total Revenue</div><div class="val text-neon" id="admTotal">$—</div></div>
+      <div class="kpi"><div class="label">Withdraw Fees (2%)</div><div class="val" id="admFees">$—</div></div>
+      <div class="kpi"><div class="label">Ad Revenue</div><div class="val text-pink" id="admAdRev">$—</div></div>
+      <div class="kpi"><div class="label">Clienți API</div><div class="val" id="admClients">—</div></div>
+    </div>
+
+    <!-- AD REVENUE PANEL -->
+    <div class="user-card" style="margin-bottom: 24px;">
+      <span class="label">— Auto-Sustainability · Ad Performance</span>
+      <h3 style="margin: 12px 0 16px;">Reclame · acoperire costuri operaționale</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
+        <div style="padding: 16px; background: var(--bg); border: 1px solid var(--line);">
+          <div class="label">Impresii</div>
+          <div class="text-neon" style="font-family: 'Syne'; font-size: 24px; font-weight: 800; margin-top: 6px;" id="admImpressions">—</div>
+        </div>
+        <div style="padding: 16px; background: var(--bg); border: 1px solid var(--line);">
+          <div class="label">Clicks</div>
+          <div style="font-family: 'Syne'; font-size: 24px; font-weight: 800; margin-top: 6px;" id="admClicks">—</div>
+        </div>
+        <div style="padding: 16px; background: var(--bg); border: 1px solid var(--line);">
+          <div class="label">CTR</div>
+          <div class="text-pink" style="font-family: 'Syne'; font-size: 24px; font-weight: 800; margin-top: 6px;" id="admCtr">—</div>
+        </div>
+        <div style="padding: 16px; background: var(--bg); border: 1px solid var(--line);">
+          <div class="label">Estimare Lunară</div>
+          <div class="text-neon" style="font-family: 'Syne'; font-size: 24px; font-weight: 800; margin-top: 6px;" id="admMonthly">$—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="user-card">
+        <span class="label">— Operations</span>
+        <h3 style="margin: 12px 0 4px;">Creează Sarcină</h3>
+        <p class="text-dim text-sm" style="margin-bottom: 20px;">Înregistrează un job manual pentru un client.</p>
+        <input class="field" id="jobType" placeholder="Tip sarcină (ex: ai-training, 3d-render)">
+        <input class="field" id="jobNodes" type="number" placeholder="Noduri necesare" value="5">
+        <input class="field" id="jobReward" type="number" step="0.01" placeholder="Reward total $" value="1.00">
+        <button class="btn-primary" onclick="createJob()" style="width: 100%; justify-content: center;">Lansează Job</button>
+      </div>
+
+      <div class="user-card">
+        <span class="label">— Contract Stats</span>
+        <h3 style="margin: 12px 0 16px;">Performanța rețelei</h3>
+        <div class="text-sm" style="line-height: 2.2;">
+          <div class="flex justify-between"><span class="text-dim">Contracte semnate:</span><span class="text-neon" id="admContractsSigned">—</span></div>
+          <div class="flex justify-between"><span class="text-dim">Contracte finalizate:</span><span class="text-neon" id="admContractsDone">—</span></div>
+          <div class="flex justify-between"><span class="text-dim">Success rate:</span><span id="admSuccessRate">—</span></div>
+          <div class="flex justify-between"><span class="text-dim">Jobs running:</span><span id="admJobsRunning">—</span></div>
+          <div class="flex justify-between"><span class="text-dim">Jobs pending:</span><span id="admJobsPending">—</span></div>
+          <div class="flex justify-between"><span class="text-dim">Total processed:</span><span class="text-neon" id="admGflopSec">— GFLOP-sec</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="user-card" style="margin-top: 24px;">
+      <span class="label">— Configuration</span>
+      <h3 style="margin: 12px 0 20px;">Setări Orchestrator</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; font-size: 13px;">
+        <div class="flex justify-between" style="padding: 12px; background: var(--bg); border: 1px solid var(--line);"><span class="text-dim">Platform fee:</span><span class="text-neon">60%</span></div>
+        <div class="flex justify-between" style="padding: 12px; background: var(--bg); border: 1px solid var(--line);"><span class="text-dim">User share:</span><span class="text-pink">40%</span></div>
+        <div class="flex justify-between" style="padding: 12px; background: var(--bg); border: 1px solid var(--line);"><span class="text-dim">Withdraw fee:</span><span>2%</span></div>
+        <div class="flex justify-between" style="padding: 12px; background: var(--bg); border: 1px solid var(--line);"><span class="text-dim">Price/GFLOP-sec:</span><span>$0.0001</span></div>
+        <div class="flex justify-between" style="padding: 12px; background: var(--bg); border: 1px solid var(--line);"><span class="text-dim">Min withdraw:</span><span>$1.00</span></div>
+        <div class="flex justify-between" style="padding: 12px; background: var(--bg); border: 1px solid var(--line);"><span class="text-dim">Tick rate:</span><span>1Hz</span></div>
+      </div>
+    </div>
+
+    <div class="user-card" style="margin-top: 24px;">
+      <span class="label">— Network Inspection</span>
+      <h3 style="margin: 12px 0 16px;">Top Noduri (live)</h3>
+      <div style="overflow-x: auto;">
+        <table class="data">
+          <thead><tr><th>ID</th><th>Regiune</th><th>Status</th><th>Load</th><th>GFLOPS</th></tr></thead>
+          <tbody id="adminNodesTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ TOAST + MODAL ============ -->
+<div class="toast-container" id="toastContainer"></div>
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-header"><h3 id="modalTitle">—</h3><p id="modalSubtitle">—</p></div>
+    <div class="modal-body" id="modalBody">—</div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<footer>
+  HIMER Neural Grid v2.0 · Decentralized Compute Protocol<br>
+  <span class="text-dim">Privacy by design. Open-source. Built for the next generation of distributed infrastructure.</span>
+</footer>
+
+<script>window.HIMER_BACKEND = 'https://himer-orchestrator.onrender.com';</script>
+<script>
+'use strict';
+// ============================================================
+// CONFIG - editează URL backend aici sau prin window.HIMER_BACKEND
+// ============================================================
+const BACKEND_URL = window.HIMER_BACKEND || (location.protocol === 'file:' ? 'http://localhost:8080' : location.origin.replace(/:\d+$/, ':8080'));
+const WS_URL = BACKEND_URL.replace(/^http/, 'ws');
+
+// ============================================================
+// STATE
+// ============================================================
+let ws = null;
+let wsConnected = false;
+let metrics = {
+  totalNodes: 0, activeNodes: 0, totalGflops: 0,
+  totalGflopSecondsProcessed: 0, jobsCompleted: 0,
+  contractsSigned: 0, contractsCompleted: 0
+};
+let nodesSample = [];
+let regions = {};
+let userId = localStorage.getItem('himer_uid');
+let adminKey = null;
+let notifications = [];
+let unreadCount = 0;
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
+  a.addEventListener('click', () => goPage(a.dataset.page));
+});
+
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a[data-page]').forEach(a => a.classList.remove('active'));
+  const target = document.getElementById('page-' + name);
+  if (!target) return;
+  target.classList.add('active');
+  document.querySelector(`.nav-links a[data-page="${name}"]`)?.classList.add('active');
+  document.getElementById('navLinks').classList.remove('open');
+  window.scrollTo(0, 0);
+  if (name === 'user') refreshUser();
+  if (name === 'admin' && adminKey) refreshAdmin();
+}
+
+document.getElementById('joinBtn').addEventListener('click', joinNetwork);
+
+// ============================================================
+// API
+// ============================================================
+async function api(path, opts = {}) {
+  try {
+    const ctrl = new AbortController();
+    const timeoutId = setTimeout(() => ctrl.abort(), 8000);
+    const res = await fetch(BACKEND_URL + path, {
+      ...opts,
+      signal: ctrl.signal,
+      headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
+    });
+    clearTimeout(timeoutId);
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
+}
+
+async function joinNetwork() {
+  if (userId) {
+    showWelcomeModal(userId, null, true);
+    return;
+  }
+  const r = await api('/api/user/join', { method: 'POST', body: JSON.stringify({}) });
+  if (r && r.userId) {
+    userId = r.userId;
+    localStorage.setItem('himer_uid', userId);
+    subscribeUserWS();
+    showWelcomeModal(userId, r.nodeId, false);
+  } else {
+    userId = 'U-' + Math.random().toString(36).slice(2, 10).toUpperCase();
+    localStorage.setItem('himer_uid', userId);
+    showWelcomeModal(userId, 'H-' + Math.random().toString(36).slice(2, 10).toUpperCase(), false);
+  }
+}
+
+function showWelcomeModal(uid, nodeId, alreadyJoined) {
+  document.getElementById('modalTitle').textContent = alreadyJoined ? 'Ești deja conectat' : 'Bine ai venit în HIMER';
+  document.getElementById('modalSubtitle').textContent = alreadyJoined
+    ? 'Contul tău este activ și nodul tău contribuie la rețea.'
+    : 'Calculatorul tău face acum parte din rețea. Începi să câștigi automat.';
+  document.getElementById('modalBody').innerHTML = `
+    <div style="background: var(--bg); border: 1px solid var(--line); padding: 20px; margin-bottom: 16px;">
+      <div class="label" style="margin-bottom: 8px;">Identificator user</div>
+      <div class="mono text-neon" style="font-size: 14px; word-break: break-all;">${uid}</div>
+    </div>
+    ${nodeId ? `<div style="background: var(--bg); border: 1px solid var(--line); padding: 20px; margin-bottom: 16px;">
+      <div class="label" style="margin-bottom: 8px;">Nodul tău</div>
+      <div class="mono" style="font-size: 14px; color: var(--text);">${nodeId}</div>
+    </div>` : ''}
+    <div style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">
+      <strong class="text-neon">Privacy:</strong> Agentul rulează sandbox. Nu accesează fișiere personale, browser sau parole.
+    </div>
+  `;
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="btn-ghost" onclick="closeModal()">Mai târziu</button>
+    <button class="btn-primary" onclick="closeModal(); goPage('user');">Vezi panoul meu</button>
+  `;
+  openModal();
+}
+
+async function refreshUser() {
+  if (!userId) {
+    document.getElementById('userNotConnected').style.display = '';
+    document.getElementById('userConnected').style.display = 'none';
+    return;
+  }
+  document.getElementById('userNotConnected').style.display = 'none';
+  document.getElementById('userConnected').style.display = '';
+  document.getElementById('uidDisplay').textContent = userId;
+
+  const u = await api('/api/user/' + userId);
+  if (u && !u.error && u.nodesList) {
+    document.getElementById('walletAmount').textContent = u.withdrawable.toFixed(4);
+    document.getElementById('totalEarned').textContent = u.totalEarnings.toFixed(4);
+    document.getElementById('joinedAt').textContent = new Date(u.joinedAt).toLocaleDateString('ro-RO');
+    document.getElementById('myNodes').textContent = u.stats.totalNodes;
+    document.getElementById('myActive').textContent = u.stats.activeNow;
+    document.getElementById('myGflopSec').textContent = formatNum(u.stats.totalGflopSeconds);
+    document.getElementById('myContracts').textContent = u.stats.totalContracts;
+
+    // Live calculation panel
+    const totalGflops = u.nodesList.reduce((a, n) => a + n.gflops, 0);
+    const avgLoad = u.nodesList.length > 0 ? u.nodesList.reduce((a, n) => a + n.load, 0) / u.nodesList.length : 0;
+    document.getElementById('calcGflops').textContent = totalGflops.toFixed(1) + ' GFLOPS';
+    document.getElementById('calcLoad').textContent = avgLoad.toFixed(0) + '%';
+    document.getElementById('calcGflopSec').textContent = formatNum(u.stats.totalGflopSeconds);
+    document.getElementById('calcEarnings').textContent = '$' + u.totalEarnings.toFixed(6);
+
+    const tbody = document.getElementById('myNodesTable');
+    tbody.innerHTML = u.nodesList.map(n => `
+      <tr>
+        <td class="mono text-xs">${n.id}</td>
+        <td><span style="color: ${statusColor(n.status)}">${n.status}</span></td>
+        <td>${n.load.toFixed(0)}%</td>
+        <td>${n.gflops.toFixed(1)}</td>
+        <td>${n.contractsCompleted || 0}</td>
+        <td class="text-neon mono">$${n.earnings.toFixed(6)}</td>
+      </tr>`).join('') || '<tr><td colspan="6" class="text-dim text-center">Nodurile se inițializează...</td></tr>';
+  } else {
+    // Mock fallback dacă backend offline
+    document.getElementById('walletAmount').textContent = '0.0042';
+    document.getElementById('totalEarned').textContent = '0.0042';
+    document.getElementById('myNodes').textContent = '1';
+    document.getElementById('myActive').textContent = '1';
+    document.getElementById('myGflopSec').textContent = '142';
+    document.getElementById('myContracts').textContent = '3';
+    document.getElementById('calcGflops').textContent = '6.0 GFLOPS';
+    document.getElementById('calcLoad').textContent = '45%';
+    document.getElementById('calcGflopSec').textContent = '142';
+    document.getElementById('calcEarnings').textContent = '$0.0042';
+  }
+
+  // Refresh notifications
+  await refreshNotifications();
+}
+
+async function refreshNotifications() {
+  if (!userId) return;
+  const r = await api('/api/user/' + userId + '/notifications');
+  if (r && r.notifications) {
+    notifications = r.notifications;
+    unreadCount = notifications.filter(n => !n.read).length;
+    renderNotifications();
+  }
+}
+
+function renderNotifications() {
+  const list = document.getElementById('notifList');
+  const bell = document.getElementById('navBell');
+  if (unreadCount > 0) bell.classList.add('has-unread');
+  else bell.classList.remove('has-unread');
+
+  if (notifications.length === 0) {
+    list.innerHTML = '<div class="notif-empty">Nicio notificare încă.</div>';
+    return;
+  }
+  const iconMap = {
+    contract_signed: '✎',
+    contract_completed: '✓',
+    payment: '$',
+    system: 'i',
+    reward: '★'
+  };
+  list.innerHTML = notifications.map(n => `
+    <div class="notif-item ${n.type} ${n.read ? '' : 'unread'}">
+      <div>
+        <div class="icon-wrap">${iconMap[n.type] || 'i'}</div>
+        <span class="notif-title">${n.title}</span>
+      </div>
+      <div class="notif-msg">${n.message}</div>
+      <div class="notif-time">${timeAgo(n.ts)}</div>
+    </div>
+  `).join('');
+}
+
+function timeAgo(ts) {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return 'acum';
+  if (s < 3600) return Math.floor(s / 60) + ' min';
+  if (s < 86400) return Math.floor(s / 3600) + ' ore';
+  return Math.floor(s / 86400) + ' zile';
+}
+
+function toggleNotifications() {
+  document.getElementById('notifPanel').classList.toggle('open');
+  if (userId) refreshNotifications();
+}
+
+async function withdraw() {
+  const r = await api('/api/user/withdraw', { method: 'POST', body: JSON.stringify({ userId }) });
+  if (r && r.withdrawn) {
+    document.getElementById('modalTitle').textContent = 'Retragere reușită';
+    document.getElementById('modalSubtitle').textContent = 'Suma este în drum către contul tău.';
+    document.getElementById('modalBody').innerHTML = `
+      <div style="display: grid; gap: 12px;">
+        <div style="background: var(--bg); border: 1px solid var(--line); padding: 16px;">
+          <div class="label" style="margin-bottom: 6px;">Sumă retrasă</div>
+          <div class="text-neon" style="font-family: 'Syne'; font-size: 28px; font-weight: 800;">$${r.withdrawn.toFixed(4)}</div>
+        </div>
+        <div class="flex justify-between text-sm" style="padding: 0 4px;">
+          <span class="text-dim">Procesare fee (2%)</span><span>$${r.fee.toFixed(4)}</span>
+        </div>
+        <div class="flex justify-between text-sm" style="padding: 0 4px;">
+          <span class="text-dim">Transaction ID</span><span class="mono text-xs">${r.txId}</span>
+        </div>
+      </div>
+    `;
+    document.getElementById('modalFooter').innerHTML = `<button class="btn-primary" onclick="closeModal()">OK</button>`;
+    openModal();
+    refreshUser();
+  } else {
+    toast('warn', 'Sumă insuficientă', r?.error || 'Continuă să acumulezi. Minim withdraw: $1.00');
+  }
+}
+
+function statusColor(s) {
+  if (s === 'COMPUTING') return 'var(--neon)';
+  if (s === 'READY') return 'var(--neon-3)';
+  if (s === 'IDLE') return 'var(--text-dim)';
+  return 'var(--warn)';
+}
+
+// ============================================================
+// ADMIN
+// ============================================================
+let adminLoginAttempts = 0;
+
+async function adminLogin() {
+  const input = document.getElementById('adminKey');
+  const k = input.value.trim();
+  if (!k) { shakeAdminBox(); return; }
+  const r = await api('/api/admin/overview', { headers: { 'X-Admin-Key': k } });
+  if (r && !r.error) {
+    adminKey = k;
+    sessionStorage.setItem('himer_admin', '1');
+    document.getElementById('adminLogin').style.display = 'none';
+    document.getElementById('adminUnlocked').style.display = '';
+    toast('success', 'Acces acordat', 'Console-ul administrator este activ.');
+    refreshAdmin();
+    if (window._adminInterval) clearInterval(window._adminInterval);
+    window._adminInterval = setInterval(refreshAdmin, 3000);
+  } else {
+    adminLoginAttempts++;
+    shakeAdminBox();
+    input.value = '';
+    const attempts = document.getElementById('adminAttempts');
+    attempts.style.display = '';
+    attempts.textContent = `// Acces respins · încercări: ${adminLoginAttempts}`;
+    if (adminLoginAttempts >= 5) {
+      attempts.textContent = '// Prea multe încercări. Așteaptă 30 secunde.';
+      input.disabled = true;
+      setTimeout(() => { input.disabled = false; adminLoginAttempts = 0; attempts.style.display = 'none'; }, 30000);
+    }
+  }
+}
+
+function shakeAdminBox() {
+  const box = document.getElementById('adminLoginBox');
+  box.classList.remove('admin-shake');
+  void box.offsetWidth;
+  box.classList.add('admin-shake');
+}
+
+function adminLogout() {
+  adminKey = null;
+  sessionStorage.removeItem('himer_admin');
+  if (window._adminInterval) clearInterval(window._adminInterval);
+  document.getElementById('adminLogin').style.display = '';
+  document.getElementById('adminUnlocked').style.display = 'none';
+  document.getElementById('adminKey').value = '';
+  toast('info', 'Sesiune închisă', 'Te-ai deconectat din admin console.');
+}
+
+async function refreshAdmin() {
+  const r = await api('/api/admin/overview', { headers: { 'X-Admin-Key': adminKey } });
+  if (!r || r.error) return;
+  const platform = r.revenueBreakdown.platform60;
+  const users = r.revenueBreakdown.users40;
+  document.getElementById('admPlat').textContent = '$' + platform.toFixed(4);
+  document.getElementById('admUsers').textContent = '$' + users.toFixed(4);
+  document.getElementById('admTotal').textContent = '$' + (r.revenueBreakdown.total || 0).toFixed(4);
+  document.getElementById('admFees').textContent = '$' + (r.revenueBreakdown.withdrawFees || 0).toFixed(4);
+  document.getElementById('admAdRev').textContent = '$' + (r.revenueBreakdown.adRevenue || 0).toFixed(4);
+  document.getElementById('admClients').textContent = r.clients;
+
+  // Ad stats
+  document.getElementById('admImpressions').textContent = formatNum(r.adStats.impressions);
+  document.getElementById('admClicks').textContent = formatNum(r.adStats.clicks);
+  document.getElementById('admCtr').textContent = r.adStats.ctr;
+  document.getElementById('admMonthly').textContent = '$' + (r.adStats.estimatedMonthly || 0).toFixed(2);
+
+  // Contract stats
+  document.getElementById('admContractsSigned').textContent = formatNum(r.contractStats.signed);
+  document.getElementById('admContractsDone').textContent = formatNum(r.contractStats.completed);
+  document.getElementById('admSuccessRate').textContent = r.contractStats.successRate;
+  document.getElementById('admJobsRunning').textContent = r.jobs.running;
+  document.getElementById('admJobsPending').textContent = r.jobs.pending;
+  document.getElementById('admGflopSec').textContent = formatNum(r.metrics.totalGflopSecondsProcessed || 0) + ' GFLOP-sec';
+
+  // Top nodes
+  const tbody = document.getElementById('adminNodesTable');
+  const top = nodesSample.slice(0, 15);
+  tbody.innerHTML = top.map(n => `
+    <tr>
+      <td class="mono text-xs">${n.id}</td>
+      <td class="text-xs text-dim">${n.lat.toFixed(1)}, ${n.lng.toFixed(1)}</td>
+      <td><span style="color: ${statusColor(decodeStatus(n.s))}">${decodeStatus(n.s)}</span></td>
+      <td>${n.l}%</td>
+      <td>${n.g}</td>
+    </tr>`).join('');
+}
+
+async function createJob() {
+  const type = document.getElementById('jobType').value.trim();
+  if (!type) { toast('warn', 'Tip sarcină necesar', 'Specifică tipul de calcul (ex: ai-training, 3d-render).'); return; }
+  const r = await api('/api/admin/job', {
+    method: 'POST',
+    headers: { 'X-Admin-Key': adminKey },
+    body: JSON.stringify({
+      type, nodes: parseInt(document.getElementById('jobNodes').value),
+      reward: parseFloat(document.getElementById('jobReward').value)
+    })
+  });
+  if (r?.jobId) {
+    toast('success', 'Job lansat', `Sarcina ${r.jobId} a intrat în queue.`);
+    document.getElementById('jobType').value = '';
+  } else {
+    toast('error', 'Eroare', r?.error || 'Job-ul nu a putut fi lansat.');
+  }
+}
+
+function decodeStatus(s) { return { I: 'IDLE', R: 'READY', C: 'COMPUTING' }[s] || s; }
+
+// ============================================================
+// TOAST & MODAL
+// ============================================================
+function toast(type, title, message, duration = 4500) {
+  const container = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  const icons = { success: '✓', error: '✕', warn: '!', info: 'i', contract: '✎' };
+  el.innerHTML = `
+    <div class="toast-icon">${icons[type] || 'i'}</div>
+    <div class="toast-body">
+      <div class="toast-title">${title}</div>
+      <div class="toast-message">${message}</div>
+    </div>
+    <button class="toast-close" onclick="this.parentElement.classList.add('exit'); setTimeout(()=>this.parentElement.remove(), 300);">✕</button>
+  `;
+  container.appendChild(el);
+  setTimeout(() => { el.classList.add('exit'); setTimeout(() => el.remove(), 300); }, duration);
+}
+
+function openModal() { document.getElementById('modalBackdrop').classList.add('active'); }
+function closeModal() { document.getElementById('modalBackdrop').classList.remove('active'); }
+document.getElementById('modalBackdrop').addEventListener('click', (e) => { if (e.target.id === 'modalBackdrop') closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); document.getElementById('notifPanel').classList.remove('open'); } });
+
+// ============================================================
+// WEBSOCKET
+// ============================================================
+function connectWS() {
+  try {
+    ws = new WebSocket(WS_URL);
+    ws.onopen = () => {
+      wsConnected = true;
+      console.log('HIMER WS connected');
+      subscribeUserWS();
+    };
+    ws.onmessage = (e) => {
+      try {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'SNAPSHOT') {
+          metrics = msg.metrics;
+          nodesSample = msg.nodesSample;
+          regions = msg.regions;
+        } else if (msg.type === 'DELTA') {
+          metrics = msg.metrics;
+          for (const ch of msg.changed) {
+            const idx = nodesSample.findIndex(n => n.id === ch.id);
+            if (idx >= 0) nodesSample[idx] = ch;
+          }
+        } else if (msg.type === 'NOTIFICATIONS') {
+          // New notifications from server - show toast + add to list
+          for (const n of msg.notifications) {
+            const tt = n.type === 'contract_signed' ? 'contract' : n.type === 'contract_completed' ? 'success' : 'info';
+            toast(tt, n.title, n.message);
+            // Add to list if not duplicate
+            if (!notifications.find(x => x.id === n.id)) {
+              notifications.unshift(n);
+              unreadCount++;
+            }
+          }
+          renderNotifications();
+        }
+        updateUI();
+      } catch (err) { /* silent */ }
+    };
+    ws.onclose = () => {
+      wsConnected = false;
+      setTimeout(connectWS, 3000);
+    };
+    ws.onerror = () => { wsConnected = false; };
+  } catch (e) {
+    startMockSimulation();
+  }
+}
+
+function subscribeUserWS() {
+  if (userId && ws && ws.readyState === 1) {
+    ws.send(JSON.stringify({ type: 'SUBSCRIBE_USER', userId }));
+  }
+}
+
+// ============================================================
+// MOCK SIMULATION (fallback)
+// ============================================================
+function startMockSimulation() {
+  if (nodesSample.length > 0) return; // already running
+  const mockRegions = [
+    { lat: 48.8, lng: 2.3 }, { lat: 44.4, lng: 26.1 },
+    { lat: 40.7, lng: -74 }, { lat: 37.7, lng: -122.4 },
+    { lat: 35.6, lng: 139.6 }, { lat: -23.5, lng: -46.6 },
+    { lat: 19.0, lng: 72.8 }
+  ];
+  for (let i = 0; i < 200; i++) {
+    const r = mockRegions[i % mockRegions.length];
+    nodesSample.push({
+      id: 'H-' + i.toString(16).toUpperCase().padStart(4, '0'),
+      lat: r.lat + (Math.random() - 0.5) * 10,
+      lng: r.lng + (Math.random() - 0.5) * 10,
+      l: Math.random() * 100 | 0,
+      s: ['I', 'R', 'C'][Math.random() * 3 | 0],
+      g: +(2 + Math.random() * 8).toFixed(1)
+    });
+  }
+  metrics.totalNodes = 2450;
+  setInterval(() => {
+    for (const n of nodesSample) {
+      n.l = Math.max(0, Math.min(100, n.l + (Math.random() - 0.5) * 30 | 0));
+      n.s = n.l > 70 ? 'C' : n.l > 30 ? 'R' : 'I';
+    }
+    metrics.activeNodes = nodesSample.filter(n => n.s === 'C').length * 12;
+    metrics.totalGflops = (metrics.activeNodes * 5) | 0;
+    metrics.totalGflopSecondsProcessed += metrics.totalGflops;
+    metrics.contractsCompleted += Math.random() < 0.1 ? 1 : 0;
+    updateUI();
+  }, 1000);
+}
+
+// ============================================================
+// UI UPDATES
+// ============================================================
+function updateUI() {
+  // Hero
+  setText('heroStat1', formatNum(metrics.totalNodes));
+  setText('heroStat2', formatNum(metrics.totalGflops));
+  setText('heroStat3', formatNum(metrics.contractsCompleted || 0));
+  // Dashboard
+  setText('kpiTotal', formatNum(metrics.totalNodes));
+  setText('kpiActive', formatNum(metrics.activeNodes));
+  setText('kpiGflops', formatNum(metrics.totalGflops));
+  setText('kpiJobs', formatNum(metrics.contractsCompleted || 0));
+  setText('renderInfo', `${nodesSample.length} noduri afișate · sampling`);
+
+  // Regions
+  const rl = document.getElementById('regionList');
+  if (rl) {
+    const entries = Object.entries(regions);
+    if (entries.length > 0) {
+      rl.innerHTML = entries.map(([name, r]) => `
+        <div class="region-item">
+          <div class="name">◇ ${name}</div>
+          <div class="nums">${r.count} noduri · ${r.active} active · ${(r.gflops || 0).toFixed(0)} GFLOPS</div>
+        </div>`).join('');
+    } else if (rl.children.length === 0) {
+      rl.innerHTML = ['EU-West', 'EU-East', 'US-East', 'US-West', 'Asia-East', 'SA'].map(n => `
+        <div class="region-item">
+          <div class="name">◇ ${n}</div>
+          <div class="nums">${(Math.random() * 500 | 0) + 100} noduri · ${(Math.random() * 200 | 0)} active</div>
+        </div>`).join('');
+    }
+  }
+
+  if (Math.random() < 0.25) addFeedItem();
+}
+
+function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+
+function formatNum(n) {
+  if (!n && n !== 0) return '0';
+  if (n > 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n > 1e3) return (n / 1e3).toFixed(1) + 'K';
+  return Math.round(n).toString();
+}
+
+const feedMessages = [
+  { type: 'success', msg: 'Contract finalizat · AI Training · ' },
+  { type: 'success', msg: 'Reward distribuit · 12 noduri · ' },
+  { type: 'warn', msg: 'Nod offline · re-routing traffic ' },
+  { type: 'success', msg: 'Nod nou conectat · ' },
+  { type: 'success', msg: '3D Render finalizat · ' },
+  { type: 'success', msg: 'Withdraw procesat · ' },
+];
+function addFeedItem() {
+  const feed = document.getElementById('feed');
+  if (!feed) return;
+  const m = feedMessages[Math.random() * feedMessages.length | 0];
+  const el = document.createElement('div');
+  el.className = 'feed-item ' + m.type;
+  el.innerHTML = `<div class="time">acum câteva sec</div><div class="action">${m.msg}${Math.random().toString(36).slice(2, 6).toUpperCase()}</div>`;
+  feed.insertBefore(el, feed.firstChild);
+  while (feed.children.length > 12) feed.removeChild(feed.lastChild);
+}
+
+// ============================================================
+// HERO NETWORK SVG
+// ============================================================
+function drawHeroNetwork() {
+  const svg = document.getElementById('hero-network');
+  if (!svg) return;
+  const cx = 250, cy = 250;
+  const layers = [{ r: 60, n: 6 }, { r: 130, n: 12 }, { r: 200, n: 20 }];
+  const points = [{ x: cx, y: cy, key: 'core' }];
+  for (const L of layers) {
+    for (let i = 0; i < L.n; i++) {
+      const a = (i / L.n) * Math.PI * 2;
+      points.push({ x: cx + Math.cos(a) * L.r, y: cy + Math.sin(a) * L.r, key: `${L.r}_${i}` });
+    }
+  }
+  let html = `<defs>
+    <radialGradient id="coreGrad"><stop offset="0%" stop-color="#00f0c8"/><stop offset="100%" stop-color="#00f0c8" stop-opacity="0"/></radialGradient>
+  </defs>`;
+  html += `<circle cx="${cx}" cy="${cy}" r="80" fill="url(#coreGrad)" opacity="0.4"/>`;
+  for (let i = 1; i < points.length; i++) {
+    for (let j = i + 1; j < points.length; j++) {
+      const dx = points[i].x - points[j].x, dy = points[i].y - points[j].y;
+      if (Math.hypot(dx, dy) < 90) {
+        html += `<line x1="${points[i].x}" y1="${points[i].y}" x2="${points[j].x}" y2="${points[j].y}" stroke="rgba(0,240,200,0.15)" stroke-width="0.5"/>`;
+      }
+    }
+    html += `<line x1="${cx}" y1="${cy}" x2="${points[i].x}" y2="${points[i].y}" stroke="rgba(107,140,255,0.08)" stroke-width="0.3"/>`;
+  }
+  for (const p of points) {
+    const isCore = p.key === 'core';
+    const r = isCore ? 8 : 2 + Math.random() * 2;
+    const color = isCore ? '#00f0c8' : ['#00f0c8', '#6b8cff', '#ff3d80'][Math.random() * 3 | 0];
+    html += `<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${color}" opacity="0.9">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="${2 + Math.random()*3}s" begin="${Math.random() * 4}s" repeatCount="indefinite"/>
+    </circle>`;
+  }
+  svg.innerHTML = html;
+}
+
+// ============================================================
+// NEURAL CANVAS (Dashboard)
+// ============================================================
+const canvas = document.getElementById('neural-canvas');
+const ctx = canvas?.getContext('2d');
+let canvasW = 0, canvasH = 0, dpr = 1;
+
+function resizeCanvas() {
+  if (!canvas) return;
+  dpr = window.devicePixelRatio || 1;
+  canvasW = canvas.offsetWidth;
+  canvasH = canvas.offsetHeight;
+  canvas.width = canvasW * dpr;
+  canvas.height = canvasH * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resizeCanvas);
+setTimeout(resizeCanvas, 100);
+
+function project(lat, lng) {
+  const x = ((lng + 180) / 360) * canvasW;
+  const y = ((90 - lat) / 180) * canvasH;
+  return [x, y];
+}
+
+let pulseTime = 0;
+let lastFrame = 0;
+function renderNeuralCanvas(ts) {
+  if (!ctx || canvasW === 0) { requestAnimationFrame(renderNeuralCanvas); return; }
+  // Cap FPS la 30 pentru performanță
+  if (ts - lastFrame < 33) { requestAnimationFrame(renderNeuralCanvas); return; }
+  lastFrame = ts;
+  pulseTime += 0.02;
+
+  ctx.fillStyle = 'rgba(10, 13, 24, 0.15)';
+  ctx.fillRect(0, 0, canvasW, canvasH);
+
+  ctx.strokeStyle = 'rgba(120, 200, 255, 0.04)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 12; i++) {
+    const x = (i / 12) * canvasW;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvasH); ctx.stroke();
+  }
+  for (let i = 0; i <= 6; i++) {
+    const y = (i / 6) * canvasH;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvasW, y); ctx.stroke();
+  }
+
+  const active = nodesSample.filter(n => n.s === 'C');
+  for (let i = 0; i < Math.min(active.length, 30); i++) {
+    const a = active[i];
+    const b = active[(i + 7) % active.length];
+    if (!a || !b) continue;
+    const [x1, y1] = project(a.lat, a.lng);
+    const [x2, y2] = project(b.lat, b.lng);
+    const grad = ctx.createLinearGradient(x1, y1, x2, y2);
+    grad.addColorStop(0, 'rgba(0,240,200,0.4)');
+    grad.addColorStop(1, 'rgba(0,240,200,0)');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+
+  for (const n of nodesSample) {
+    const [x, y] = project(n.lat, n.lng);
+    let color, size;
+    if (n.s === 'C') { color = '#00f0c8'; size = 3 + Math.sin(pulseTime + x * 0.01) * 1; }
+    else if (n.s === 'R') { color = '#6b8cff'; size = 2; }
+    else { color = '#7a8499'; size = 1.2; }
+
+    if (n.s === 'C') {
+      const g = ctx.createRadialGradient(x, y, 0, x, y, 12);
+      g.addColorStop(0, 'rgba(0,240,200,0.5)');
+      g.addColorStop(1, 'rgba(0,240,200,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(x, y, 12, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
+  }
+  requestAnimationFrame(renderNeuralCanvas);
+}
+
+// ============================================================
+// AD TRACKING (auto-sustain)
+// ============================================================
+function trackAdImpressions() {
+  const slots = document.querySelectorAll('.ad-slot');
+  if (!slots.length) return;
+  const observed = new WeakSet();
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !observed.has(e.target)) {
+        observed.add(e.target);
+        api('/api/ad/impression', { method: 'POST', body: JSON.stringify({ slot: e.target.dataset.slot }) });
+      }
+    });
+  }, { threshold: 0.5 });
+  slots.forEach(s => {
+    obs.observe(s);
+    s.addEventListener('click', () => {
+      api('/api/ad/click', { method: 'POST', body: JSON.stringify({ slot: s.dataset.slot }) });
+    });
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+drawHeroNetwork();
+requestAnimationFrame(renderNeuralCanvas);
+connectWS();
+setTimeout(() => { if (!wsConnected) startMockSimulation(); }, 2000);
+setInterval(() => { if (userId) refreshUser(); }, 8000);
+setTimeout(trackAdImpressions, 1000);
+
+// Auto-subscribe la WS dacă user e logat
+if (userId) {
+  setTimeout(subscribeUserWS, 1500);
+}
+</script>
+</body>
+</html>
