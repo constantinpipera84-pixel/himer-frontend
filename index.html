@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="HIMER Neural Grid - Decentralized compute network. Your computer contributes, you earn.">
 <meta name="theme-color" content="#05060a">
 <title>HIMER Neural Grid · Distributed Compute Network</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%2300f0c8'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%2305060a'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Ccircle cx='90' cy='90' r='80' fill='%2300f0c8'/%3E%3Ccircle cx='90' cy='90' r='35' fill='%2305060a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
@@ -19,11 +22,12 @@
   --neon: #00f0c8; --neon-2: #ff3d80; --neon-3: #6b8cff;
   --warn: #ffb547; --success: #00f0c8; --danger: #ff3d80;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { overflow-x: hidden; scroll-behavior: smooth; }
 body {
   font-family: 'JetBrains Mono', monospace; background: var(--bg); color: var(--text);
-  min-height: 100vh; position: relative; -webkit-font-smoothing: antialiased; line-height: 1.5;
+  min-height: 100vh; min-height: 100dvh; position: relative;
+  -webkit-font-smoothing: antialiased; line-height: 1.5;
 }
 body::before {
   content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -34,7 +38,7 @@ body::before {
     linear-gradient(90deg, rgba(120,200,255,0.03) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
 }
-h1, h2, h3, .display { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+h1, h2, h3 { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
 .mono { font-family: 'JetBrains Mono', monospace; }
 .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-dim); }
 
@@ -42,13 +46,13 @@ h1, h2, h3, .display { font-family: 'Syne', sans-serif; font-weight: 800; letter
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 28px; background: rgba(5,6,10,0.7);
-  backdrop-filter: blur(20px); border-bottom: 1px solid var(--line);
-  gap: 16px;
+  padding: 14px 24px; background: rgba(5,6,10,0.85);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line); gap: 12px;
 }
 .logo { display: flex; align-items: center; gap: 12px; font-family: 'Syne'; font-weight: 800; font-size: 20px; cursor: pointer; }
 .logo-mark {
-  width: 32px; height: 32px;
+  width: 30px; height: 30px;
   background: conic-gradient(from 0deg, var(--neon), var(--neon-3), var(--neon-2), var(--neon));
   mask: radial-gradient(circle at center, transparent 30%, black 32%, black 48%, transparent 50%), linear-gradient(black, black);
   -webkit-mask: radial-gradient(circle at center, transparent 30%, black 32%, black 48%, transparent 50%), linear-gradient(black, black);
@@ -56,18 +60,19 @@ h1, h2, h3, .display { font-family: 'Syne', sans-serif; font-weight: 800; letter
   animation: spin 8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.nav-links { display: flex; gap: 22px; align-items: center; }
+.nav-links { display: flex; gap: 20px; align-items: center; }
 .nav-links a {
   color: var(--text-dim); text-decoration: none; font-size: 12px;
   font-weight: 600; letter-spacing: 0.05em; cursor: pointer; transition: color 0.2s;
 }
 .nav-links a:hover, .nav-links a.active { color: var(--neon); }
-.nav-actions { display: flex; gap: 12px; align-items: center; }
+.nav-actions { display: flex; gap: 10px; align-items: center; }
 .nav-bell, .nav-lang {
   position: relative; cursor: pointer; padding: 8px;
   color: var(--text-dim); transition: color 0.2s;
   display: flex; align-items: center; gap: 4px;
   font-size: 11px; font-weight: 600;
+  min-width: 36px; min-height: 36px; justify-content: center;
 }
 .nav-bell:hover, .nav-lang:hover { color: var(--neon); }
 .nav-bell.off { opacity: 0.4; }
@@ -77,13 +82,21 @@ h1, h2, h3, .display { font-family: 'Syne', sans-serif; font-weight: 800; letter
   box-shadow: 0 0 8px var(--neon-2);
 }
 .nav-cta {
-  padding: 10px 24px; background: var(--neon); color: #000; border: none;
+  padding: 10px 22px; background: var(--neon); color: #000; border: none;
   font-family: inherit; font-weight: 700; font-size: 11px;
   letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
   clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%); transition: all 0.2s;
+  min-height: 38px;
 }
 .nav-cta:hover { background: #fff; }
-.menu-toggle { display: none; background: none; border: none; color: var(--text); cursor: pointer; font-size: 22px; }
+.menu-toggle {
+  display: none; background: transparent;
+  border: 1px solid var(--line); color: var(--text);
+  cursor: pointer; font-size: 18px;
+  width: 38px; height: 38px;
+  align-items: center; justify-content: center;
+}
+.menu-toggle:hover { border-color: var(--neon); color: var(--neon); }
 
 /* LANG DROPDOWN */
 .lang-dropdown {
@@ -95,7 +108,7 @@ h1, h2, h3, .display { font-family: 'Syne', sans-serif; font-weight: 800; letter
 }
 .lang-dropdown.open { display: block; }
 .lang-item {
-  padding: 10px 16px; cursor: pointer; font-size: 13px;
+  padding: 12px 16px; cursor: pointer; font-size: 13px;
   display: flex; justify-content: space-between; align-items: center;
   transition: background 0.2s;
 }
@@ -104,20 +117,20 @@ h1, h2, h3, .display { font-family: 'Syne', sans-serif; font-weight: 800; letter
 .lang-item .code { font-size: 10px; color: var(--text-dim); }
 
 /* PAGES */
-.page { display: none; position: relative; z-index: 2; padding-top: 76px; }
+.page { display: none; position: relative; z-index: 2; padding-top: 70px; }
 .page.active { display: block; }
 
 /* HERO */
 .hero {
-  min-height: 100vh; padding: 80px 32px 60px;
-  display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px;
+  min-height: calc(100vh - 70px); padding: 60px 28px 60px;
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 50px;
   align-items: center; max-width: 1400px; margin: 0 auto;
 }
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
   padding: 8px 14px; border: 1px solid var(--line-strong);
   font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--neon); margin-bottom: 32px;
+  color: var(--neon); margin-bottom: 28px;
 }
 .hero-eyebrow::before {
   content: ''; width: 6px; height: 6px; border-radius: 50%;
@@ -125,70 +138,69 @@ h1, h2, h3, .display { font-family: 'Syne', sans-serif; font-weight: 800; letter
   animation: pulse 2s infinite;
 }
 @keyframes pulse { 50% { opacity: 0.4; } }
-.hero h1 { font-size: clamp(40px, 7vw, 88px); margin-bottom: 24px; }
+.hero h1 { font-size: clamp(36px, 7vw, 80px); margin-bottom: 24px; }
 .hero h1 .stroke { -webkit-text-stroke: 2px var(--neon); color: transparent; font-style: italic; }
-.hero p.lead { font-size: 17px; color: var(--text-dim); max-width: 540px; margin-bottom: 40px; line-height: 1.7; }
-.hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
-.hero-stat .num { font-family: 'Syne'; font-size: 32px; font-weight: 800; color: var(--neon); line-height: 1; }
+.hero p.lead { font-size: 16px; color: var(--text-dim); max-width: 520px; margin-bottom: 36px; line-height: 1.7; }
+.hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 36px; }
+.hero-stat .num { font-family: 'Syne'; font-size: 30px; font-weight: 800; color: var(--neon); line-height: 1; }
 .hero-stat .lab { font-size: 10px; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 6px; }
 
 .btn-primary {
   display: inline-flex; align-items: center; gap: 12px;
-  padding: 16px 32px; background: var(--neon); color: #000; border: none;
+  padding: 15px 30px; background: var(--neon); color: #000; border: none;
   font-family: inherit; font-weight: 800; font-size: 13px;
   letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
   clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
-  transition: all 0.3s;
+  transition: all 0.3s; min-height: 44px;
 }
 .btn-primary:hover { background: #fff; gap: 18px; }
 .btn-primary::after { content: '→'; font-size: 18px; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-ghost {
   display: inline-flex; align-items: center; gap: 10px;
-  padding: 16px 26px; background: transparent; color: var(--text);
+  padding: 15px 24px; background: transparent; color: var(--text);
   border: 1px solid var(--line-strong); font-family: inherit;
   font-weight: 600; font-size: 12px; letter-spacing: 0.1em;
   text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+  min-height: 44px;
 }
 .btn-ghost:hover { border-color: var(--neon); color: var(--neon); }
-.btn-group { display: flex; gap: 16px; flex-wrap: wrap; }
+.btn-group { display: flex; gap: 14px; flex-wrap: wrap; }
 
-.hero-visual { position: relative; aspect-ratio: 1; max-width: 500px; margin: 0 auto; }
+.hero-visual { position: relative; aspect-ratio: 1; max-width: 480px; margin: 0 auto; }
 #hero-network { width: 100%; height: 100%; }
 
 /* SECTIONS */
-section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
-.section-head { margin-bottom: 50px; max-width: 720px; }
-.section-head .label { color: var(--neon); margin-bottom: 16px; display: block; }
-.section-head h2 { font-size: clamp(28px, 4.5vw, 48px); margin-bottom: 18px; }
-.section-head p { color: var(--text-dim); font-size: 15px; line-height: 1.7; }
+section.bloc { padding: 70px 28px; max-width: 1400px; margin: 0 auto; }
+.section-head { margin-bottom: 44px; max-width: 720px; }
+.section-head .label { color: var(--neon); margin-bottom: 14px; display: block; }
+.section-head h2 { font-size: clamp(26px, 4.5vw, 44px); margin-bottom: 16px; }
+.section-head p { color: var(--text-dim); font-size: 14px; line-height: 1.7; }
 
 .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--line); border: 1px solid var(--line); }
-.how-step { background: var(--bg); padding: 36px 28px; transition: background 0.3s; }
+.how-step { background: var(--bg); padding: 32px 24px; transition: background 0.3s; }
 .how-step:hover { background: var(--bg-2); }
-.how-step .num { font-family: 'Syne'; font-size: 56px; font-weight: 800; color: var(--neon); opacity: 0.3; line-height: 1; margin-bottom: 16px; }
-.how-step h3 { font-size: 20px; margin-bottom: 12px; }
+.how-step .num { font-family: 'Syne'; font-size: 52px; font-weight: 800; color: var(--neon); opacity: 0.3; line-height: 1; margin-bottom: 14px; }
+.how-step h3 { font-size: 19px; margin-bottom: 10px; }
 .how-step p { color: var(--text-dim); font-size: 13px; line-height: 1.7; }
 
-.features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 .feature {
-  border: 1px solid var(--line); padding: 28px;
+  border: 1px solid var(--line); padding: 26px;
   background: var(--surface); backdrop-filter: blur(10px);
   position: relative; overflow: hidden;
 }
 .feature::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 0; background: var(--neon); transition: height 0.4s; }
 .feature:hover::before { height: 100%; }
-.feature h3 { font-size: 18px; margin-bottom: 10px; }
+.feature h3 { font-size: 17px; margin-bottom: 10px; }
 .feature p { color: var(--text-dim); font-size: 13px; line-height: 1.7; }
-.feature .icon { width: 36px; height: 36px; margin-bottom: 16px; color: var(--neon); }
 
 /* PRIVACY BLOCK */
 .privacy-block {
   background: linear-gradient(135deg, rgba(0,240,200,0.05), rgba(107,140,255,0.05));
-  border: 1px solid var(--line-strong); padding: 40px; position: relative;
+  border: 1px solid var(--line-strong); padding: 36px; position: relative;
 }
-.privacy-block::before { content: ''; position: absolute; top: -1px; left: -1px; right: -1px; height: 2px; background: linear-gradient(90deg, var(--neon), transparent); }
-.privacy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 28px; }
+.privacy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 26px; }
 .privacy-col h4 { font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
 .privacy-col.no h4 { color: var(--neon-2); }
 .privacy-col.yes h4 { color: var(--neon); }
@@ -197,35 +209,9 @@ section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
 .privacy-col.no li::before { content: '✕'; position: absolute; left: 0; top: 8px; color: var(--neon-2); font-weight: 700; }
 .privacy-col.yes li::before { content: '✓'; position: absolute; left: 0; top: 8px; color: var(--neon); font-weight: 700; }
 
-/* AD SLOTS */
-.ad-slot {
-  border: 1px dashed var(--line-strong); padding: 20px; text-align: center;
-  color: var(--text-dim); font-size: 11px; letter-spacing: 0.15em;
-  text-transform: uppercase; margin: 20px 0; min-height: 90px;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.3); cursor: pointer; transition: all 0.3s;
-  position: relative;
-}
-.ad-slot:hover { border-color: var(--neon); }
-.ad-tag { position: absolute; top: 4px; left: 8px; font-size: 9px; color: var(--text-dim); opacity: 0.5; }
-
-/* MILESTONES */
-.milestone {
-  border: 1px solid var(--line); padding: 24px; margin-bottom: 16px;
-  background: var(--surface); position: relative; overflow: hidden;
-}
-.milestone.completed { border-color: var(--neon); }
-.milestone.completed::after { content: '✓'; position: absolute; top: 20px; right: 20px; color: var(--neon); font-size: 24px; font-weight: 800; }
-.milestone-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
-.milestone-title { font-size: 15px; font-weight: 700; }
-.milestone-reward { font-size: 11px; color: var(--neon-3); margin-top: 4px; }
-.milestone-progress-bar { height: 4px; background: var(--bg); margin: 14px 0 8px; overflow: hidden; }
-.milestone-progress-bar > div { height: 100%; background: linear-gradient(90deg, var(--neon-3), var(--neon)); transition: width 0.5s; }
-.milestone-stats { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); }
-
 /* DASHBOARD */
-.dash-wrap { display: grid; grid-template-columns: 220px 1fr 300px; min-height: calc(100vh - 76px); }
-.dash-side { border-right: 1px solid var(--line); padding: 24px 0; background: var(--bg-2); }
+.dash-wrap { display: grid; grid-template-columns: 220px 1fr 300px; min-height: calc(100vh - 70px); }
+.dash-side { border-right: 1px solid var(--line); padding: 22px 0; background: var(--bg-2); }
 .dash-side .label { padding: 0 22px 12px; }
 .dash-side a {
   display: flex; align-items: center; gap: 10px; padding: 11px 22px;
@@ -235,11 +221,11 @@ section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
 .dash-side a:hover, .dash-side a.active {
   color: var(--neon); background: rgba(0,240,200,0.05); border-left-color: var(--neon);
 }
-.dash-main { padding: 28px; overflow-x: hidden; }
-.dash-right { border-left: 1px solid var(--line); padding: 28px 22px; background: var(--bg-2); }
+.dash-main { padding: 26px; min-width: 0; overflow-x: hidden; }
+.dash-right { border-left: 1px solid var(--line); padding: 26px 22px; background: var(--bg-2); }
 
-.dash-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
-.dash-header h2 { font-size: 30px; }
+.dash-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 26px; flex-wrap: wrap; gap: 14px; }
+.dash-header h2 { font-size: 28px; }
 .live-badge {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 12px; border: 1px solid var(--neon);
@@ -247,16 +233,35 @@ section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
 }
 .live-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 10px var(--neon); animation: pulse 1.5s infinite; }
 
-.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
 .kpi { border: 1px solid var(--line); background: var(--surface); padding: 18px; }
 .kpi .label { font-size: 10px; margin-bottom: 8px; }
 .kpi .val { font-family: 'Syne'; font-size: 26px; font-weight: 800; color: var(--text); line-height: 1; }
 .kpi .delta { font-size: 11px; color: var(--neon); margin-top: 6px; }
 
-.grid-viz { border: 1px solid var(--line); background: var(--bg-2); padding: 18px; margin-bottom: 22px; }
-.grid-viz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+/* GRID VIZ — CRITICAL FIX: explicit width/height */
+.grid-viz {
+  border: 1px solid var(--line); background: var(--bg-2);
+  padding: 18px; margin-bottom: 22px;
+  min-width: 0; /* Critical: prevents grid blowout */
+}
+.grid-viz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
 .grid-viz-header h3 { font-size: 16px; font-weight: 600; font-family: 'JetBrains Mono'; }
-#neural-canvas { width: 100%; height: 420px; display: block; cursor: pointer; }
+.canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  background: rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+#neural-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  cursor: pointer;
+}
 
 .region-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 14px; }
 .region-item { padding: 10px; border: 1px solid var(--line); background: var(--bg); font-size: 11px; }
@@ -269,7 +274,6 @@ section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
 .feed-item .action { margin-top: 4px; }
 .feed-item.success .action { color: var(--neon); }
 
-/* NODE POPUP */
 .node-popup {
   position: absolute; min-width: 220px;
   background: var(--bg-2); border: 1px solid var(--neon);
@@ -278,43 +282,43 @@ section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
   display: none; font-size: 12px; pointer-events: auto;
 }
 .node-popup.open { display: block; }
-.node-popup h4 { font-family: 'JetBrains Mono'; font-size: 13px; margin-bottom: 10px; color: var(--neon); }
+.node-popup h4 { font-family: 'JetBrains Mono'; font-size: 13px; margin-bottom: 10px; color: var(--neon); word-break: break-all; }
 .node-popup .row { display: flex; justify-content: space-between; padding: 4px 0; }
 .node-popup .row span:first-child { color: var(--text-dim); }
 .node-popup .close-x { position: absolute; top: 8px; right: 10px; cursor: pointer; color: var(--text-dim); font-size: 14px; }
 
 /* USER PANEL */
-.user-card { border: 1px solid var(--line); background: var(--surface); padding: 28px; margin-bottom: 22px; }
+.user-card { border: 1px solid var(--line); background: var(--surface); padding: 26px; margin-bottom: 20px; }
 .user-card.featured { border-color: var(--line-strong); }
-.wallet-balance { font-family: 'Syne'; font-size: 56px; font-weight: 800; color: var(--neon); line-height: 1; margin: 14px 0; }
+.wallet-balance { font-family: 'Syne'; font-size: 52px; font-weight: 800; color: var(--neon); line-height: 1; margin: 12px 0; }
 .wallet-balance .currency { font-size: 22px; opacity: 0.6; }
+.wallet-disclaimer { font-size: 11px; color: var(--text-dim); margin-top: 8px; font-style: italic; line-height: 1.5; }
 
 .withdraw-progress { margin-top: 16px; }
 .withdraw-progress-bar { height: 6px; background: var(--bg); margin: 8px 0; overflow: hidden; border: 1px solid var(--line); }
 .withdraw-progress-bar > div { height: 100%; background: linear-gradient(90deg, var(--neon-3), var(--neon)); transition: width 0.5s; }
 .withdraw-progress-text { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); }
 
-.boost-slider { margin: 18px 0; }
-.boost-slider input[type=range] {
-  width: 100%; -webkit-appearance: none; appearance: none;
-  background: var(--bg); height: 6px;
-}
-.boost-slider input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none;
-  width: 20px; height: 20px; background: var(--neon);
-  cursor: pointer; border-radius: 0; box-shadow: 0 0 10px var(--neon);
-}
-.boost-slider input[type=range]::-moz-range-thumb {
-  width: 20px; height: 20px; background: var(--neon); cursor: pointer; border-radius: 0; border: none;
-}
-
 .calc-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
 .calc-row:last-child { border-bottom: none; }
 .calc-row.total { padding-top: 14px; border-top: 1px solid var(--line); margin-top: 8px; border-bottom: none; font-weight: 700; }
 
-/* NOTIFICATIONS PANEL */
+/* DEVICES LIST */
+.device-list { display: grid; gap: 10px; margin-top: 12px; }
+.device-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px;
+  background: var(--bg); border: 1px solid var(--line); font-size: 12px;
+}
+.device-item .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.device-item .dot.online { background: var(--neon); box-shadow: 0 0 8px var(--neon); }
+.device-item .dot.offline { background: var(--text-dim); }
+.device-item .info { flex: 1; min-width: 0; }
+.device-item .nm { font-weight: 700; color: var(--text); }
+.device-item .nid { color: var(--text-dim); font-size: 10px; }
+
+/* NOTIFICATIONS */
 .notif-panel {
-  position: fixed; top: 76px; right: 20px; z-index: 95;
+  position: fixed; top: 70px; right: 20px; z-index: 95;
   width: 360px; max-width: calc(100vw - 32px);
   background: var(--bg-2); border: 1px solid var(--line-strong);
   max-height: 70vh; overflow-y: auto;
@@ -331,19 +335,15 @@ section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
 .toggle-switch.on { background: var(--neon); border-color: var(--neon); }
 .toggle-switch.on::after { left: 18px; background: #000; }
 .notif-empty { padding: 40px 18px; text-align: center; color: var(--text-dim); font-size: 13px; }
-.notif-item { padding: 14px 18px; border-bottom: 1px solid var(--line); transition: background 0.2s; position: relative; }
+.notif-item { padding: 14px 18px; border-bottom: 1px solid var(--line); position: relative; }
 .notif-item.unread::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--neon); }
 .notif-item .icon-wrap { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-right: 10px; font-size: 11px; font-weight: 700; border: 1px solid; vertical-align: middle; }
-.notif-item.contract_signed .icon-wrap { color: var(--neon-3); border-color: var(--neon-3); }
-.notif-item.contract_completed .icon-wrap { color: var(--neon); border-color: var(--neon); }
-.notif-item.payment .icon-wrap { color: var(--warn); border-color: var(--warn); }
-.notif-item.system .icon-wrap { color: var(--text-dim); border-color: var(--text-dim); }
 .notif-title { font-weight: 700; font-size: 13px; display: inline-block; vertical-align: middle; }
 .notif-msg { color: var(--text-dim); font-size: 12px; margin-top: 6px; line-height: 1.5; }
 .notif-time { font-size: 10px; color: var(--text-dim); margin-top: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
 
 /* TOAST */
-.toast-container { position: fixed; top: 90px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; max-width: 360px; }
+.toast-container { position: fixed; top: 84px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; max-width: 360px; }
 .toast {
   pointer-events: auto; background: rgba(10,13,24,0.95); backdrop-filter: blur(20px);
   border: 1px solid var(--line-strong); border-left: 3px solid var(--neon);
@@ -355,7 +355,6 @@ section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
 .toast.error { border-left-color: var(--neon-2); }
 .toast.warn { border-left-color: var(--warn); }
 .toast.info { border-left-color: var(--neon-3); }
-.toast.contract { border-left-color: var(--neon-3); }
 .toast.exit { animation: toastOut 0.3s ease-in forwards; }
 @keyframes toastIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes toastOut { to { transform: translateX(40px); opacity: 0; } }
@@ -363,11 +362,11 @@ section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
 .toast.success .toast-icon { color: var(--neon); }
 .toast.error .toast-icon { color: var(--neon-2); }
 .toast.warn .toast-icon { color: var(--warn); }
-.toast.info .toast-icon, .toast.contract .toast-icon { color: var(--neon-3); }
+.toast.info .toast-icon { color: var(--neon-3); }
 .toast-body { flex: 1; }
 .toast-title { font-family: 'Syne'; font-weight: 700; font-size: 13px; margin-bottom: 3px; }
 .toast-message { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
-.toast-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 15px; line-height: 1; }
+.toast-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 15px; line-height: 1; padding: 0; }
 
 /* MODAL */
 .modal-backdrop {
@@ -394,71 +393,11 @@ section.bloc { padding: 80px 32px; max-width: 1400px; margin: 0 auto; }
 .modal-close {
   position: absolute; top: 18px; right: 18px; background: none;
   border: 1px solid var(--line); color: var(--text-dim);
-  width: 30px; height: 30px; cursor: pointer; font-size: 14px;
+  width: 32px; height: 32px; cursor: pointer; font-size: 14px;
 }
 .modal-close:hover { color: var(--neon-2); border-color: var(--neon-2); }
 
-/* ADMIN */
-.admin-login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
-.admin-login-box {
-  width: 100%; max-width: 420px; background: var(--bg-2);
-  border: 1px solid var(--line-strong); padding: 40px; position: relative;
-  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-}
-.admin-login-box::before { content: ''; position: absolute; top: -1px; left: -1px; right: -1px; height: 3px; background: linear-gradient(90deg, var(--neon), var(--neon-3), var(--neon-2)); }
-.admin-icon-lock { width: 52px; height: 52px; border: 1px solid var(--neon); display: flex; align-items: center; justify-content: center; margin-bottom: 22px; color: var(--neon); }
-.admin-attempts { font-size: 11px; color: var(--warn); margin-top: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
-.admin-shake { animation: shake 0.4s; }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-
-.admin-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 24px; flex-wrap: wrap; }
-.admin-tab { padding: 12px 20px; cursor: pointer; color: var(--text-dim); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; border-bottom: 2px solid transparent; transition: all 0.2s; }
-.admin-tab:hover { color: var(--text); }
-.admin-tab.active { color: var(--neon); border-bottom-color: var(--neon); }
-.admin-panel { display: none; }
-.admin-panel.active { display: block; }
-
-.reality-banner {
-  background: linear-gradient(135deg, rgba(255,61,128,0.15), rgba(255,181,71,0.1));
-  border: 1px solid var(--warn); padding: 20px;
-  margin-bottom: 24px; font-size: 13px;
-}
-.reality-banner strong { color: var(--warn); }
-.reality-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 16px; }
-.reality-stat { padding: 14px; background: var(--bg); border: 1px solid var(--line); }
-.reality-stat .lab { font-size: 10px; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; }
-.reality-stat .val { font-family: 'Syne'; font-size: 28px; font-weight: 800; margin-top: 6px; line-height: 1; }
-.reality-stat.real .val { color: var(--neon); }
-.reality-stat.seed .val { color: var(--warn); }
-
-.split-viz { display: grid; grid-template-columns: 60fr 40fr; gap: 0; margin: 14px 0 0; border: 1px solid var(--line-strong); }
-.split-viz > div { padding: 28px; }
-.split-viz .platform { background: linear-gradient(135deg, rgba(0,240,200,0.1), transparent); border-right: 1px solid var(--line); }
-.split-viz .user { background: linear-gradient(135deg, rgba(255,61,128,0.1), transparent); }
-.split-viz .pct { font-family: 'Syne'; font-size: 42px; font-weight: 800; line-height: 1; }
-.split-viz .platform .pct { color: var(--neon); }
-.split-viz .user .pct { color: var(--neon-2); }
-.split-viz h4 { margin: 10px 0 6px; font-size: 15px; }
-.split-viz p { color: var(--text-dim); font-size: 12px; }
-
-table.data { width: 100%; border-collapse: collapse; font-size: 12px; }
-table.data th, table.data td { padding: 10px; text-align: left; border-bottom: 1px solid var(--line); }
-table.data th { color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; }
-table.data tr:hover { background: rgba(0,240,200,0.03); }
-.badge { display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; }
-.badge.real { color: var(--neon); border: 1px solid var(--neon); }
-.badge.seed { color: var(--warn); border: 1px solid var(--warn); }
-.badge.pending { color: var(--warn); border: 1px solid var(--warn); }
-.badge.paid { color: var(--neon); border: 1px solid var(--neon); }
-
-input.field, select.field, textarea.field {
-  width: 100%; padding: 12px 16px; background: var(--bg);
-  border: 1px solid var(--line); color: var(--text);
-  font-family: inherit; font-size: 13px; margin-bottom: 12px;
-}
-input.field:focus { outline: none; border-color: var(--neon); }
-
-/* AI CHAT BOX */
+/* AI CHAT */
 .ai-fab {
   position: fixed; bottom: 24px; right: 24px; z-index: 90;
   width: 56px; height: 56px; border-radius: 50%;
@@ -466,12 +405,12 @@ input.field:focus { outline: none; border-color: var(--neon); }
   border: none; cursor: pointer;
   box-shadow: 0 4px 20px rgba(0,240,200,0.4);
   display: flex; align-items: center; justify-content: center;
-  color: #000; font-size: 24px; transition: all 0.2s;
+  color: #000; transition: all 0.2s;
 }
 .ai-fab:hover { transform: scale(1.05); }
 .ai-fab.open { background: var(--neon-2); }
 .ai-chat {
-  position: fixed; bottom: 96px; right: 24px; z-index: 89;
+  position: fixed; bottom: 92px; right: 24px; z-index: 89;
   width: 380px; max-width: calc(100vw - 32px); height: 520px; max-height: calc(100vh - 140px);
   background: var(--bg-2); border: 1px solid var(--line-strong);
   display: none; flex-direction: column;
@@ -493,37 +432,75 @@ input.field:focus { outline: none; border-color: var(--neon); }
 .ai-quick-btn { padding: 6px 12px; background: var(--bg); border: 1px solid var(--line); color: var(--text-dim); font-size: 11px; cursor: pointer; }
 .ai-quick-btn:hover { color: var(--neon); border-color: var(--neon); }
 
-/* FOOTER */
-footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: center; font-size: 12px; color: var(--text-dim); position: relative; z-index: 2; }
+/* PWA INSTALL */
+.install-prompt {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(120px);
+  background: var(--bg-2); border: 1px solid var(--neon);
+  padding: 14px 20px; z-index: 88;
+  display: flex; gap: 14px; align-items: center;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  max-width: 90vw;
+}
+.install-prompt.show { transform: translateX(-50%) translateY(0); }
+.install-prompt .ico { font-size: 22px; }
+.install-prompt .txt { font-size: 12px; }
+.install-prompt button { padding: 8px 14px; background: var(--neon); color: #000; border: none; font-weight: 700; font-size: 11px; cursor: pointer; }
+.install-prompt .x { background: none; border: 1px solid var(--line); color: var(--text-dim); }
 
-/* MOBILE */
-@media (max-width: 1024px) {
-  .hero { grid-template-columns: 1fr; padding: 60px 20px; }
-  .hero-visual { max-width: 320px; }
+input.field, select.field, textarea.field {
+  width: 100%; padding: 12px 16px; background: var(--bg);
+  border: 1px solid var(--line); color: var(--text);
+  font-family: inherit; font-size: 13px; margin-bottom: 12px;
+}
+input.field:focus { outline: none; border-color: var(--neon); }
+
+table.data { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.data th, table.data td { padding: 10px; text-align: left; border-bottom: 1px solid var(--line); }
+table.data th { color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; }
+table.data tr:hover { background: rgba(0,240,200,0.03); }
+.badge { display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; }
+.badge.online { color: var(--neon); border: 1px solid var(--neon); }
+.badge.offline { color: var(--text-dim); border: 1px solid var(--text-dim); }
+
+footer { border-top: 1px solid var(--line); padding: 32px 28px; text-align: center; font-size: 12px; color: var(--text-dim); position: relative; z-index: 2; }
+footer a { color: var(--neon); text-decoration: none; }
+
+/* MOBILE — CRITICAL FIXES */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding: 40px 20px; gap: 30px; }
+  .hero-visual { max-width: 280px; }
   .how-grid, .features, .privacy-grid { grid-template-columns: 1fr; }
   .dash-wrap { grid-template-columns: 1fr; }
   .dash-side, .dash-right { display: none; }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  .nav-links { display: none; }
-  .nav-links.open {
-    display: flex; position: absolute; top: 100%; left: 0; right: 0;
-    flex-direction: column; background: var(--bg-2); padding: 20px;
-    border-bottom: 1px solid var(--line); gap: 14px;
+
+  /* CRITICAL: Hamburger menu visible on mobile */
+  .nav-links {
+    display: none;
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; background: var(--bg-2);
+    padding: 20px; border-bottom: 1px solid var(--line);
+    gap: 14px;
   }
-  .menu-toggle { display: block; }
-  .split-viz { grid-template-columns: 1fr; }
-  .split-viz .platform { border-right: none; border-bottom: 1px solid var(--line); }
-  .nav { padding: 14px 18px; }
+  .nav-links.open { display: flex; }
+  .menu-toggle { display: inline-flex !important; }
+
+  .nav { padding: 12px 16px; }
   section.bloc { padding: 50px 18px; }
-  .dash-main { padding: 20px; }
+  .dash-main { padding: 18px; }
   .privacy-block { padding: 24px; }
-  .notif-panel { top: 70px; right: 12px; left: 12px; width: auto; }
+  .notif-panel { top: 64px; right: 12px; left: 12px; width: auto; }
   .ai-chat { right: 12px; left: 12px; width: auto; }
+  .hero-stats { gap: 14px; }
+  .hero-stat .num { font-size: 24px; }
+  .canvas-wrap { height: 360px; }
 }
 @media (max-width: 480px) {
   .kpi-grid { grid-template-columns: 1fr 1fr; }
-  .hero-stats { grid-template-columns: 1fr 1fr; }
-  .wallet-balance { font-size: 44px; }
+  .wallet-balance { font-size: 42px; }
+  .hero h1 { font-size: 38px; }
+  .nav-cta { padding: 8px 14px; font-size: 10px; }
 }
 
 .gap-2 { gap: 8px; } .gap-3 { gap: 16px; } .gap-4 { gap: 24px; }
@@ -553,7 +530,7 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
   </div>
   <div class="nav-actions">
     <div class="nav-lang" onclick="toggleLangDropdown(event)">
-      <span id="langCurrent">EN</span> <span style="font-size: 10px;">▼</span>
+      <span id="langCurrent">EN</span><span style="font-size:10px;">▼</span>
       <div class="lang-dropdown" id="langDropdown"></div>
     </div>
     <div class="nav-bell" id="navBell" onclick="toggleNotifications()" title="Notifications">
@@ -563,8 +540,8 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
       </svg>
     </div>
     <button class="nav-cta" id="joinBtn" data-i18n="nav.join">Join</button>
+    <button class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">☰</button>
   </div>
-  <button class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
 </nav>
 
 <!-- NOTIF PANEL -->
@@ -580,6 +557,17 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
   <div id="notifList"></div>
 </div>
 
+<!-- PWA INSTALL -->
+<div class="install-prompt" id="installPrompt">
+  <div class="ico">📱</div>
+  <div class="txt">
+    <div style="font-weight:700;color:var(--text);" data-i18n="install.title">Install HIMER App</div>
+    <div data-i18n="install.text">Add to home screen for quick access</div>
+  </div>
+  <button onclick="triggerInstall()" data-i18n="install.cta">Install</button>
+  <button class="x" onclick="dismissInstall()">✕</button>
+</div>
+
 <!-- HOME -->
 <div class="page active" id="page-home">
   <section class="hero">
@@ -590,11 +578,11 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
         <span class="stroke" data-i18n="hero.title2">connected</span> <span data-i18n="hero.title3">to the</span><br>
         <span data-i18n="hero.title4">future network.</span>
       </h1>
-      <p class="lead" data-i18n="hero.lead">HIMER is a distributed neural network using unused processing power from computers worldwide. You provide capacity — we sell it to companies for complex computations, AI training, and renders. You receive your share, directly in your wallet.</p>
+      <p class="lead" data-i18n="hero.lead">HIMER is a distributed neural network using unused processing power from computers worldwide.</p>
       <div class="hero-stats">
         <div class="hero-stat"><div class="num" id="heroStat1">—</div><div class="lab" data-i18n="hero.stat1">Active Nodes</div></div>
         <div class="hero-stat"><div class="num" id="heroStat2">—</div><div class="lab" data-i18n="hero.stat2">GFLOPS / sec</div></div>
-        <div class="hero-stat"><div class="num" id="heroStat3">—</div><div class="lab" data-i18n="hero.stat3">Contracts Completed</div></div>
+        <div class="hero-stat"><div class="num" id="heroStat3">—</div><div class="lab" data-i18n="hero.stat3">Contracts</div></div>
       </div>
       <div class="btn-group">
         <button class="btn-primary" onclick="joinNetwork()" data-i18n="hero.cta1">Connect Now</button>
@@ -608,63 +596,53 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
     <div class="section-head">
       <span class="label" data-i18n="how.eyebrow">How to Participate</span>
       <h2 data-i18n="how.title">Three steps. Zero effort.</h2>
-      <p data-i18n="how.lead">No need to understand blockchain, GPUs, or infrastructure. Connect your browser or install the agent, and your node joins the network automatically.</p>
+      <p data-i18n="how.lead">No need to understand blockchain or GPUs. Connect, and your node joins automatically.</p>
     </div>
     <div class="how-grid">
       <div class="how-step">
         <div class="num">01</div>
         <h3 data-i18n="how.step1.title">Join</h3>
-        <p data-i18n="how.step1.text">One click and your browser becomes a network node. Optional: install desktop agent for intensive compute. Sandboxed, isolated from your system.</p>
+        <p data-i18n="how.step1.text">One click and your browser becomes a network node.</p>
       </div>
       <div class="how-step">
         <div class="num">02</div>
         <h3 data-i18n="how.step2.title">Decide your share</h3>
-        <p data-i18n="how.step2.text">You control how much CPU and bandwidth you offer: 10%, 50%, 100%. Schedule by hours. Stop anytime, no penalties.</p>
+        <p data-i18n="how.step2.text">Control how much CPU and bandwidth you offer.</p>
       </div>
       <div class="how-step">
         <div class="num">03</div>
         <h3 data-i18n="how.step3.title">Earn automatically</h3>
-        <p data-i18n="how.step3.text">The orchestrator assigns tasks to your node. For each unit of compute processed, you receive your share — direct, transparent.</p>
+        <p data-i18n="how.step3.text">For each unit of compute processed, you accumulate value.</p>
       </div>
-    </div>
-  </section>
-
-  <section class="bloc" style="padding: 16px 32px;">
-    <div class="ad-slot" data-slot="home-1">
-      <span class="ad-tag">// AdSense Slot</span>
-      <span>Ad Space · 728×90 or Responsive</span>
     </div>
   </section>
 
   <section class="bloc">
     <div class="privacy-block">
-      <span class="label" style="color: var(--neon);" data-i18n="privacy.eyebrow">— Privacy First</span>
-      <h2 style="font-size: clamp(26px, 4vw, 40px); margin: 12px 0 16px;" data-i18n="privacy.title">Zero access to your data.</h2>
-      <p style="color: var(--text-dim); font-size: 14px; line-height: 1.7; max-width: 720px;" data-i18n="privacy.lead">
-        The HIMER agent runs in a fully isolated sandbox. It only processes anonymized compute packages sent by the orchestrator.
-        Cannot read your files, access your browser, or touch your bank account or passwords. Open-source, auditable, stoppable with one click.
-      </p>
+      <span class="label" style="color:var(--neon);" data-i18n="privacy.eyebrow">— Privacy First</span>
+      <h2 style="font-size:clamp(24px,4vw,38px);margin:10px 0 14px;" data-i18n="privacy.title">Zero access to your data.</h2>
+      <p style="color:var(--text-dim);font-size:14px;line-height:1.7;max-width:720px;" data-i18n="privacy.lead">The HIMER agent runs in a fully isolated sandbox. It only processes anonymized compute packages.</p>
       <div class="privacy-grid">
         <div class="privacy-col no">
           <h4 data-i18n="privacy.noTitle">What HIMER does NOT do</h4>
           <ul>
-            <li data-i18n="privacy.no1">Does not access personal files, photos, or documents</li>
-            <li data-i18n="privacy.no2">Does not read passwords, cookies, or browser data</li>
-            <li data-i18n="privacy.no3">Does not collect browsing history or biometric data</li>
-            <li data-i18n="privacy.no4">Does not sell, transmit, or store your data to third parties</li>
-            <li data-i18n="privacy.no5">Does not run arbitrary code — only cryptographically signed containers</li>
-            <li data-i18n="privacy.no6">Does not access webcam, microphone, or peripheral devices</li>
+            <li data-i18n="privacy.no1">No access to personal files</li>
+            <li data-i18n="privacy.no2">No passwords or cookies</li>
+            <li data-i18n="privacy.no3">No browsing history</li>
+            <li data-i18n="privacy.no4">No data sold or transmitted</li>
+            <li data-i18n="privacy.no5">Only signed containers run</li>
+            <li data-i18n="privacy.no6">No webcam or microphone</li>
           </ul>
         </div>
         <div class="privacy-col yes">
           <h4 data-i18n="privacy.yesTitle">What HIMER does</h4>
           <ul>
-            <li data-i18n="privacy.yes1">Processes only anonymized mathematical compute packages</li>
-            <li data-i18n="privacy.yes2">Runs in isolated sandbox (WebAssembly / container)</li>
-            <li data-i18n="privacy.yes3">Reports only technical metrics: CPU, RAM, GFLOPS</li>
-            <li data-i18n="privacy.yes4">Uses 1 internal HIMER ID for wallet (anonymous)</li>
-            <li data-i18n="privacy.yes5">Open-source — agent code can be inspected anytime</li>
-            <li data-i18n="privacy.yes6">Instant stop: one click and your node disconnects</li>
+            <li data-i18n="privacy.yes1">Processes anonymized math packages</li>
+            <li data-i18n="privacy.yes2">Runs in WebAssembly sandbox</li>
+            <li data-i18n="privacy.yes3">Reports only CPU, RAM, GFLOPS</li>
+            <li data-i18n="privacy.yes4">Uses anonymous HIMER ID</li>
+            <li data-i18n="privacy.yes5">Open-source auditable code</li>
+            <li data-i18n="privacy.yes6">One-click instant stop</li>
           </ul>
         </div>
       </div>
@@ -672,74 +650,61 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
   </section>
 </div>
 
-<!-- HOW (detailed) -->
+<!-- HOW DETAILED -->
 <div class="page" id="page-how">
   <section class="bloc">
     <div class="section-head">
       <span class="label" data-i18n="how.detailEyebrow">— Technical Documentation</span>
       <h2 data-i18n="how.detailTitle">How HIMER works from the inside.</h2>
-      <p data-i18n="how.detailLead">For those who want to understand the mechanics. Nothing hidden.</p>
     </div>
-    <div style="display: grid; gap: 22px;">
+    <div style="display:grid;gap:20px;">
       <div class="feature">
-        <h3 class="text-neon" data-i18n="how.poc.title">1. Proof-of-Compute (PoC)</h3>
-        <p style="margin-top: 12px;" data-i18n="how.poc.text">Each node reports heartbeat at 1Hz to the orchestrator. For each assigned task, the node must return the result + a cryptographic hash of intermediate steps. The orchestrator verifies a random sample (5%) by re-computing on witness nodes. If results differ, the node loses trust score and is temporarily blacklisted.</p>
+        <h3 class="text-neon" data-i18n="how.poc.title">1. Proof-of-Compute</h3>
+        <p style="margin-top:10px;" data-i18n="how.poc.text">Each node reports heartbeat. For each task, the node returns result + cryptographic hash. 5% are re-verified on witness nodes.</p>
       </div>
       <div class="feature">
-        <h3 class="text-neon" data-i18n="how.assign.title">2. Intelligent Job Assignment</h3>
-        <p style="margin-top: 12px;" data-i18n="how.assign.text">The orchestrator scores nodes by: trustScore × GFLOPS / (load + 1). High-priority tasks go to top nodes. Redundant tasks (requiring consensus) are distributed geographically for resilience.</p>
-      </div>
-      <div class="feature">
-        <h3 class="text-neon" data-i18n="how.scale.title">3. Unlimited Scaling</h3>
-        <p style="margin-top: 12px;" data-i18n="how.scale.text">The backend uses delta updates (only changed nodes sent at 1Hz) and sampling (frontend displays 500 representative nodes + region aggregates). Thus, 100,000 active nodes = ~50KB/s on WebSocket.</p>
-      </div>
-      <div class="feature">
-        <h3 class="text-neon" data-i18n="how.formula.title">4. Earnings Formula</h3>
-        <p style="margin-top: 12px; margin-bottom: 14px;" data-i18n="how.formula.text">Calculation is fully transparent. Every second your node is active, contribution is measured:</p>
-        <div style="background: var(--bg); padding: 18px; border: 1px solid var(--line); font-family: 'JetBrains Mono'; font-size: 12px;">
-          <div class="calc-row"><span>GFLOP-seconds</span><span class="text-dim">= GFLOPS_node × (load / 100)</span></div>
-          <div class="calc-row"><span>Gross generated</span><span class="text-dim">= GFLOP-sec × $0.0001 × boost</span></div>
+        <h3 class="text-neon" data-i18n="how.formula.title">2. Earnings Formula</h3>
+        <p style="margin-top:10px;margin-bottom:14px;" data-i18n="how.formula.text">Transparent calculation per second of active contribution.</p>
+        <div style="background:var(--bg);padding:18px;border:1px solid var(--line);font-size:12px;">
+          <div class="calc-row"><span>GFLOP-seconds</span><span class="text-dim">= GFLOPS × (load / 100)</span></div>
+          <div class="calc-row"><span>Gross</span><span class="text-dim">= GFLOP-sec × $0.0001 × boost</span></div>
           <div class="calc-row"><span data-i18n="how.formula.share">Your share</span><span class="text-dim">= Gross × user_share</span></div>
-          <div class="calc-row total"><span data-i18n="how.formula.update">Wallet update</span><span class="text-neon" data-i18n="how.formula.auto">automatic, instant</span></div>
         </div>
       </div>
       <div class="feature">
-        <h3 class="text-neon" data-i18n="how.withdraw.title">5. Withdraw</h3>
-        <p style="margin-top: 12px;" data-i18n="how.withdraw.text">Earnings accumulate every second. Minimum withdraw: $500. Processing fee: 2%. Payment via Stripe Connect (bank account, USD), with Stripe Identity verification for security. If you lose your HIMER password, hackers still cannot extract funds — Stripe requires separate 2FA confirmation.</p>
+        <h3 class="text-neon" data-i18n="how.withdraw.title">3. Withdraw</h3>
+        <p style="margin-top:10px;" data-i18n="how.withdraw.text">Minimum withdraw $500. Fee 2%. Payment via Stripe Connect with identity verification. Available only after platform receives payments from clients.</p>
       </div>
     </div>
   </section>
 </div>
 
-<!-- PRIVACY (detailed) -->
+<!-- PRIVACY DETAILED -->
 <div class="page" id="page-privacy">
   <section class="bloc">
     <div class="section-head">
-      <span class="label" style="color: var(--neon);" data-i18n="privacy.detailEyebrow">— Privacy Policy</span>
+      <span class="label" style="color:var(--neon);" data-i18n="privacy.detailEyebrow">— Privacy Policy</span>
       <h2 data-i18n="privacy.detailTitle">Privacy by Design.</h2>
-      <p data-i18n="privacy.detailLead">Built from scratch with the principle: your data stays yours. Not just on paper — technically impossible to access.</p>
     </div>
-    <div class="privacy-block" style="margin-bottom: 28px;">
-      <h3 style="font-size: 22px; margin-bottom: 16px;" data-i18n="privacy.arch.title">Isolation Architecture</h3>
-      <ul style="margin-top: 16px; list-style: none;">
-        <li style="padding: 10px 0; border-bottom: 1px solid var(--line);"><strong class="text-neon">→ Sandbox WebAssembly / Docker:</strong> <span class="text-dim text-sm" data-i18n="privacy.arch.sandbox">Code executes in isolated environment, no access to host OS.</span></li>
-        <li style="padding: 10px 0; border-bottom: 1px solid var(--line);"><strong class="text-neon">→ Network whitelisting:</strong> <span class="text-dim text-sm" data-i18n="privacy.arch.network">Agent only communicates with HIMER servers. Any other connection blocked.</span></li>
-        <li style="padding: 10px 0; border-bottom: 1px solid var(--line);"><strong class="text-neon">→ Filesystem read-only:</strong> <span class="text-dim text-sm" data-i18n="privacy.arch.fs">Agent cannot write or read files outside its own work folder.</span></li>
-        <li style="padding: 10px 0;"><strong class="text-neon">→ Open-source verifiable:</strong> <span class="text-dim text-sm" data-i18n="privacy.arch.os">Agent code is on GitHub. Anyone can audit, recompile, verify.</span></li>
+    <div class="privacy-block">
+      <h3 style="font-size:20px;margin-bottom:14px;" data-i18n="privacy.arch.title">Isolation Architecture</h3>
+      <ul style="list-style:none;">
+        <li style="padding:10px 0;border-bottom:1px solid var(--line);"><strong class="text-neon">→ Sandbox WASM/Docker:</strong> <span class="text-dim text-sm" data-i18n="privacy.arch.sandbox">Code in isolated environment.</span></li>
+        <li style="padding:10px 0;border-bottom:1px solid var(--line);"><strong class="text-neon">→ Network whitelist:</strong> <span class="text-dim text-sm" data-i18n="privacy.arch.network">Only HIMER servers contacted.</span></li>
+        <li style="padding:10px 0;"><strong class="text-neon">→ Open-source:</strong> <span class="text-dim text-sm" data-i18n="privacy.arch.os">Code on GitHub for audit.</span></li>
       </ul>
     </div>
   </section>
 </div>
 
-<!-- ROADMAP (replaces "contracts in progress") -->
+<!-- ROADMAP -->
 <div class="page" id="page-roadmap">
   <section class="bloc">
     <div class="section-head">
-      <span class="label" style="color: var(--neon-3);" data-i18n="roadmap.eyebrow">— Network Development</span>
+      <span class="label" style="color:var(--neon-3);" data-i18n="roadmap.eyebrow">— Network Development</span>
       <h2 data-i18n="roadmap.title">Together, milestone by milestone.</h2>
-      <p data-i18n="roadmap.lead">Every contribution gets us closer to the next milestone. Each unlocked level brings new features for the entire community.</p>
     </div>
-    <div id="milestonesList"></div>
+    <div id="milestonesList" style="display:grid;gap:14px;"></div>
   </section>
 </div>
 
@@ -747,13 +712,12 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
 <div class="page" id="page-about">
   <section class="bloc">
     <div class="section-head">
-      <span class="label" data-i18n="about.eyebrow">— About the Project</span>
+      <span class="label" data-i18n="about.eyebrow">— About</span>
       <h2 data-i18n="about.title">Why HIMER?</h2>
     </div>
-    <div style="max-width: 720px; font-size: 15px; line-height: 1.8; color: var(--text-dim);">
-      <p style="margin-bottom: 20px;" data-i18n="about.p1">We live in an era where AI and intensive compute drive the economy. But processing power is concentrated in 5 companies (AWS, Azure, GCP, Oracle, Alibaba). High prices, dependency, and a missed opportunity for millions with powerful unused computers.</p>
-      <p style="margin-bottom: 20px; color: var(--text);" data-i18n="about.p2"><strong>Our goal:</strong> Build an open alternative where anyone with a computer becomes a cloud provider. You earn from what's otherwise unused. Companies get cheap, fast compute.</p>
-      <p data-i18n="about.p3">We start small. Hundreds of nodes. Then thousands. Each contributor receives their share of value generated by their node. Together we build the largest DePIN alternative to centralized cloud.</p>
+    <div style="max-width:720px;font-size:15px;line-height:1.8;color:var(--text-dim);">
+      <p style="margin-bottom:18px;" data-i18n="about.p1">AI and intensive compute drive the economy. Power is concentrated in 5 companies. We build an open alternative.</p>
+      <p style="color:var(--text);" data-i18n="about.p2"><strong>Goal:</strong> anyone with a computer becomes a cloud provider.</p>
     </div>
   </section>
 </div>
@@ -765,11 +729,9 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
       <span class="label" data-i18n="dash.network">Network</span>
       <a class="dash-sub-link active" data-sub="grid" onclick="dashSub('grid')">⬢ <span data-i18n="dash.liveGrid">Live Grid</span></a>
       <a class="dash-sub-link" data-sub="regions" onclick="dashSub('regions')">◇ <span data-i18n="dash.regions">Regions</span></a>
-      <a class="dash-sub-link" data-sub="jobs" onclick="dashSub('jobs')">↗ <span data-i18n="dash.jobs">Jobs</span></a>
       <a class="dash-sub-link" data-sub="performance" onclick="dashSub('performance')">$ <span data-i18n="dash.performance">Performance</span></a>
-      <span class="label" style="margin-top: 24px; display: block;" data-i18n="dash.tools">Tools</span>
+      <span class="label" style="margin-top:22px;display:block;" data-i18n="dash.tools">Tools</span>
       <a class="dash-sub-link" data-sub="settings" onclick="dashSub('settings')">⚙ <span data-i18n="dash.settings">Settings</span></a>
-      <a class="dash-sub-link" data-sub="docs" onclick="dashSub('docs')">? <span data-i18n="dash.docs">Docs</span></a>
     </aside>
     <main class="dash-main">
       <div class="dash-header">
@@ -780,20 +742,19 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
         <div class="live-badge"><span class="dot"></span> Live · WebSocket</div>
       </div>
 
-      <!-- SUB: GRID -->
-      <div class="dash-sub-panel active" id="sub-grid">
+      <div class="dash-sub-panel" id="sub-grid">
         <div class="kpi-grid">
           <div class="kpi"><div class="label" data-i18n="dash.kpi.totalNodes">Total Nodes</div><div class="val" id="kpiTotal">—</div><div class="delta">↗ live</div></div>
           <div class="kpi"><div class="label" data-i18n="dash.kpi.active">Active Now</div><div class="val" id="kpiActive">—</div><div class="delta">computing</div></div>
           <div class="kpi"><div class="label" data-i18n="dash.kpi.gflops">GFLOPS / sec</div><div class="val" id="kpiGflops">—</div><div class="delta">throughput</div></div>
-          <div class="kpi"><div class="label" data-i18n="dash.kpi.contracts">Contracts Completed</div><div class="val" id="kpiJobs">—</div><div class="delta">total</div></div>
+          <div class="kpi"><div class="label" data-i18n="dash.kpi.contracts">Contracts</div><div class="val" id="kpiJobs">—</div><div class="delta">completed</div></div>
         </div>
         <div class="grid-viz">
           <div class="grid-viz-header">
             <h3>// <span data-i18n="dash.grid.title">Global Neural Grid</span></h3>
             <span class="text-dim text-xs" id="renderInfo">—</span>
           </div>
-          <div style="position: relative;">
+          <div class="canvas-wrap" id="canvasWrap">
             <canvas id="neural-canvas"></canvas>
             <div class="node-popup" id="nodePopup">
               <span class="close-x" onclick="closeNodePopup()">✕</span>
@@ -803,13 +764,11 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
           </div>
           <div class="region-list" id="regionList"></div>
         </div>
-        <div class="ad-slot" data-slot="dash-1"><span class="ad-tag">// AdSense Slot</span><span>In-app Display · 728×90</span></div>
       </div>
 
-      <!-- SUB: REGIONS -->
       <div class="dash-sub-panel" id="sub-regions" style="display:none;">
         <div class="user-card">
-          <h3 style="margin-bottom: 16px;" data-i18n="dash.regionsTable">Distribution by Region</h3>
+          <h3 style="margin-bottom:16px;" data-i18n="dash.regionsTable">Distribution by Region</h3>
           <table class="data">
             <thead><tr><th data-i18n="dash.region">Region</th><th data-i18n="dash.nodes">Nodes</th><th data-i18n="dash.activeShort">Active</th><th>GFLOPS</th><th>%</th></tr></thead>
             <tbody id="regionsTable"></tbody>
@@ -817,75 +776,38 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
         </div>
       </div>
 
-      <!-- SUB: JOBS -->
-      <div class="dash-sub-panel" id="sub-jobs" style="display:none;">
-        <div class="user-card">
-          <h3 style="margin-bottom: 16px;" data-i18n="dash.jobsTable">Recent Contract Activity</h3>
-          <div id="jobsFeed"></div>
-        </div>
-      </div>
-
-      <!-- SUB: PERFORMANCE -->
       <div class="dash-sub-panel" id="sub-performance" style="display:none;">
         <div class="kpi-grid">
-          <div class="kpi"><div class="label" data-i18n="dash.perf.capacity">Total Capacity</div><div class="val" id="perfCapacity">—</div><div class="delta">GFLOPS</div></div>
-          <div class="kpi"><div class="label" data-i18n="dash.perf.bandwidth">Bandwidth Est.</div><div class="val" id="perfBandwidth">—</div><div class="delta">MB/s</div></div>
-          <div class="kpi"><div class="label" data-i18n="dash.perf.utilization">Utilization</div><div class="val" id="perfUtilization">—%</div><div class="delta">avg load</div></div>
-          <div class="kpi"><div class="label" data-i18n="dash.perf.processed">Total Processed</div><div class="val" id="perfProcessed">—</div><div class="delta">GFLOP-sec</div></div>
-        </div>
-        <div class="user-card">
-          <h3 style="margin-bottom: 12px;" data-i18n="dash.perf.title">Network Performance Insights</h3>
-          <p class="text-dim text-sm" data-i18n="dash.perf.desc">Real-time aggregated capacity across all participating nodes. Bandwidth is estimated based on typical compute throughput patterns.</p>
+          <div class="kpi"><div class="label">Total Capacity</div><div class="val" id="perfCapacity">—</div></div>
+          <div class="kpi"><div class="label">Bandwidth</div><div class="val" id="perfBandwidth">—</div></div>
+          <div class="kpi"><div class="label">Utilization</div><div class="val" id="perfUtilization">—%</div></div>
+          <div class="kpi"><div class="label">Processed</div><div class="val" id="perfProcessed">—</div></div>
         </div>
       </div>
 
-      <!-- SUB: SETTINGS -->
       <div class="dash-sub-panel" id="sub-settings" style="display:none;">
         <div class="user-card">
-          <h3 style="margin-bottom: 16px;" data-i18n="dash.settings.title">Display Settings</h3>
-          <div style="display: grid; gap: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span data-i18n="dash.settings.notifications">Show notifications</span>
+          <h3 style="margin-bottom:16px;" data-i18n="dash.settings.title">Settings</h3>
+          <div style="display:grid;gap:14px;">
+            <div class="flex justify-between items-center">
+              <span data-i18n="dash.settings.notifications">Notifications</span>
               <div class="toggle-switch on" id="settNotifToggle" onclick="toggleNotifEnabled()"></div>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span data-i18n="dash.settings.animations">Reduced animations</span>
-              <div class="toggle-switch" id="settAnimToggle" onclick="toggleAnimations()"></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="flex justify-between items-center">
               <span data-i18n="dash.settings.lang">Language</span>
-              <select class="field" id="settLang" style="width: auto; margin: 0;" onchange="setLanguage(this.value)"></select>
+              <select class="field" id="settLang" style="width:auto;margin:0;" onchange="setLanguage(this.value)"></select>
+            </div>
+            <div class="flex justify-between items-center">
+              <span data-i18n="dash.settings.install">Install App</span>
+              <button class="btn-ghost" style="padding:8px 14px;font-size:11px;" onclick="triggerInstall()" data-i18n="install.cta">Install</button>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- SUB: DOCS -->
-      <div class="dash-sub-panel" id="sub-docs" style="display:none;">
-        <div class="user-card">
-          <h3 style="margin-bottom: 16px;" data-i18n="dash.docs.title">API Documentation</h3>
-          <p class="text-dim text-sm" style="margin-bottom: 20px;" data-i18n="dash.docs.intro">Public endpoints for integration and business clients.</p>
-
-          <div style="background: var(--bg); padding: 16px; border: 1px solid var(--line); margin-bottom: 16px;">
-            <div class="text-neon mono">GET /api/stats</div>
-            <p class="text-dim text-xs mt-3" data-i18n="dash.docs.stats">Public stats (nodes, active, GFLOPS, jobs).</p>
-          </div>
-          <div style="background: var(--bg); padding: 16px; border: 1px solid var(--line); margin-bottom: 16px;">
-            <div class="text-neon mono">GET /api/node/:id</div>
-            <p class="text-dim text-xs mt-3" data-i18n="dash.docs.node">Public node info (region, status, GFLOPS).</p>
-          </div>
-          <div style="background: var(--bg); padding: 16px; border: 1px solid var(--line); margin-bottom: 16px;">
-            <div class="text-neon mono">POST /api/v1/compute</div>
-            <p class="text-dim text-xs mt-3" data-i18n="dash.docs.compute">Business client endpoint. Requires X-API-Key header.</p>
-            <pre style="background: var(--bg-2); padding: 10px; margin-top: 10px; font-size: 10px; overflow-x: auto;">{"type": "ai-training", "nodes": 10}</pre>
-          </div>
-          <p class="text-dim text-sm" data-i18n="dash.docs.contact">For API keys and enterprise integration, contact api@himer.network</p>
         </div>
       </div>
     </main>
     <aside class="dash-right">
       <span class="label" data-i18n="dash.activity">Live Activity</span>
-      <div id="feed" style="margin-top: 14px;"></div>
+      <div id="feed" style="margin-top:14px;"></div>
     </aside>
   </div>
 </div>
@@ -898,215 +820,80 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
       <h2 data-i18n="user.title">Wallet & Your Nodes</h2>
     </div>
 
-    <div id="userNotConnected" class="user-card" style="text-align: center; padding: 70px 28px;">
-      <div style="width: 70px; height: 70px; margin: 0 auto 22px; border: 1px solid var(--line-strong); display: flex; align-items: center; justify-content: center; color: var(--neon);">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <div id="userNotConnected" class="user-card" style="text-align:center;padding:60px 24px;">
+      <div style="width:64px;height:64px;margin:0 auto 18px;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;color:var(--neon);">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>
         </svg>
       </div>
-      <h3 style="font-size: 22px; margin-bottom: 10px;" data-i18n="user.notConn.title">Not connected yet</h3>
-      <p class="text-dim" style="max-width: 380px; margin: 0 auto 26px; font-size: 13px;" data-i18n="user.notConn.text">One click and your computer becomes an active node. No commitments — stop anytime.</p>
+      <h3 style="font-size:22px;margin-bottom:10px;" data-i18n="user.notConn.title">Not connected yet</h3>
+      <p class="text-dim" style="max-width:380px;margin:0 auto 24px;font-size:13px;" data-i18n="user.notConn.text">One click and your computer becomes an active node.</p>
       <button class="btn-primary" onclick="joinNetwork()" data-i18n="user.notConn.cta">Connect now</button>
     </div>
 
-    <div id="userConnected" style="display: none;">
+    <div id="userConnected" style="display:none;">
       <div class="user-card featured">
-        <span class="label" data-i18n="user.wallet">— Wallet · Available</span>
+        <span class="label" data-i18n="user.wallet">— Wallet · Accumulated</span>
         <div class="wallet-balance"><span class="currency">$</span><span id="walletAmount">0.0000</span></div>
-
+        <div class="wallet-disclaimer" data-i18n="user.walletDisclaimer">Estimated balance from your contribution. Withdrawal available after platform receives client payments.</div>
         <div class="withdraw-progress">
           <div class="withdraw-progress-bar"><div id="withdrawProgressFill" style="width:0%"></div></div>
           <div class="withdraw-progress-text">
             <span><span data-i18n="user.minWithdraw">Min withdraw</span>: $500</span>
-            <span id="withdrawProgressText">0% / 100%</span>
+            <span id="withdrawProgressText">0%</span>
           </div>
         </div>
-
-        <div class="flex gap-3" style="flex-wrap: wrap; margin-top: 20px;">
+        <div class="flex gap-3" style="flex-wrap:wrap;margin-top:18px;">
           <button class="btn-primary" onclick="requestWithdraw()" id="withdrawBtn" data-i18n="user.withdraw">Request Withdraw</button>
           <button class="btn-ghost" onclick="setupPayoutMethod()" data-i18n="user.setupPayout">Setup Payout</button>
         </div>
         <div class="mt-4 text-sm text-dim">
-          User ID: <span class="text-neon mono" id="uidDisplay">—</span> ·
-          <span data-i18n="user.total">Total earned</span>: $<span id="totalEarned">0</span>
+          User ID: <span class="text-neon mono" id="uidDisplay" onclick="copyUid()" style="cursor:pointer;" title="Copy">—</span>
+          · <span data-i18n="user.total">Total</span>: $<span id="totalEarned">0</span>
         </div>
       </div>
 
       <div class="kpi-grid">
-        <div class="kpi"><div class="label" data-i18n="user.kpi.nodes">My Nodes</div><div class="val" id="myNodes">0</div></div>
+        <div class="kpi"><div class="label" data-i18n="user.kpi.devices">My Devices</div><div class="val" id="myDevices">0</div></div>
+        <div class="kpi"><div class="label" data-i18n="user.kpi.nodes">Total Nodes</div><div class="val" id="myNodes">0</div></div>
         <div class="kpi"><div class="label" data-i18n="user.kpi.active">Active Now</div><div class="val" id="myActive">0</div></div>
-        <div class="kpi"><div class="label" data-i18n="user.kpi.processed">GFLOP-sec processed</div><div class="val" id="myGflopSec">0</div></div>
-        <div class="kpi"><div class="label" data-i18n="user.kpi.contracts">Contracts done</div><div class="val" id="myContracts">0</div></div>
+        <div class="kpi"><div class="label" data-i18n="user.kpi.contracts">Contracts</div><div class="val" id="myContracts">0</div></div>
       </div>
 
       <div class="user-card">
-        <span class="label" data-i18n="user.calc.eyebrow">— Live Earnings Calculation</span>
-        <h3 style="margin: 10px 0 14px;" data-i18n="user.calc.title">Your Contribution Formula</h3>
-        <div style="background: var(--bg); padding: 18px; border: 1px solid var(--line); font-size: 13px;">
-          <div class="calc-row"><span data-i18n="user.calc.gflops">GFLOPS (sum)</span><span class="text-neon mono" id="calcGflops">—</span></div>
-          <div class="calc-row"><span data-i18n="user.calc.load">Avg load</span><span class="mono" id="calcLoad">—</span></div>
-          <div class="calc-row"><span data-i18n="user.calc.processed">GFLOP-sec processed</span><span class="mono" id="calcGflopSec">—</span></div>
-          <div class="calc-row"><span data-i18n="user.calc.price">Unit price</span><span class="mono">$0.0001</span></div>
-          <div class="calc-row total"><span data-i18n="user.calc.accumulated">Wallet accumulated</span><span class="text-neon" id="calcEarnings">$—</span></div>
-        </div>
+        <span class="label" data-i18n="user.devices.eyebrow">— Your Devices</span>
+        <h3 style="margin:10px 0 8px;" data-i18n="user.devices.title">Connected devices</h3>
+        <p class="text-dim text-xs" data-i18n="user.devices.hint">Each device you connect from creates its own node. You can use the same User ID on phone, laptop, tablet — all contribute together.</p>
+        <div class="device-list" id="deviceList"></div>
       </div>
 
       <div class="user-card">
         <span class="label" data-i18n="user.nodesTable.eyebrow">— Your Nodes</span>
-        <h3 style="margin: 10px 0 14px;" data-i18n="user.nodesTable.title">Real-time status</h3>
-        <div style="overflow-x: auto;">
+        <h3 style="margin:10px 0 14px;" data-i18n="user.nodesTable.title">Real-time status</h3>
+        <div style="overflow-x:auto;">
           <table class="data">
-            <thead><tr><th>ID</th><th data-i18n="user.nodesTable.region">Region</th><th data-i18n="user.nodesTable.status">Status</th><th data-i18n="user.nodesTable.load">Load</th><th>GFLOPS</th><th data-i18n="user.nodesTable.earned">Earned</th></tr></thead>
+            <thead><tr><th>ID</th><th data-i18n="user.nodesTable.region">Region</th><th data-i18n="user.nodesTable.status">Status</th><th>Load</th><th>GFLOPS</th><th data-i18n="user.nodesTable.earned">Earned</th></tr></thead>
             <tbody id="myNodesTable"></tbody>
           </table>
         </div>
       </div>
-
-      <div class="ad-slot" data-slot="user-1"><span class="ad-tag">// AdSense Slot</span><span>User Panel · Responsive</span></div>
     </div>
   </section>
 </div>
 
-<!-- ADMIN -->
-<div class="page" id="page-admin">
-  <div class="admin-login-screen" id="adminLogin">
-    <div class="admin-login-box" id="adminLoginBox">
-      <div class="admin-icon-lock">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-      </div>
-      <span class="label" style="color: var(--neon);">— Restricted Access</span>
-      <h2 style="font-size: 26px; margin: 10px 0 8px;">Admin Console</h2>
-      <p class="text-dim text-sm" style="margin-bottom: 24px;">Private zone. Access key required.</p>
-      <input type="password" class="field" id="adminKey" placeholder="Admin access key" autocomplete="off" onkeydown="if(event.key==='Enter') adminLogin()">
-      <button class="btn-primary" onclick="adminLogin()" style="width: 100%; justify-content: center;">Access Console</button>
-      <div class="admin-attempts" id="adminAttempts" style="display: none;"></div>
-    </div>
-  </div>
-
-  <section class="bloc" id="adminUnlocked" style="display: none;">
-    <div class="dash-header" style="margin-bottom: 24px;">
-      <div>
-        <span class="label">— Admin · Confidential</span>
-        <h2 style="font-size: 30px;">Reality View</h2>
-      </div>
-      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-        <div class="live-badge"><span class="dot"></span> Authenticated</div>
-        <button class="btn-ghost" style="padding: 8px 16px;" onclick="adminLogout()">Logout</button>
-      </div>
-    </div>
-
-    <div class="admin-tabs">
-      <div class="admin-tab active" data-tab="reality" onclick="adminTab('reality')">Reality</div>
-      <div class="admin-tab" data-tab="treasury" onclick="adminTab('treasury')">Treasury & Revenue</div>
-      <div class="admin-tab" data-tab="payouts" onclick="adminTab('payouts')">Payouts</div>
-      <div class="admin-tab" data-tab="users" onclick="adminTab('users')">Users</div>
-      <div class="admin-tab" data-tab="ops" onclick="adminTab('ops')">Operations</div>
-    </div>
-
-    <!-- TAB: REALITY -->
-    <div class="admin-panel active" id="adm-reality">
-      <div class="reality-banner">
-        <strong>⚠ Reality View</strong> — Real data without inflation. Public sees the total (real + seed).
-        <div class="reality-stats">
-          <div class="reality-stat real"><div class="lab">Real Nodes</div><div class="val" id="rRealNodes">—</div></div>
-          <div class="reality-stat seed"><div class="lab">Seed Nodes (demo)</div><div class="val" id="rSeedNodes">—</div></div>
-          <div class="reality-stat"><div class="lab">Total Displayed</div><div class="val" id="rTotalNodes">—</div></div>
-          <div class="reality-stat real"><div class="lab">Real Users</div><div class="val" id="rRealUsers">—</div></div>
-          <div class="reality-stat"><div class="lab">Active Real Nodes</div><div class="val" id="rActiveReal">—</div></div>
-          <div class="reality-stat"><div class="lab">Users w/ Payout Setup</div><div class="val" id="rPayoutUsers">—</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: TREASURY -->
-    <div class="admin-panel" id="adm-treasury">
-      <div class="user-card">
-        <span class="label">— Revenue Split · Confidential</span>
-        <h3 style="margin: 10px 0 4px;">60/40 Distribution</h3>
-        <div class="split-viz">
-          <div class="platform">
-            <div class="label" style="color: var(--neon);">Platform · 60%</div>
-            <div class="pct" id="admPlat">$0.00</div>
-            <p>Reinvested in infrastructure.</p>
-          </div>
-          <div class="user">
-            <div class="label" style="color: var(--neon-2);">Users Pool · 40%</div>
-            <div class="pct" id="admUsers">$0.00</div>
-            <p>Distributed to contributors.</p>
-          </div>
-        </div>
-      </div>
-      <div class="kpi-grid">
-        <div class="kpi"><div class="label">Treasury Balance</div><div class="val text-neon" id="admTreasury">$—</div><div class="delta">from real clients</div></div>
-        <div class="kpi"><div class="label">Owed to Users</div><div class="val text-pink" id="admOwed">$—</div><div class="delta">withdrawable</div></div>
-        <div class="kpi"><div class="label">Net Available</div><div class="val" id="admNet">$—</div><div class="delta">platform profit</div></div>
-        <div class="kpi"><div class="label">Ad Revenue</div><div class="val" id="admAdRev">$—</div><div class="delta">tracked impressions</div></div>
-      </div>
-      <div class="user-card">
-        <span class="label">— Ad Performance</span>
-        <h3 style="margin: 10px 0 16px;">Auto-Sustainability</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px;">
-          <div style="padding: 14px; background: var(--bg); border: 1px solid var(--line);"><div class="label">Impressions</div><div class="text-neon" style="font-family: 'Syne'; font-size: 22px; font-weight: 800; margin-top: 6px;" id="admImpressions">—</div></div>
-          <div style="padding: 14px; background: var(--bg); border: 1px solid var(--line);"><div class="label">Clicks</div><div style="font-family: 'Syne'; font-size: 22px; font-weight: 800; margin-top: 6px;" id="admClicks">—</div></div>
-          <div style="padding: 14px; background: var(--bg); border: 1px solid var(--line);"><div class="label">CTR</div><div class="text-pink" style="font-family: 'Syne'; font-size: 22px; font-weight: 800; margin-top: 6px;" id="admCtr">—</div></div>
-          <div style="padding: 14px; background: var(--bg); border: 1px solid var(--line);"><div class="label">Est. Monthly</div><div class="text-neon" style="font-family: 'Syne'; font-size: 22px; font-weight: 800; margin-top: 6px;" id="admMonthly">$—</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: PAYOUTS -->
-    <div class="admin-panel" id="adm-payouts">
-      <div class="user-card">
-        <h3 style="margin-bottom: 16px;">Pending Withdrawal Requests</h3>
-        <p class="text-dim text-sm" style="margin-bottom: 20px;">Review and approve user payout requests. Approval triggers Stripe transfer (when configured).</p>
-        <div style="overflow-x: auto;">
-          <table class="data">
-            <thead><tr><th>ID</th><th>User</th><th>Gross</th><th>Fee</th><th>Net</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
-            <tbody id="admPayoutsTable"><tr><td colspan="8" class="text-center text-dim">No requests yet</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: USERS -->
-    <div class="admin-panel" id="adm-users">
-      <div class="user-card">
-        <h3 style="margin-bottom: 16px;">Real Users</h3>
-        <div style="overflow-x: auto;">
-          <table class="data">
-            <thead><tr><th>ID</th><th>Email</th><th>Total Earned</th><th>Withdrawable</th><th>Nodes</th><th>Payout</th><th>Joined</th></tr></thead>
-            <tbody id="admUsersTable"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: OPS -->
-    <div class="admin-panel" id="adm-ops">
-      <div class="user-card">
-        <h3 style="margin-bottom: 16px;">Launch Test Job</h3>
-        <input class="field" id="jobType" placeholder="Job type (e.g., ai-training)">
-        <input class="field" id="jobNodes" type="number" placeholder="Nodes needed" value="5">
-        <input class="field" id="jobReward" type="number" step="0.01" placeholder="Reward $" value="1.00">
-        <button class="btn-primary" onclick="createJob()" style="width: 100%; justify-content: center;">Launch Job</button>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- AI ASSISTANT -->
-<button class="ai-fab" id="aiFab" onclick="toggleAI()" title="AI Assistant">
+<!-- AI -->
+<button class="ai-fab" id="aiFab" onclick="toggleAI()" title="AI Assistant" aria-label="AI Assistant">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
     <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
   </svg>
 </button>
 <div class="ai-chat" id="aiChat">
   <div class="ai-chat-header">
-    <h4><span data-i18n="ai.title">HIMER Assistant</span></h4>
-    <button class="modal-close" style="position: static; border: none;" onclick="toggleAI()">✕</button>
+    <h4 data-i18n="ai.title">HIMER Assistant</h4>
+    <button class="modal-close" style="position:static;border:none;" onclick="toggleAI()">✕</button>
   </div>
   <div class="ai-chat-body" id="aiChatBody">
-    <div class="ai-msg bot" data-i18n="ai.greeting">Hi! I'm the HIMER Assistant. Ask me anything about the platform, how it works, payments, or privacy.</div>
+    <div class="ai-msg bot" data-i18n="ai.greeting">Hi! Ask me anything about HIMER.</div>
   </div>
   <div class="ai-quick" id="aiQuick"></div>
   <div class="ai-chat-input">
@@ -1115,7 +902,6 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
   </div>
 </div>
 
-<!-- TOAST + MODAL -->
 <div class="toast-container" id="toastContainer"></div>
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal" id="modal">
@@ -1127,272 +913,299 @@ footer { border-top: 1px solid var(--line); padding: 36px 32px; text-align: cent
 </div>
 
 <footer>
-  HIMER Neural Grid v3.0 · <span data-i18n="footer.tagline">Decentralized Compute Protocol</span><br>
-  <span class="text-dim" data-i18n="footer.note">Privacy by design. Open-source. Built for the next generation of distributed infrastructure.</span>
+  HIMER Neural Grid v4.0 · <span data-i18n="footer.tagline">Decentralized Compute Protocol</span><br>
+  <span class="text-dim" data-i18n="footer.note">Privacy by design. Open-source.</span> · <a href="admin.html">Admin</a> · <a href="client.html">Business</a>
 </footer>
 
-<script>window.HIMER_BACKEND = 'https://himer-orchestrator.onrender.com';</script>
+<script src="config.js"></script>
 <script>
 'use strict';
+// === Auto-injected by deployment ===
+// IMPORTANT: window.HIMER_BACKEND must be set before this script runs
+// Add this BEFORE this script: <script>window.HIMER_BACKEND='https://your-backend.onrender.com';</script>
 
 // ============================================================
 // CONFIG
 // ============================================================
-const BACKEND_URL = window.HIMER_BACKEND || (location.protocol === 'file:' ? 'http://localhost:8080' : location.origin.replace(/:\d+$/, ':8080'));
+const BACKEND_URL = window.HIMER_BACKEND || location.origin;
 const WS_URL = BACKEND_URL.replace(/^http/, 'ws');
 
+// Device fingerprint (stable for this browser+device)
+function generateFingerprint() {
+  const data = [
+    navigator.userAgent,
+    navigator.language,
+    screen.width + 'x' + screen.height,
+    screen.colorDepth,
+    new Date().getTimezoneOffset(),
+    navigator.hardwareConcurrency || 0,
+    navigator.platform || ''
+  ].join('|');
+  // Simple hash
+  let h = 0;
+  for (let i = 0; i < data.length; i++) h = ((h << 5) - h + data.charCodeAt(i)) | 0;
+  return 'fp_' + Math.abs(h).toString(36) + '_' + (localStorage.getItem('himer_fp_suffix') || (() => {
+    const s = Math.random().toString(36).slice(2, 8);
+    localStorage.setItem('himer_fp_suffix', s);
+    return s;
+  })());
+}
+const DEVICE_FP = generateFingerprint();
+
 // ============================================================
-// i18n - 15 LIMBI
+// i18n - 15 LIMBI (EN + RO complete, fallback EN)
 // ============================================================
 const LANGUAGES = [
-  { code: 'en', name: 'English', native: 'English' },
-  { code: 'ro', name: 'Romanian', native: 'Română' },
-  { code: 'de', name: 'German', native: 'Deutsch' },
-  { code: 'fr', name: 'French', native: 'Français' },
-  { code: 'es', name: 'Spanish', native: 'Español' },
-  { code: 'it', name: 'Italian', native: 'Italiano' },
-  { code: 'pt', name: 'Portuguese', native: 'Português' },
-  { code: 'ru', name: 'Russian', native: 'Русский' },
-  { code: 'pl', name: 'Polish', native: 'Polski' },
-  { code: 'tr', name: 'Turkish', native: 'Türkçe' },
-  { code: 'zh', name: 'Chinese', native: '中文' },
-  { code: 'ja', name: 'Japanese', native: '日本語' },
-  { code: 'ko', name: 'Korean', native: '한국어' },
-  { code: 'hi', name: 'Hindi', native: 'हिन्दी' },
-  { code: 'ar', name: 'Arabic', native: 'العربية' }
+  { code: 'en', native: 'English' },
+  { code: 'ro', native: 'Română' },
+  { code: 'de', native: 'Deutsch' },
+  { code: 'fr', native: 'Français' },
+  { code: 'es', native: 'Español' },
+  { code: 'it', native: 'Italiano' },
+  { code: 'pt', native: 'Português' },
+  { code: 'ru', native: 'Русский' },
+  { code: 'pl', native: 'Polski' },
+  { code: 'tr', native: 'Türkçe' },
+  { code: 'zh', native: '中文' },
+  { code: 'ja', native: '日本語' },
+  { code: 'ko', native: '한국어' },
+  { code: 'hi', native: 'हिन्दी' },
+  { code: 'ar', native: 'العربية' }
 ];
 
 const I18N = {
   en: {
-    'nav.home': 'Home', 'nav.how': 'How it Works', 'nav.privacy': 'Privacy', 'nav.roadmap': 'Roadmap',
-    'nav.about': 'About', 'nav.dashboard': 'Dashboard', 'nav.panel': 'Panel', 'nav.join': 'Join',
-    'hero.eyebrow': 'Decentralized Compute · Proof-of-Compute',
-    'hero.title1': 'Your computer,', 'hero.title2': 'connected', 'hero.title3': 'to the', 'hero.title4': 'future network.',
-    'hero.lead': "HIMER is a distributed neural network using unused processing power from computers worldwide. You provide capacity — we sell it to companies for complex computations, AI training, and renders. You receive your share, directly in your wallet.",
-    'hero.stat1': 'Active Nodes', 'hero.stat2': 'GFLOPS / sec', 'hero.stat3': 'Contracts Completed',
-    'hero.cta1': 'Connect Now', 'hero.cta2': 'How it Works',
-    'how.eyebrow': 'How to Participate', 'how.title': 'Three steps. Zero effort.',
-    'how.lead': 'No need to understand blockchain, GPUs, or infrastructure. Connect your browser or install the agent, and your node joins the network automatically.',
-    'how.step1.title': 'Join', 'how.step1.text': 'One click and your browser becomes a network node. Optional: install desktop agent for intensive compute. Sandboxed, isolated from your system.',
-    'how.step2.title': 'Decide your share', 'how.step2.text': 'You control how much CPU and bandwidth you offer: 10%, 50%, 100%. Schedule by hours. Stop anytime, no penalties.',
-    'how.step3.title': 'Earn automatically', 'how.step3.text': 'The orchestrator assigns tasks to your node. For each unit of compute processed, you receive your share — direct, transparent.',
-    'privacy.eyebrow': '— Privacy First', 'privacy.title': 'Zero access to your data.',
-    'privacy.lead': 'The HIMER agent runs in a fully isolated sandbox. It only processes anonymized compute packages sent by the orchestrator. Cannot read your files, access your browser, or touch your bank account or passwords.',
-    'privacy.noTitle': 'What HIMER does NOT do',
-    'privacy.no1': 'Does not access personal files, photos, or documents',
-    'privacy.no2': 'Does not read passwords, cookies, or browser data',
-    'privacy.no3': 'Does not collect browsing history or biometric data',
-    'privacy.no4': 'Does not sell or transmit your data to third parties',
-    'privacy.no5': 'Does not run arbitrary code — only signed containers',
-    'privacy.no6': 'Does not access webcam, microphone, or peripherals',
-    'privacy.yesTitle': 'What HIMER does',
-    'privacy.yes1': 'Processes only anonymized mathematical compute',
-    'privacy.yes2': 'Runs in isolated sandbox (WebAssembly / container)',
-    'privacy.yes3': 'Reports only technical metrics: CPU, RAM, GFLOPS',
-    'privacy.yes4': 'Uses 1 internal HIMER ID for wallet (anonymous)',
-    'privacy.yes5': 'Open-source — code can be audited anytime',
-    'privacy.yes6': 'Instant stop: one click and your node disconnects',
-    'roadmap.eyebrow': '— Network Development', 'roadmap.title': 'Together, milestone by milestone.',
-    'roadmap.lead': 'Every contribution gets us closer to the next milestone. Each unlocked level brings new features for the entire community.',
-    'about.eyebrow': '— About the Project', 'about.title': 'Why HIMER?',
-    'about.p1': 'We live in an era where AI and intensive compute drive the economy. But processing power is concentrated in 5 companies. High prices, dependency, and a missed opportunity for millions with powerful unused computers.',
-    'about.p2': 'Our goal: Build an open alternative where anyone with a computer becomes a cloud provider. You earn from what is otherwise unused. Companies get cheap, fast compute.',
-    'about.p3': 'We start small. Hundreds of nodes. Then thousands. Each contributor receives their share of value generated by their node.',
-    'dash.network': 'Network', 'dash.liveGrid': 'Live Grid', 'dash.regions': 'Regions', 'dash.jobs': 'Jobs',
-    'dash.performance': 'Performance', 'dash.tools': 'Tools', 'dash.settings': 'Settings', 'dash.docs': 'Docs',
-    'dash.headerEyebrow': 'Job Dispatch & Control',
-    'dash.kpi.totalNodes': 'Total Nodes', 'dash.kpi.active': 'Active Now', 'dash.kpi.gflops': 'GFLOPS / sec', 'dash.kpi.contracts': 'Contracts Completed',
-    'dash.grid.title': 'Global Neural Grid', 'dash.regionsTable': 'Distribution by Region',
-    'dash.region': 'Region', 'dash.nodes': 'Nodes', 'dash.activeShort': 'Active',
-    'dash.jobsTable': 'Recent Contract Activity',
-    'dash.perf.capacity': 'Total Capacity', 'dash.perf.bandwidth': 'Bandwidth Est.',
-    'dash.perf.utilization': 'Utilization', 'dash.perf.processed': 'Total Processed',
-    'dash.perf.title': 'Network Performance Insights',
-    'dash.perf.desc': 'Real-time aggregated capacity across all participating nodes. Bandwidth is estimated based on typical compute throughput patterns.',
-    'dash.settings.title': 'Display Settings', 'dash.settings.notifications': 'Show notifications',
-    'dash.settings.animations': 'Reduced animations', 'dash.settings.lang': 'Language',
-    'dash.docs.title': 'API Documentation', 'dash.docs.intro': 'Public endpoints for integration and business clients.',
-    'dash.docs.stats': 'Public stats (nodes, active, GFLOPS, jobs).',
-    'dash.docs.node': 'Public node info (region, status, GFLOPS).',
-    'dash.docs.compute': 'Business client endpoint. Requires X-API-Key header.',
-    'dash.docs.contact': 'For API keys contact api@himer.network',
-    'dash.activity': 'Live Activity',
-    'user.eyebrow': '— Personal Panel', 'user.title': 'Wallet & Your Nodes',
-    'user.notConn.title': 'Not connected yet',
-    'user.notConn.text': 'One click and your computer becomes an active node. No commitments — stop anytime.',
-    'user.notConn.cta': 'Connect now',
-    'user.wallet': '— Wallet · Available',
-    'user.minWithdraw': 'Min withdraw',
-    'user.withdraw': 'Request Withdraw',
-    'user.setupPayout': 'Setup Payout',
-    'user.total': 'Total earned',
-    'user.kpi.nodes': 'My Nodes', 'user.kpi.active': 'Active Now',
-    'user.kpi.processed': 'GFLOP-sec processed', 'user.kpi.contracts': 'Contracts done',
-    'user.calc.eyebrow': '— Live Earnings Calculation', 'user.calc.title': 'Your Contribution Formula',
-    'user.calc.gflops': 'GFLOPS (sum)', 'user.calc.load': 'Avg load',
-    'user.calc.processed': 'GFLOP-sec processed', 'user.calc.price': 'Unit price',
-    'user.calc.accumulated': 'Wallet accumulated',
-    'user.nodesTable.eyebrow': '— Your Nodes', 'user.nodesTable.title': 'Real-time status',
-    'user.nodesTable.region': 'Region', 'user.nodesTable.status': 'Status',
-    'user.nodesTable.load': 'Load', 'user.nodesTable.earned': 'Earned',
-    'notif.title': 'Notifications', 'notif.enable': 'Enable notifications',
-    'notif.empty': 'No notifications yet.',
-    'ai.title': 'HIMER Assistant', 'ai.send': 'Send',
-    'ai.greeting': "Hi! I'm the HIMER Assistant. Ask me anything about the platform, how it works, payments, or privacy.",
-    'ai.thinking': 'Thinking...',
-    'ai.faq.payment': 'You earn as your node contributes compute power. Once your wallet reaches $500, you can request a withdraw. Payments go via Stripe Connect — secure bank transfer with identity verification. Even if someone steals your HIMER password, they cannot extract money (Stripe requires 2FA confirmation).',
-    'ai.faq.privacy': "HIMER runs in a sandbox. It cannot access your files, browser, passwords, or webcam. It only processes anonymized math packages sent by our orchestrator. Open-source and auditable on GitHub. You can stop it instantly with one click.",
-    'ai.faq.howWorks': "Your computer joins a global network. When companies need compute power (AI training, 3D rendering, scientific simulations), our orchestrator splits the work and sends pieces to your node. You're paid for each unit processed.",
-    'ai.faq.earnings': "Earnings depend on your computer's power (GFLOPS) and how much you offer (10-100%). A typical computer at 50% capacity can earn $5-30/month. Stronger systems earn more. The exact rate is $0.0001 per GFLOP-second.",
-    'ai.faq.poc': "Proof-of-Compute means we cryptographically verify each task. Your node returns the result plus a hash. We randomly re-check 5% on other nodes. If results match, you get paid. If not, your trust score drops.",
-    'ai.faq.agent': "For now, your browser is the node. Soon we'll release a desktop agent (Windows/Mac/Linux) for stronger compute. It will be open-source, ~5MB, and easy to uninstall anytime.",
-    'ai.faq.withdraw': 'Minimum withdraw is $500. This keeps fees low and processing efficient. You set up your bank account via Stripe (with identity verification for security), and once you reach $500 you request a payout. Money arrives in 1-3 business days.',
-    'ai.faq.register': "Just click 'Join' on the homepage. You'll get a User ID and your first node activates instantly. No email required unless you want notifications or payouts.",
-    'ai.faq.stop': "Click 'Pause' in your Panel, or just close the browser tab. Your node disconnects immediately. Earnings already accumulated stay in your wallet.",
-    'ai.faq.contract': "A contract is a job assigned to your node by a paying client. When work starts, you get a 'Contract signed' notification. When done, you get the payment notification. View all contracts in your Panel.",
-    'ai.faq.costs': "Zero cost to contributors. You never pay HIMER. The platform earns from business clients buying compute. Withdraw fee is 2% (covers Stripe processing).",
-    'ai.faq.boost': "Boost is your contribution level: 10% means light background use, 100% means full power offered. Premium ($5/month) adds 1.5x multiplier and priority on high-paying tasks.",
-    'ai.faq.node': "A node is your computer's contribution unit. Each user starts with 1 node. As we grow, multi-node accounts may be supported for users with multiple machines.",
-    'ai.faq.gflops': "GFLOPS = billions of floating-point operations per second. A typical laptop has 2-8 GFLOPS. Gaming PCs: 10-50 GFLOPS. We measure your actual capacity, not advertised numbers.",
-    'ai.faq.aiTraining': "We support distributed training for ML models. Tasks are split into chunks small enough for any node. Frameworks supported: TensorFlow, PyTorch, JAX. Coming soon: stable diffusion fine-tuning.",
-    'ai.faq.rendering': "Animation studios use HIMER for frame rendering. Blender, Cycles, V-Ray supported. Render a 1080p frame in seconds across hundreds of nodes.",
-    'ai.faq.whatIsHimer': "HIMER is a decentralized compute network (DePIN). We connect millions of personal computers to provide cloud computing power at a fraction of AWS prices. Contributors earn money, companies save money.",
-    'ai.faq.referral': "Referral system coming soon. You'll get a unique link, and earn a percentage of what your invited friends generate. Stay tuned.",
-    'ai.faq.fallback': "I don't have a specific answer for that. Try rephrasing, or check our Privacy / How it Works pages. For complex questions, you can email support@himer.network.",
-    'notif.welcome.title': 'Welcome to HIMER',
-    'notif.welcome.message': 'Your node is now active in the network.',
-    'notif.contractSigned.title': 'Contract signed',
-    'notif.contractSigned.message': 'Your node was assigned to a new task.',
-    'notif.contractCompleted.title': 'Contract completed',
-    'notif.contractCompleted.message': 'Task finished successfully. Reward added.',
-    'notif.payoutRequested.title': 'Withdraw requested',
-    'notif.payoutRequested.message': 'Your request is pending review.',
-    'notif.payoutPaid.title': 'Payout sent',
-    'notif.payoutPaid.message': 'Money is on its way to your bank.',
-    'footer.tagline': 'Decentralized Compute Protocol',
-    'footer.note': 'Privacy by design. Open-source.',
-    'mile.locked': 'Locked', 'mile.unlocked': 'Unlocked',
-    'admin.unauthorized': 'Invalid access key'
+    'nav.home':'Home','nav.how':'How','nav.privacy':'Privacy','nav.roadmap':'Roadmap','nav.about':'About','nav.dashboard':'Dashboard','nav.panel':'Panel','nav.join':'Join',
+    'hero.eyebrow':'Decentralized Compute · Proof-of-Compute',
+    'hero.title1':'Your computer,','hero.title2':'connected','hero.title3':'to the','hero.title4':'future network.',
+    'hero.lead':'HIMER is a distributed network using unused processing power from computers worldwide. You provide capacity — we sell it to companies. You receive your share.',
+    'hero.stat1':'Active Nodes','hero.stat2':'GFLOPS / sec','hero.stat3':'Contracts',
+    'hero.cta1':'Connect Now','hero.cta2':'How it Works',
+    'how.eyebrow':'How to Participate','how.title':'Three steps. Zero effort.',
+    'how.lead':'Connect your browser and your node joins automatically.',
+    'how.step1.title':'Join','how.step1.text':'One click and your browser becomes a network node.',
+    'how.step2.title':'Decide your share','how.step2.text':'Control how much CPU and bandwidth you offer.',
+    'how.step3.title':'Earn automatically','how.step3.text':'For each unit of compute processed, you accumulate value.',
+    'how.detailEyebrow':'— Technical Documentation','how.detailTitle':'How HIMER works from the inside.',
+    'how.poc.title':'1. Proof-of-Compute','how.poc.text':'Each node reports heartbeat. For each task, the node returns result + cryptographic hash. 5% are re-verified on witness nodes.',
+    'how.formula.title':'2. Earnings Formula','how.formula.text':'Transparent calculation per second of active contribution.',
+    'how.formula.share':'Your share',
+    'how.withdraw.title':'3. Withdraw','how.withdraw.text':'Minimum $500. Fee 2%. Payment via Stripe Connect with identity verification. Available only after platform receives payments from clients.',
+    'privacy.eyebrow':'— Privacy First','privacy.title':'Zero access to your data.',
+    'privacy.lead':'The HIMER agent runs in a fully isolated sandbox. It only processes anonymized compute packages.',
+    'privacy.noTitle':'What HIMER does NOT do',
+    'privacy.no1':'No access to personal files','privacy.no2':'No passwords or cookies','privacy.no3':'No browsing history',
+    'privacy.no4':'No data sold or transmitted','privacy.no5':'Only signed containers run','privacy.no6':'No webcam or microphone',
+    'privacy.yesTitle':'What HIMER does',
+    'privacy.yes1':'Processes anonymized math packages','privacy.yes2':'Runs in WebAssembly sandbox','privacy.yes3':'Reports only CPU, RAM, GFLOPS',
+    'privacy.yes4':'Uses anonymous HIMER ID','privacy.yes5':'Open-source auditable code','privacy.yes6':'One-click instant stop',
+    'privacy.detailEyebrow':'— Privacy Policy','privacy.detailTitle':'Privacy by Design.',
+    'privacy.arch.title':'Isolation Architecture',
+    'privacy.arch.sandbox':'Code in isolated environment.','privacy.arch.network':'Only HIMER servers contacted.','privacy.arch.os':'Code on GitHub for audit.',
+    'roadmap.eyebrow':'— Network Development','roadmap.title':'Together, milestone by milestone.',
+    'about.eyebrow':'— About','about.title':'Why HIMER?',
+    'about.p1':'AI and intensive compute drive the economy. Power is concentrated in 5 companies. We build an open alternative.',
+    'about.p2':'Goal: anyone with a computer becomes a cloud provider.',
+    'dash.network':'Network','dash.liveGrid':'Live Grid','dash.regions':'Regions','dash.performance':'Performance',
+    'dash.tools':'Tools','dash.settings':'Settings',
+    'dash.headerEyebrow':'Job Dispatch & Control',
+    'dash.kpi.totalNodes':'Total Nodes','dash.kpi.active':'Active Now','dash.kpi.gflops':'GFLOPS / sec','dash.kpi.contracts':'Contracts',
+    'dash.grid.title':'Global Neural Grid','dash.regionsTable':'Distribution by Region',
+    'dash.region':'Region','dash.nodes':'Nodes','dash.activeShort':'Active',
+    'dash.settings.title':'Settings','dash.settings.notifications':'Notifications','dash.settings.lang':'Language','dash.settings.install':'Install App',
+    'dash.activity':'Live Activity',
+    'user.eyebrow':'— Personal Panel','user.title':'Wallet & Your Nodes',
+    'user.notConn.title':'Not connected yet','user.notConn.text':'One click and your computer becomes an active node.','user.notConn.cta':'Connect now',
+    'user.wallet':'— Wallet · Accumulated',
+    'user.walletDisclaimer':'Estimated balance from your contribution. Withdrawal available after platform receives client payments.',
+    'user.minWithdraw':'Min withdraw','user.withdraw':'Request Withdraw','user.setupPayout':'Setup Payout','user.total':'Total',
+    'user.kpi.devices':'My Devices','user.kpi.nodes':'Total Nodes','user.kpi.active':'Active Now','user.kpi.contracts':'Contracts',
+    'user.devices.eyebrow':'— Your Devices','user.devices.title':'Connected devices',
+    'user.devices.hint':'Each device you connect from creates its own node. Same User ID across phone, laptop, tablet — all contribute together.',
+    'user.nodesTable.eyebrow':'— Your Nodes','user.nodesTable.title':'Real-time status',
+    'user.nodesTable.region':'Region','user.nodesTable.status':'Status','user.nodesTable.earned':'Earned',
+    'notif.title':'Notifications','notif.enable':'Enable notifications','notif.empty':'No notifications yet.',
+    'ai.title':'HIMER Assistant','ai.send':'Send','ai.thinking':'Thinking...',
+    'ai.greeting':"Hi! I'm the HIMER Assistant. Ask me about payments, privacy, how it works, or anything else.",
+    'ai.faq.payment':'You earn as your node contributes compute. Once your wallet reaches $500, you can request withdraw. Payments via Stripe Connect with identity verification.',
+    'ai.faq.privacy':'HIMER runs in sandbox. No access to your files, browser, passwords, or webcam. Open-source on GitHub. One-click stop.',
+    'ai.faq.howWorks':'Your computer joins a global network. When companies need compute, our orchestrator sends tasks to your node. You earn for each unit processed.',
+    'ai.faq.earnings':'Depends on your power (GFLOPS) and how much you offer. Typical computer at 50% can earn $5-30/month. Rate: $0.0001 per GFLOP-second.',
+    'ai.faq.poc':'Proof-of-Compute: each task is cryptographically verified. 5% sample re-checked on other nodes. Match = paid. Mismatch = trust drops.',
+    'ai.faq.agent':'Browser is the node now. Desktop agent (Windows/Mac/Linux) coming soon. Open-source, ~5MB.',
+    'ai.faq.withdraw':'Minimum $500 to keep fees low. Setup bank via Stripe (identity verified). Money in 1-3 business days after admin approval.',
+    'ai.faq.register':'Click Join. Get User ID. First node activates instantly. Email optional.',
+    'ai.faq.stop':'Click Pause in Panel or close tab. Node disconnects immediately. Accumulated earnings stay.',
+    'ai.faq.contract':'A contract is a job assigned to your node by a paying client. Notifications when signed and completed.',
+    'ai.faq.costs':'Zero cost to contributors. Never pay HIMER. Platform earns from business clients. Withdraw fee 2%.',
+    'ai.faq.boost':'Boost = your contribution level. Premium ($5/month) adds 1.5x multiplier and priority on high-paying tasks.',
+    'ai.faq.node':'A node is your computer\'s contribution unit. Each device you connect creates its own node.',
+    'ai.faq.gflops':'GFLOPS = billions of operations per second. Laptop: 2-8. Gaming PC: 10-50. We measure real capacity.',
+    'ai.faq.aiTraining':'We support ML training: TensorFlow, PyTorch, JAX. Coming: Stable Diffusion fine-tuning.',
+    'ai.faq.rendering':'Studios use HIMER for rendering. Blender, Cycles, V-Ray supported.',
+    'ai.faq.whatIsHimer':'HIMER is a decentralized compute network (DePIN). Millions of personal computers offering cloud at fraction of AWS price.',
+    'ai.faq.referral':'Referral coming soon. Unique link, earn percentage from invited friends.',
+    'ai.faq.community':'Network grows daily. Check our Roadmap for milestones unlocking new features.',
+    'ai.faq.blockchain':'Not blockchain-based today, but we use cryptographic proofs (Proof-of-Compute). Web3 integration coming.',
+    'ai.faq.timing':'Earnings accumulate in real-time per second. Payout takes 1-3 business days after admin approval.',
+    'ai.faq.multidevice':'Yes! Use the same User ID on multiple devices (phone, laptop, tablet). Each becomes its own node, all contribute together.',
+    'ai.faq.os':'Works on any device with a modern browser: Windows, Mac, Linux, Android, iOS.',
+    'ai.faq.bandwidth':'Very low data usage. ~50KB/s when active. Idle: a few KB/min for heartbeat.',
+    'ai.faq.power':'Negligible extra power when idle. Active compute uses what your CPU normally would for browsing.',
+    'ai.faq.age':'Must be 18+. Under 18 needs parental consent and a guardian-managed account.',
+    'ai.faq.country':'Available worldwide. Some countries may have payout restrictions through Stripe.',
+    'ai.faq.tax':'Earnings may be taxable in your country. Consult a local tax advisor.',
+    'ai.faq.stripe':'We use Stripe Connect. Identity verified once, then bank transfers are automated and secure.',
+    'ai.faq.paymentMethods':'Currently Stripe (bank/debit). PayPal and crypto coming after we reach 1000 active users.',
+    'ai.faq.email':'Email optional for notifications and payouts. Without email, you can still contribute but no payout.',
+    'ai.faq.password':'Currently no password for users — your User ID is your access. Save it carefully. Email login coming.',
+    'ai.faq.deleteAccount':'Email support@himer.network to request deletion. All data removed within 30 days.',
+    'ai.faq.legitimacy':'HIMER is a legitimate project. Open-source code on GitHub. Transparent operations.',
+    'ai.faq.investment':'No investment needed from you. Free to participate.',
+    'ai.faq.minimum':'No minimum hardware. Even a phone contributes. Minimum withdraw is $500.',
+    'ai.faq.maximum':'No maximum. Stronger systems and more devices earn more.',
+    'ai.faq.mobile':'Mobile fully supported! Install as PWA from browser menu. Background contribution coming.',
+    'ai.faq.temperature':'Modern CPUs are designed for sustained load. Browser sandbox uses minimal CPU. Stop anytime if concerned.',
+    'ai.faq.gpu':'GPU support coming Q2 next year via WebGPU. Currently CPU only.',
+    'ai.faq.slowdown':'If browser feels slow, lower your contribution % in Panel.',
+    'ai.faq.idle':'Best contribution time! Run HIMER overnight or when computer is idle.',
+    'ai.faq.support':'Support: support@himer.network. Response within 24h.',
+    'ai.faq.legal':'Fully legal worldwide. Same as folding@home, BOINC, or browser mining.',
+    'ai.faq.terms':'See our Terms of Service. Open-source agent and transparent operations.',
+    'ai.faq.fallback':"I don't have a specific answer for that. Try rephrasing, or contact support@himer.network.",
+    'notif.welcome.title':'Welcome to HIMER','notif.welcome.message':'Your node is now active in the network.',
+    'notif.contractSigned.title':'Contract signed','notif.contractSigned.message':'Your node was assigned to a new task.',
+    'notif.contractCompleted.title':'Contract completed','notif.contractCompleted.message':'Task finished. Reward added to wallet.',
+    'notif.payoutRequested.title':'Withdraw requested','notif.payoutRequested.message':'Your request is under review.',
+    'notif.payoutPaid.title':'Payout sent','notif.payoutPaid.message':'Money is on its way to your bank.',
+    'install.title':'Install HIMER App','install.text':'Add to home screen for quick access','install.cta':'Install',
+    'footer.tagline':'Decentralized Compute Protocol','footer.note':'Privacy by design. Open-source.',
+    'mile.locked':'Locked','mile.unlocked':'Unlocked',
+    'modal.withdraw.title':'Withdraw Request',
+    'modal.belowMin.title':'Keep accumulating','modal.belowMin.msg':'You need at least $500 to request withdraw. Continue contributing and you\'ll get there.',
+    'modal.noPayout.title':'Setup payout method first','modal.noPayout.msg':'Before requesting withdraw, you need to connect your bank account.',
+    'modal.confirmWithdraw.title':'Confirm withdrawal',
+    'common.cancel':'Cancel','common.continue':'Continue','common.confirm':'Confirm','common.copy':'Copy','common.copied':'Copied'
   },
   ro: {
-    'nav.home': 'Acasă', 'nav.how': 'Cum funcționează', 'nav.privacy': 'Confidențialitate', 'nav.roadmap': 'Roadmap',
-    'nav.about': 'Despre', 'nav.dashboard': 'Dashboard', 'nav.panel': 'Panou', 'nav.join': 'Alătură-te',
-    'hero.eyebrow': 'Calcul Descentralizat · Proof-of-Compute',
-    'hero.title1': 'Calculatorul tău,', 'hero.title2': 'conectat', 'hero.title3': 'la', 'hero.title4': 'rețeaua viitorului.',
-    'hero.lead': 'HIMER este o rețea neuronală distribuită care folosește puterea de procesare nefolosită a calculatoarelor din lume. Tu pui la dispoziție capacitate — noi o vindem companiilor pentru calcule complexe, antrenare AI și randări. Tu primești partea ta, direct în wallet.',
-    'hero.stat1': 'Noduri Active', 'hero.stat2': 'GFLOPS / sec', 'hero.stat3': 'Contracte Finalizate',
-    'hero.cta1': 'Conectează-te', 'hero.cta2': 'Cum funcționează',
-    'how.eyebrow': 'Cum participi', 'how.title': 'Trei pași. Zero efort.',
-    'how.lead': 'Nu trebuie să înțelegi blockchain. Conectezi browserul sau instalezi agentul, iar nodul tău intră automat în rețea.',
-    'how.step1.title': 'Te alături', 'how.step1.text': 'Un click și browserul tău devine nod. Opțional, instalezi agent desktop pentru calcul intens. Sandbox izolat de sistem.',
-    'how.step2.title': 'Decizi cât oferi', 'how.step2.text': 'Tu controlezi cât CPU și bandwidth oferi: 10%, 50%, 100%. Programezi pe ore. Oprești oricând.',
-    'how.step3.title': 'Câștigi automat', 'how.step3.text': 'Orchestratorul atribuie sarcini către nodul tău. Pentru fiecare unitate procesată, primești partea ta — direct.',
-    'privacy.eyebrow': '— Privacy First', 'privacy.title': 'Zero acces la datele tale.',
-    'privacy.lead': 'Agentul HIMER rulează într-un sandbox izolat. Procesează doar pachete anonimizate. Nu poate citi fișierele tale, accesa browserul, sau atinge contul bancar sau parolele.',
-    'privacy.noTitle': 'Ce NU face HIMER',
-    'privacy.no1': 'Nu accesează fișierele personale, fotografii sau documente',
-    'privacy.no2': 'Nu citește parolele, cookies sau datele din browser',
-    'privacy.no3': 'Nu colectează istoric de navigare sau date biometrice',
-    'privacy.no4': 'Nu vinde, nu transmite datele tale către terți',
-    'privacy.no5': 'Nu rulează cod arbitrar — doar containere semnate',
-    'privacy.no6': 'Nu accesează webcam, microfon sau periferice',
-    'privacy.yesTitle': 'Ce face HIMER',
-    'privacy.yes1': 'Procesează doar pachete matematice anonime',
-    'privacy.yes2': 'Rulează în sandbox izolat (WebAssembly / container)',
-    'privacy.yes3': 'Raportează doar metrici tehnice: CPU, RAM, GFLOPS',
-    'privacy.yes4': 'Folosește 1 ID HIMER pentru wallet (anonim)',
-    'privacy.yes5': 'Open-source — codul poate fi auditat oricând',
-    'privacy.yes6': 'Oprire instant: un click și nodul tău se deconectează',
-    'roadmap.eyebrow': '— Dezvoltarea Rețelei', 'roadmap.title': 'Împreună, milestone după milestone.',
-    'roadmap.lead': 'Fiecare contribuție ne apropie de următorul obiectiv. Fiecare nivel deblocat aduce funcții noi pentru întreaga comunitate.',
-    'about.eyebrow': '— Despre Proiect', 'about.title': 'De ce HIMER?',
-    'about.p1': 'Trăim într-o eră în care AI-ul și calculul intensiv determină economia. Dar puterea de procesare e concentrată în 5 companii. Prețuri mari, dependență, oportunitate ratată pentru milioane de oameni cu calculatoare nefolosite.',
-    'about.p2': 'Scopul nostru: o alternativă deschisă, în care oricine cu un calculator devine furnizor de cloud. Tu câștigi din ce stă nefolosit. Companiile primesc calcul ieftin.',
-    'about.p3': 'Începem mic. Sute de noduri. Apoi mii. Fiecare contributor primește partea lui din valoarea generată.',
-    'dash.network': 'Rețea', 'dash.liveGrid': 'Grid Live', 'dash.regions': 'Regiuni', 'dash.jobs': 'Sarcini',
-    'dash.performance': 'Performanță', 'dash.tools': 'Tools', 'dash.settings': 'Setări', 'dash.docs': 'Docs',
-    'dash.headerEyebrow': 'Dispatch & Control',
-    'dash.kpi.totalNodes': 'Noduri Totale', 'dash.kpi.active': 'Active Acum', 'dash.kpi.gflops': 'GFLOPS / sec', 'dash.kpi.contracts': 'Contracte Finalizate',
-    'dash.grid.title': 'Global Neural Grid', 'dash.regionsTable': 'Distribuție pe Regiuni',
-    'dash.region': 'Regiune', 'dash.nodes': 'Noduri', 'dash.activeShort': 'Active',
-    'dash.jobsTable': 'Activitate Recentă',
-    'dash.perf.capacity': 'Capacitate Totală', 'dash.perf.bandwidth': 'Bandwidth Est.',
-    'dash.perf.utilization': 'Utilizare', 'dash.perf.processed': 'Total Procesat',
-    'dash.perf.title': 'Insights Performanță Rețea',
-    'dash.perf.desc': 'Capacitate agregată în timp real. Bandwidth e estimat pe baza pattern-urilor de throughput tipice.',
-    'dash.settings.title': 'Setări Afișare', 'dash.settings.notifications': 'Afișează notificări',
-    'dash.settings.animations': 'Animații reduse', 'dash.settings.lang': 'Limbă',
-    'dash.docs.title': 'Documentație API', 'dash.docs.intro': 'Endpoints publice pentru integrare.',
-    'dash.docs.stats': 'Statistici publice.',
-    'dash.docs.node': 'Info publică nod.',
-    'dash.docs.compute': 'Endpoint clienți business. Necesită X-API-Key.',
-    'dash.docs.contact': 'Pentru API keys: api@himer.network',
-    'dash.activity': 'Activitate Live',
-    'user.eyebrow': '— Panou Personal', 'user.title': 'Wallet & Noduri',
-    'user.notConn.title': 'Nu ești conectat',
-    'user.notConn.text': 'Un click și calculatorul tău devine nod activ. Fără angajamente — oprești oricând.',
-    'user.notConn.cta': 'Conectează-te',
-    'user.wallet': '— Wallet · Disponibil',
-    'user.minWithdraw': 'Min withdraw',
-    'user.withdraw': 'Cere Retragere',
-    'user.setupPayout': 'Setup Plată',
-    'user.total': 'Total acumulat',
-    'user.kpi.nodes': 'Nodurile mele', 'user.kpi.active': 'Active acum',
-    'user.kpi.processed': 'GFLOP-sec procesate', 'user.kpi.contracts': 'Contracte',
-    'user.calc.eyebrow': '— Calcul Earnings (live)', 'user.calc.title': 'Formula Contribuției',
-    'user.calc.gflops': 'GFLOPS (sumă)', 'user.calc.load': 'Load mediu',
-    'user.calc.processed': 'GFLOP-sec procesate', 'user.calc.price': 'Preț unitar',
-    'user.calc.accumulated': 'Acumulat',
-    'user.nodesTable.eyebrow': '— Nodurile tale', 'user.nodesTable.title': 'Status live',
-    'user.nodesTable.region': 'Regiune', 'user.nodesTable.status': 'Status',
-    'user.nodesTable.load': 'Load', 'user.nodesTable.earned': 'Câștigat',
-    'notif.title': 'Notificări', 'notif.enable': 'Activează notificările',
-    'notif.empty': 'Nicio notificare încă.',
-    'ai.title': 'HIMER Assistant', 'ai.send': 'Trimite',
-    'ai.greeting': 'Salut! Sunt asistentul HIMER. Întreabă-mă orice despre platformă, cum funcționează, plăți, sau privacy.',
-    'ai.thinking': 'Mă gândesc...',
-    'ai.faq.payment': 'Câștigi pe măsură ce nodul tău contribuie. Când wallet-ul atinge $500, poți cere retragere. Plățile merg prin Stripe Connect — transfer bancar securizat cu verificare identitate. Chiar dacă cineva îți fură parola HIMER, nu poate extrage banii (Stripe cere confirmare 2FA separată).',
-    'ai.faq.privacy': 'HIMER rulează în sandbox. Nu poate accesa fișierele, browserul, parolele sau webcam. Procesează doar pachete matematice anonime trimise de orchestrator. Open-source pe GitHub. Oprești instant cu un click.',
-    'ai.faq.howWorks': 'Calculatorul tău se alătură unei rețele globale. Când companii au nevoie de putere de calcul (antrenare AI, randări 3D, simulări), orchestratorul împarte munca și trimite bucăți către nodul tău. Ești plătit pentru fiecare unitate procesată.',
-    'ai.faq.earnings': 'Câștigurile depind de puterea calculatorului (GFLOPS) și cât oferi (10-100%). Un calculator tipic la 50% poate genera $5-30/lună. Sisteme mai puternice câștigă mai mult. Rata exactă: $0.0001 per GFLOP-secundă.',
-    'ai.faq.poc': 'Proof-of-Compute = verificăm criptografic fiecare sarcină. Nodul tău returnează rezultatul plus un hash. Re-verificăm aleatoriu 5% pe alte noduri. Dacă rezultatele coincid, ești plătit. Dacă nu, trust score-ul scade.',
-    'ai.faq.agent': 'Momentan browserul e nodul. Curând lansăm agent desktop (Windows/Mac/Linux) pentru calcul intens. Open-source, ~5MB, dezinstalabil oricând.',
-    'ai.faq.withdraw': 'Retragere minimă $500. Asta ține fee-urile mici. Conectezi cont bancar prin Stripe (cu verificare identitate pentru securitate), iar la $500 ceri payout. Banii ajung în 1-3 zile lucrătoare.',
-    'ai.faq.register': 'Click pe "Alătură-te" pe pagina principală. Primești User ID și primul tău nod se activează instant. Nu e nevoie de email decât pentru notificări sau plăți.',
-    'ai.faq.stop': 'Click "Pauză" în Panel, sau închizi tab-ul. Nodul tău se deconectează imediat. Câștigurile acumulate rămân în wallet.',
-    'ai.faq.contract': 'Un contract = o sarcină atribuită nodului tău de un client plătitor. Când începe, primești notificare "Contract semnat". La finalizare, notificare cu plata. Vezi tot istoricul în Panel.',
-    'ai.faq.costs': 'Zero cost pentru contribuitori. Nu plătești niciodată HIMER. Platforma câștigă din clienții business care cumpără calcul. Fee withdraw: 2% (acoperă procesarea Stripe).',
-    'ai.faq.boost': 'Boost = nivelul tău de contribuție: 10% = background ușor, 100% = putere maximă. Premium ($5/lună) adaugă multiplicator 1.5x și prioritate la sarcini valoroase.',
-    'ai.faq.node': 'Un nod = unitatea de contribuție a calculatorului tău. Fiecare user începe cu 1 nod. Pe viitor suport pentru multiple noduri (laptop + desktop + server).',
-    'ai.faq.gflops': 'GFLOPS = miliarde de operații pe secundă. Laptop tipic: 2-8 GFLOPS. PC gaming: 10-50 GFLOPS. Măsurăm capacitatea reală, nu numerele de marketing.',
-    'ai.faq.aiTraining': 'Suportăm antrenare distribuită ML. Sarcinile sunt împărțite în bucăți mici. Frameworks: TensorFlow, PyTorch, JAX. Curând: fine-tuning Stable Diffusion.',
-    'ai.faq.rendering': 'Studiouri animație folosesc HIMER pentru randare. Blender, Cycles, V-Ray. Randezi frame 1080p în secunde prin sute de noduri.',
-    'ai.faq.whatIsHimer': 'HIMER e o rețea descentralizată de calcul (DePIN). Conectăm milioane de calculatoare personale pentru a oferi cloud la fracțiune din prețul AWS. Contribuitorii câștigă, companiile economisesc.',
-    'ai.faq.referral': 'Sistem referral în curând. Vei primi link unic și vei câștiga procentaj din ce generează prietenii invitați.',
-    'ai.faq.fallback': 'Nu am răspuns specific. Încearcă reformulare, sau vezi paginile Privacy / Cum funcționează. Pentru întrebări complexe: support@himer.network.',
-    'notif.welcome.title': 'Bine ai venit în HIMER',
-    'notif.welcome.message': 'Nodul tău e activ în rețea.',
-    'notif.contractSigned.title': 'Contract semnat',
-    'notif.contractSigned.message': 'Nodul tău a fost atribuit unei sarcini noi.',
-    'notif.contractCompleted.title': 'Contract finalizat',
-    'notif.contractCompleted.message': 'Sarcina e completă. Recompensa adăugată.',
-    'notif.payoutRequested.title': 'Retragere cerută',
-    'notif.payoutRequested.message': 'Cererea ta e în review.',
-    'notif.payoutPaid.title': 'Plată trimisă',
-    'notif.payoutPaid.message': 'Banii vin către contul tău bancar.',
-    'footer.tagline': 'Protocol Calcul Descentralizat',
-    'footer.note': 'Privacy by design. Open-source.',
-    'mile.locked': 'Blocat', 'mile.unlocked': 'Deblocat',
-    'admin.unauthorized': 'Cheie acces invalidă'
+    'nav.home':'Acasă','nav.how':'Cum','nav.privacy':'Confidențialitate','nav.roadmap':'Roadmap','nav.about':'Despre','nav.dashboard':'Dashboard','nav.panel':'Panou','nav.join':'Alătură-te',
+    'hero.eyebrow':'Calcul Descentralizat · Proof-of-Compute',
+    'hero.title1':'Calculatorul tău,','hero.title2':'conectat','hero.title3':'la','hero.title4':'rețeaua viitorului.',
+    'hero.lead':'HIMER este o rețea distribuită care folosește puterea de procesare nefolosită a calculatoarelor din lume. Tu pui la dispoziție capacitate — noi o vindem companiilor. Tu primești partea ta.',
+    'hero.stat1':'Noduri Active','hero.stat2':'GFLOPS / sec','hero.stat3':'Contracte',
+    'hero.cta1':'Conectează-te','hero.cta2':'Cum funcționează',
+    'how.eyebrow':'Cum participi','how.title':'Trei pași. Zero efort.',
+    'how.lead':'Conectezi browserul și nodul tău intră automat în rețea.',
+    'how.step1.title':'Te alături','how.step1.text':'Un click și browserul tău devine nod în rețea.',
+    'how.step2.title':'Decizi cât oferi','how.step2.text':'Controlezi cât CPU și bandwidth oferi.',
+    'how.step3.title':'Câștigi automat','how.step3.text':'Pentru fiecare unitate de calcul procesată, acumulezi valoare.',
+    'how.detailEyebrow':'— Documentație Tehnică','how.detailTitle':'Cum funcționează HIMER pe interior.',
+    'how.poc.title':'1. Proof-of-Compute','how.poc.text':'Fiecare nod raportează heartbeat. Pentru fiecare sarcină, nodul returnează rezultatul + un hash criptografic. 5% sunt reverificate pe noduri martor.',
+    'how.formula.title':'2. Formula de Câștiguri','how.formula.text':'Calcul transparent pentru fiecare secundă de contribuție activă.',
+    'how.formula.share':'Partea ta',
+    'how.withdraw.title':'3. Retragere','how.withdraw.text':'Minim $500. Fee 2%. Plată prin Stripe Connect cu verificare identitate. Disponibilă doar după ce platforma încasează de la clienți.',
+    'privacy.eyebrow':'— Privacy First','privacy.title':'Zero acces la datele tale.',
+    'privacy.lead':'Agentul HIMER rulează într-un sandbox complet izolat. Procesează doar pachete anonime de calcul.',
+    'privacy.noTitle':'Ce NU face HIMER',
+    'privacy.no1':'Nu accesează fișierele personale','privacy.no2':'Nu citește parole sau cookies','privacy.no3':'Nu colectează istoric',
+    'privacy.no4':'Nu vinde, nu transmite date','privacy.no5':'Doar containere semnate','privacy.no6':'Nu accesează webcam/microfon',
+    'privacy.yesTitle':'Ce face HIMER',
+    'privacy.yes1':'Procesează pachete matematice anonime','privacy.yes2':'Rulează în sandbox WebAssembly','privacy.yes3':'Raportează doar CPU, RAM, GFLOPS',
+    'privacy.yes4':'Folosește ID anonim HIMER','privacy.yes5':'Open-source pe GitHub','privacy.yes6':'Oprire instantă cu un click',
+    'privacy.detailEyebrow':'— Politică de Confidențialitate','privacy.detailTitle':'Privacy by Design.',
+    'privacy.arch.title':'Arhitectură de Izolare',
+    'privacy.arch.sandbox':'Cod în mediu izolat.','privacy.arch.network':'Doar serverele HIMER contactate.','privacy.arch.os':'Cod pe GitHub auditat.',
+    'roadmap.eyebrow':'— Dezvoltarea Rețelei','roadmap.title':'Împreună, milestone după milestone.',
+    'about.eyebrow':'— Despre','about.title':'De ce HIMER?',
+    'about.p1':'AI-ul și calculul intensiv determină economia. Puterea e concentrată în 5 companii. Construim o alternativă deschisă.',
+    'about.p2':'Scopul: oricine cu un calculator devine furnizor cloud.',
+    'dash.network':'Rețea','dash.liveGrid':'Grid Live','dash.regions':'Regiuni','dash.performance':'Performanță',
+    'dash.tools':'Tools','dash.settings':'Setări',
+    'dash.headerEyebrow':'Dispatch & Control',
+    'dash.kpi.totalNodes':'Noduri Totale','dash.kpi.active':'Active Acum','dash.kpi.gflops':'GFLOPS / sec','dash.kpi.contracts':'Contracte',
+    'dash.grid.title':'Global Neural Grid','dash.regionsTable':'Distribuție pe Regiuni',
+    'dash.region':'Regiune','dash.nodes':'Noduri','dash.activeShort':'Active',
+    'dash.settings.title':'Setări','dash.settings.notifications':'Notificări','dash.settings.lang':'Limbă','dash.settings.install':'Instalează App',
+    'dash.activity':'Activitate Live',
+    'user.eyebrow':'— Panou Personal','user.title':'Wallet & Nodurile tale',
+    'user.notConn.title':'Nu ești conectat','user.notConn.text':'Un click și calculatorul tău devine nod activ.','user.notConn.cta':'Conectează-te',
+    'user.wallet':'— Wallet · Acumulat',
+    'user.walletDisclaimer':'Sold estimat din contribuția ta. Retragerea e disponibilă după ce platforma încasează de la clienți.',
+    'user.minWithdraw':'Min withdraw','user.withdraw':'Cere Retragere','user.setupPayout':'Setează Plată','user.total':'Total',
+    'user.kpi.devices':'Dispozitivele mele','user.kpi.nodes':'Noduri Total','user.kpi.active':'Active acum','user.kpi.contracts':'Contracte',
+    'user.devices.eyebrow':'— Dispozitivele tale','user.devices.title':'Dispozitive conectate',
+    'user.devices.hint':'Fiecare dispozitiv de la care te conectezi creează un nod propriu. Același User ID pe telefon, laptop, tabletă — toate contribuie împreună.',
+    'user.nodesTable.eyebrow':'— Nodurile tale','user.nodesTable.title':'Status în timp real',
+    'user.nodesTable.region':'Regiune','user.nodesTable.status':'Status','user.nodesTable.earned':'Câștigat',
+    'notif.title':'Notificări','notif.enable':'Activează notificările','notif.empty':'Nicio notificare încă.',
+    'ai.title':'Asistent HIMER','ai.send':'Trimite','ai.thinking':'Mă gândesc...',
+    'ai.greeting':'Salut! Sunt asistentul HIMER. Întreabă-mă orice despre plăți, privacy, sau cum funcționează.',
+    'ai.faq.payment':'Câștigi pe măsură ce nodul contribuie. La $500 poți cere retragere. Plăți prin Stripe Connect cu verificare identitate.',
+    'ai.faq.privacy':'HIMER rulează în sandbox. Nu accesează fișierele, browserul, parolele, webcamul. Open-source pe GitHub. Oprire instantă.',
+    'ai.faq.howWorks':'Calculatorul se alătură unei rețele globale. Când companii au nevoie de calcul, orchestratorul trimite sarcini către nodul tău. Plătit pe unitate.',
+    'ai.faq.earnings':'Depinde de puterea ta (GFLOPS) și cât oferi. PC tipic la 50% = $5-30/lună. Rata: $0.0001 per GFLOP-secundă.',
+    'ai.faq.poc':'Proof-of-Compute: fiecare sarcină e verificată criptografic. 5% reverificate pe alte noduri. Match = plătit. Mismatch = scade trust.',
+    'ai.faq.agent':'Browserul e nodul acum. Agent desktop (Windows/Mac/Linux) în curând. Open-source, ~5MB.',
+    'ai.faq.withdraw':'Min $500 pentru fee-uri mici. Setezi banca prin Stripe (identitate verificată). Bani în 1-3 zile după aprobare admin.',
+    'ai.faq.register':'Click pe Join. Primești User ID. Primul nod se activează instant. Email opțional.',
+    'ai.faq.stop':'Click Pauză în Panel sau închizi tab-ul. Nodul se deconectează imediat. Câștigurile acumulate rămân.',
+    'ai.faq.contract':'Un contract = o sarcină atribuită nodului tău de un client plătitor. Notificări la semnare și finalizare.',
+    'ai.faq.costs':'Zero cost pentru contribuitori. Nu plătești HIMER. Platforma câștigă din clienți business. Fee retragere 2%.',
+    'ai.faq.boost':'Boost = nivelul tău de contribuție. Premium ($5/lună) adaugă multiplicator 1.5x și prioritate la sarcini valoroase.',
+    'ai.faq.node':'Un nod = unitatea de contribuție a calculatorului tău. Fiecare dispozitiv conectat creează nod propriu.',
+    'ai.faq.gflops':'GFLOPS = miliarde operații pe secundă. Laptop: 2-8. PC gaming: 10-50. Măsurăm capacitatea reală.',
+    'ai.faq.aiTraining':'Suportăm ML training: TensorFlow, PyTorch, JAX. Curând: fine-tuning Stable Diffusion.',
+    'ai.faq.rendering':'Studiouri folosesc HIMER pentru randare. Blender, Cycles, V-Ray suportate.',
+    'ai.faq.whatIsHimer':'HIMER e rețea descentralizată de calcul (DePIN). Milioane de calculatoare oferind cloud la fracțiune din prețul AWS.',
+    'ai.faq.referral':'Sistem referral în curând. Link unic, câștigi procentaj de la prietenii invitați.',
+    'ai.faq.community':'Rețeaua crește zilnic. Vezi Roadmap pentru milestones care deblochează funcții noi.',
+    'ai.faq.blockchain':'Nu blockchain azi, dar folosim dovezi criptografice (Proof-of-Compute). Integrare Web3 în curând.',
+    'ai.faq.timing':'Câștigurile se acumulează în timp real, secundă cu secundă. Payout durează 1-3 zile după aprobare admin.',
+    'ai.faq.multidevice':'Da! Folosește același User ID pe mai multe dispozitive (telefon, laptop, tabletă). Fiecare devine nod propriu, toate contribuie împreună.',
+    'ai.faq.os':'Funcționează pe orice dispozitiv cu browser modern: Windows, Mac, Linux, Android, iOS.',
+    'ai.faq.bandwidth':'Utilizare foarte mică de date. ~50KB/s activ. Idle: câțiva KB/min pentru heartbeat.',
+    'ai.faq.power':'Consum suplimentar neglijabil în idle. Calculul activ folosește cât consumă CPU-ul în mod normal pentru navigare.',
+    'ai.faq.age':'Trebuie 18+. Sub 18 necesită consimțământ părintesc și cont gestionat de tutore.',
+    'ai.faq.country':'Disponibil în toată lumea. Unele țări pot avea restricții payout prin Stripe.',
+    'ai.faq.tax':'Câștigurile pot fi taxabile în țara ta. Consultă un consilier fiscal local.',
+    'ai.faq.stripe':'Folosim Stripe Connect. Identitate verificată o dată, apoi transferurile bancare sunt automate și sigure.',
+    'ai.faq.paymentMethods':'Momentan Stripe (bancă/debit). PayPal și crypto vor veni după ce ajungem la 1000 useri activi.',
+    'ai.faq.email':'Email opțional pentru notificări și plăți. Fără email poți contribui dar nu poți retrage.',
+    'ai.faq.password':'Momentan fără parolă pentru useri — User ID e accesul tău. Salvează-l atent. Login cu email în curând.',
+    'ai.faq.deleteAccount':'Email la support@himer.network pentru ștergere. Toate datele eliminate în 30 zile.',
+    'ai.faq.legitimacy':'HIMER e un proiect legitim. Cod open-source pe GitHub. Operațiuni transparente.',
+    'ai.faq.investment':'Nu necesită investiție din partea ta. Gratuit de participat.',
+    'ai.faq.minimum':'Fără hardware minim. Chiar și un telefon contribuie. Min retragere $500.',
+    'ai.faq.maximum':'Fără maxim. Sisteme mai puternice și mai multe dispozitive câștigă mai mult.',
+    'ai.faq.mobile':'Mobil complet suportat! Instalează ca PWA din meniul browserului. Contribuție background în curând.',
+    'ai.faq.temperature':'CPU-urile moderne sunt proiectate pentru încărcare susținută. Sandbox folosește CPU minim. Oprești oricând.',
+    'ai.faq.gpu':'Suport GPU în Q2 anul viitor prin WebGPU. Momentan doar CPU.',
+    'ai.faq.slowdown':'Dacă browserul e lent, reduci procentul de contribuție în Panel.',
+    'ai.faq.idle':'Momentul ideal pentru contribuție! Rulează HIMER noaptea sau când calculatorul e idle.',
+    'ai.faq.support':'Suport: support@himer.network. Răspuns în 24h.',
+    'ai.faq.legal':'Complet legal global. La fel ca folding@home, BOINC, sau browser mining.',
+    'ai.faq.terms':'Vezi Termenii noștri. Agent open-source și operațiuni transparente.',
+    'ai.faq.fallback':'Nu am răspuns specific. Încearcă altă formulare sau contactează support@himer.network.',
+    'notif.welcome.title':'Bine ai venit în HIMER','notif.welcome.message':'Nodul tău e activ în rețea.',
+    'notif.contractSigned.title':'Contract semnat','notif.contractSigned.message':'Nodul tău a fost atribuit unei sarcini noi.',
+    'notif.contractCompleted.title':'Contract finalizat','notif.contractCompleted.message':'Sarcina finalizată. Recompensa adăugată.',
+    'notif.payoutRequested.title':'Retragere cerută','notif.payoutRequested.message':'Cererea ta e în review.',
+    'notif.payoutPaid.title':'Plată trimisă','notif.payoutPaid.message':'Banii vin către contul tău bancar.',
+    'install.title':'Instalează HIMER App','install.text':'Adaugă pe ecranul de start pentru acces rapid','install.cta':'Instalează',
+    'footer.tagline':'Protocol Calcul Descentralizat','footer.note':'Privacy by design. Open-source.',
+    'mile.locked':'Blocat','mile.unlocked':'Deblocat',
+    'modal.withdraw.title':'Cerere Retragere',
+    'modal.belowMin.title':'Continuă să acumulezi','modal.belowMin.msg':'Ai nevoie de minim $500 pentru a cere retragere. Continuă să contribui și vei ajunge acolo.',
+    'modal.noPayout.title':'Setează metoda de plată mai întâi','modal.noPayout.msg':'Înainte de a cere retragere, trebuie să conectezi contul bancar.',
+    'modal.confirmWithdraw.title':'Confirmă retragerea',
+    'common.cancel':'Anulează','common.continue':'Continuă','common.confirm':'Confirmă','common.copy':'Copiază','common.copied':'Copiat'
   }
 };
 
-// Pentru limbi non-EN/RO, folosim fallback la EN cu prefix de limbă (poate fi extins ulterior)
-// Detectare automată limbă
 function detectLanguage() {
   const saved = localStorage.getItem('himer_lang');
   if (saved && I18N[saved]) return saved;
-  const browser = (navigator.language || navigator.userLanguage || 'en').slice(0, 2).toLowerCase();
+  const browser = (navigator.language || 'en').slice(0, 2).toLowerCase();
   return I18N[browser] ? browser : 'en';
 }
 
@@ -1404,13 +1217,9 @@ function t(key, fallback) {
 
 function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    const val = t(key, el.textContent);
-    el.textContent = val;
+    el.textContent = t(el.dataset.i18n, el.textContent);
   });
-  // Update document lang for accessibility
   document.documentElement.lang = currentLang;
-  // RTL pentru arabă
   document.documentElement.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
 }
 
@@ -1421,7 +1230,6 @@ function setLanguage(code) {
   document.getElementById('langCurrent').textContent = code.toUpperCase();
   applyTranslations();
   buildLangDropdown();
-  // Re-render dynamic
   renderMilestones();
   if (userId) refreshUser();
 }
@@ -1431,38 +1239,33 @@ function buildLangDropdown() {
   dd.innerHTML = LANGUAGES.map(l => `
     <div class="lang-item ${l.code === currentLang ? 'active' : ''}" onclick="setLanguage('${l.code}'); toggleLangDropdown(event)">
       <span>${l.native}</span><span class="code">${l.code.toUpperCase()}</span>
-    </div>
-  `).join('');
-  // Settings dropdown
+    </div>`).join('');
   const sl = document.getElementById('settLang');
-  if (sl) {
-    sl.innerHTML = LANGUAGES.map(l => `<option value="${l.code}" ${l.code === currentLang ? 'selected' : ''}>${l.native}</option>`).join('');
-  }
+  if (sl) sl.innerHTML = LANGUAGES.map(l => `<option value="${l.code}" ${l.code === currentLang ? 'selected' : ''}>${l.native}</option>`).join('');
 }
 
 function toggleLangDropdown(e) {
   e?.stopPropagation();
   document.getElementById('langDropdown').classList.toggle('open');
 }
-document.addEventListener('click', (e) => {
+document.addEventListener('click', e => {
   if (!e.target.closest('.nav-lang')) document.getElementById('langDropdown').classList.remove('open');
 });
 
 // ============================================================
 // STATE
 // ============================================================
-let ws = null;
-let wsConnected = false;
-let metrics = { totalNodes: 0, activeNodes: 0, totalGflops: 0, totalGflopSecondsProcessed: 0, jobsCompleted: 0, contractsSigned: 0, contractsCompleted: 0 };
+let ws = null, wsReconnectTimer = null;
+let metrics = { totalNodes: 0, activeNodes: 0, totalGflops: 0, contractsCompleted: 0 };
 let nodesSample = [];
 let regions = {};
 let milestones = [];
 let userId = localStorage.getItem('himer_uid');
-let adminKey = null;
+let userDeviceId = localStorage.getItem('himer_did');
+let userNodeId = localStorage.getItem('himer_nid');
 let notifications = [];
 let unreadCount = 0;
 let notificationsEnabled = localStorage.getItem('himer_notif') !== 'off';
-let animationsReduced = localStorage.getItem('himer_anim') === 'reduced';
 
 // ============================================================
 // NAVIGATION
@@ -1481,14 +1284,14 @@ function goPage(name) {
   document.getElementById('navLinks').classList.remove('open');
   window.scrollTo(0, 0);
   if (name === 'user') refreshUser();
-  if (name === 'admin' && adminKey) refreshAdmin();
   if (name === 'roadmap') renderMilestones();
+  if (name === 'dashboard') setTimeout(resizeCanvas, 100);
 }
 
 document.getElementById('joinBtn').addEventListener('click', joinNetwork);
 
 // ============================================================
-// DASH SUB-NAVIGATION
+// DASH SUB
 // ============================================================
 function dashSub(name) {
   document.querySelectorAll('.dash-sub-link').forEach(a => a.classList.toggle('active', a.dataset.sub === name));
@@ -1496,54 +1299,25 @@ function dashSub(name) {
   const panel = document.getElementById('sub-' + name);
   if (panel) panel.style.display = '';
   const titles = {
-    grid: 'Neural Grid · Live', regions: 'Regions',
-    jobs: 'Jobs', performance: 'Performance',
-    settings: t('dash.settings.title'), docs: t('dash.docs.title')
+    grid: 'Neural Grid · Live', regions: t('dash.regions'),
+    performance: t('dash.performance'), settings: t('dash.settings.title')
   };
   document.getElementById('dashSubTitle').textContent = titles[name] || '';
   if (name === 'regions') renderRegionsTable();
-  if (name === 'jobs') renderJobsFeed();
   if (name === 'performance') renderPerformance();
+  if (name === 'grid') setTimeout(resizeCanvas, 100);
 }
 
 function renderRegionsTable() {
   const tbody = document.getElementById('regionsTable');
   const total = Object.values(regions).reduce((a, r) => a + r.count, 0) || 1;
   tbody.innerHTML = Object.entries(regions).map(([name, r]) => `
-    <tr>
-      <td><strong>◇ ${name}</strong></td>
-      <td>${r.count}</td>
-      <td class="text-neon">${r.active}</td>
-      <td>${(r.gflops || 0).toFixed(0)}</td>
-      <td>${(r.count / total * 100).toFixed(1)}%</td>
-    </tr>
+    <tr><td><strong>◇ ${name}</strong></td><td>${r.count}</td><td class="text-neon">${r.active}</td><td>${(r.gflops || 0).toFixed(0)}</td><td>${(r.count / total * 100).toFixed(1)}%</td></tr>
   `).join('') || '<tr><td colspan="5" class="text-dim text-center">Loading...</td></tr>';
 }
 
-let jobsFeedData = [];
-function pushJobFeed(text, type = 'success') {
-  jobsFeedData.unshift({ text, type, ts: Date.now() });
-  if (jobsFeedData.length > 20) jobsFeedData.length = 20;
-  if (document.getElementById('sub-jobs')?.style.display !== 'none') renderJobsFeed();
-}
-
-function renderJobsFeed() {
-  const el = document.getElementById('jobsFeed');
-  if (!el) return;
-  if (jobsFeedData.length === 0) {
-    el.innerHTML = '<div class="text-dim text-sm text-center" style="padding: 30px;">No activity yet</div>';
-    return;
-  }
-  el.innerHTML = jobsFeedData.map(j => `
-    <div class="feed-item ${j.type}">
-      <div class="time">${new Date(j.ts).toLocaleTimeString()}</div>
-      <div class="action">${j.text}</div>
-    </div>
-  `).join('');
-}
-
 function renderPerformance() {
-  setText('perfCapacity', formatNum(metrics.totalGflops * 10) + ' total');
+  setText('perfCapacity', formatNum(metrics.totalGflops * 10) + ' GF');
   setText('perfBandwidth', formatNum(metrics.activeNodes * 0.5) + ' MB/s');
   const util = metrics.totalNodes > 0 ? Math.round((metrics.activeNodes / metrics.totalNodes) * 100) : 0;
   setText('perfUtilization', util + '%');
@@ -1556,7 +1330,7 @@ function renderPerformance() {
 async function api(path, opts = {}) {
   try {
     const ctrl = new AbortController();
-    const timeoutId = setTimeout(() => ctrl.abort(), 8000);
+    const timeoutId = setTimeout(() => ctrl.abort(), 10000);
     const res = await fetch(BACKEND_URL + path, {
       ...opts, signal: ctrl.signal,
       headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
@@ -1567,39 +1341,52 @@ async function api(path, opts = {}) {
 }
 
 // ============================================================
-// JOIN / USER FLOW
+// JOIN / MULTI-DEVICE
 // ============================================================
 async function joinNetwork() {
-  if (userId) { showWelcomeModal(userId, null, true); return; }
-  const r = await api('/api/user/join', { method: 'POST', body: JSON.stringify({ lang: currentLang }) });
+  const body = { fp: DEVICE_FP, lang: currentLang };
+  if (userId) body.userId = userId;
+  const r = await api('/api/user/join', { method: 'POST', body: JSON.stringify(body) });
   if (r && r.userId) {
     userId = r.userId;
+    userDeviceId = r.deviceId;
+    userNodeId = r.nodeId;
     localStorage.setItem('himer_uid', userId);
+    localStorage.setItem('himer_did', userDeviceId);
+    localStorage.setItem('himer_nid', userNodeId);
     subscribeUserWS();
-    showWelcomeModal(userId, r.nodeId, false);
+    showWelcomeModal(r);
   } else {
-    toast('error', 'Connection failed', 'Could not connect to backend. Please try again.');
+    toast('error', 'Connection failed', 'Could not reach backend. The server might be waking up; try again in 30 seconds.');
   }
 }
 
-function showWelcomeModal(uid, nodeId, alreadyJoined) {
-  document.getElementById('modalTitle').textContent = alreadyJoined ? 'Already connected' : 'Welcome to HIMER';
-  document.getElementById('modalSubtitle').textContent = alreadyJoined ? 'Your account is active.' : 'Your computer is now part of the network.';
+function showWelcomeModal(r) {
+  const isNewUser = r.isNewUser;
+  const isNewDevice = r.isNewDevice && !isNewUser;
+  let title, subtitle;
+  if (isNewUser) { title = 'Welcome to HIMER'; subtitle = 'Your computer is now part of the network.'; }
+  else if (isNewDevice) { title = 'New device added'; subtitle = `${r.deviceName} added to your account.`; }
+  else { title = 'Welcome back'; subtitle = 'Already connected.'; }
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalSubtitle').textContent = subtitle;
   document.getElementById('modalBody').innerHTML = `
-    <div style="background: var(--bg); border: 1px solid var(--line); padding: 18px; margin-bottom: 14px;">
-      <div class="label" style="margin-bottom: 8px;">User ID</div>
-      <div class="mono text-neon" style="font-size: 14px; word-break: break-all;">${uid}</div>
+    <div style="background:var(--bg);border:1px solid var(--line);padding:18px;margin-bottom:12px;">
+      <div class="label" style="margin-bottom:6px;">User ID</div>
+      <div class="mono text-neon" style="font-size:14px;word-break:break-all;">${r.userId}</div>
+      <div class="text-xs text-dim mt-3">Save this ID. Use it on other devices to link them together.</div>
     </div>
-    ${nodeId ? `<div style="background: var(--bg); border: 1px solid var(--line); padding: 18px; margin-bottom: 14px;">
-      <div class="label" style="margin-bottom: 8px;">Your Node</div>
-      <div class="mono" style="font-size: 14px;">${nodeId}</div>
-    </div>` : ''}
-    <div style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">
-      <strong class="text-neon">Privacy:</strong> Sandbox isolated. No file/browser/password access.
+    <div style="background:var(--bg);border:1px solid var(--line);padding:18px;margin-bottom:12px;">
+      <div class="label" style="margin-bottom:6px;">This Device</div>
+      <div class="mono" style="font-size:13px;">${r.deviceName}</div>
+      <div class="mono text-dim text-xs">Node: ${r.nodeId}</div>
+    </div>
+    <div style="font-size:12px;color:var(--text-dim);line-height:1.6;">
+      <strong class="text-neon">Multi-device:</strong> Use the same User ID on phone, tablet, other PCs — each becomes a separate node, all contribute together.
     </div>
   `;
   document.getElementById('modalFooter').innerHTML = `
-    <button class="btn-ghost" onclick="closeModal()">Later</button>
+    <button class="btn-ghost" onclick="closeModal()">${t('common.cancel', 'Later')}</button>
     <button class="btn-primary" onclick="closeModal(); goPage('user');">View Panel</button>
   `;
   openModal();
@@ -1616,112 +1403,154 @@ async function refreshUser() {
   document.getElementById('uidDisplay').textContent = userId;
 
   const u = await api('/api/user/' + userId);
-  if (u && !u.error && u.nodesList) {
-    document.getElementById('walletAmount').textContent = u.withdrawable.toFixed(4);
-    document.getElementById('totalEarned').textContent = u.totalEarnings.toFixed(4);
-    document.getElementById('myNodes').textContent = u.stats.totalNodes;
-    document.getElementById('myActive').textContent = u.stats.activeNow;
-    document.getElementById('myGflopSec').textContent = formatNum(u.stats.totalGflopSeconds);
-    document.getElementById('myContracts').textContent = u.stats.totalContracts;
-
-    // Withdraw progress
-    const minW = u.minWithdraw || 500;
-    const pct = Math.min(100, (u.withdrawable / minW) * 100);
-    document.getElementById('withdrawProgressFill').style.width = pct + '%';
-    document.getElementById('withdrawProgressText').textContent = pct.toFixed(1) + '% · $' + u.withdrawable.toFixed(2) + ' / $' + minW;
-    const wb = document.getElementById('withdrawBtn');
-    if (wb) wb.disabled = u.withdrawable < minW || !u.payoutSetup;
-
-    // Live calculation
-    const totalGflops = u.nodesList.reduce((a, n) => a + n.gflops, 0);
-    const avgLoad = u.nodesList.length > 0 ? u.nodesList.reduce((a, n) => a + n.load, 0) / u.nodesList.length : 0;
-    document.getElementById('calcGflops').textContent = totalGflops.toFixed(1);
-    document.getElementById('calcLoad').textContent = avgLoad.toFixed(0) + '%';
-    document.getElementById('calcGflopSec').textContent = formatNum(u.stats.totalGflopSeconds);
-    document.getElementById('calcEarnings').textContent = '$' + u.totalEarnings.toFixed(6);
-
-    const tbody = document.getElementById('myNodesTable');
-    tbody.innerHTML = u.nodesList.map(n => `
-      <tr>
-        <td class="mono text-xs">${n.id}</td>
-        <td class="text-xs">${n.region || '—'}</td>
-        <td><span style="color: ${statusColor(n.status)}">${n.status}</span></td>
-        <td>${n.load.toFixed(0)}%</td>
-        <td>${n.gflops.toFixed(1)}</td>
-        <td class="text-neon mono">$${n.earnings.toFixed(6)}</td>
-      </tr>`).join('') || `<tr><td colspan="6" class="text-dim text-center">Initializing...</td></tr>`;
+  if (!u || u.error) {
+    // RESILIENCE: backend lost our user. Re-join automatically.
+    toast('info', 'Reconnecting your account...', '');
+    await joinNetwork();
+    return;
   }
+  document.getElementById('walletAmount').textContent = u.withdrawable.toFixed(4);
+  document.getElementById('totalEarned').textContent = u.totalEarnings.toFixed(4);
+  document.getElementById('myDevices').textContent = u.deviceCount;
+  document.getElementById('myNodes').textContent = u.stats.totalNodes;
+  document.getElementById('myActive').textContent = u.stats.activeNow;
+  document.getElementById('myContracts').textContent = u.stats.totalContracts;
+
+  const minW = u.minWithdraw || 500;
+  const pct = Math.min(100, (u.withdrawable / minW) * 100);
+  document.getElementById('withdrawProgressFill').style.width = pct + '%';
+  document.getElementById('withdrawProgressText').textContent = pct.toFixed(1) + '% · $' + u.withdrawable.toFixed(2) + ' / $' + minW;
+
+  // Device list
+  const dl = document.getElementById('deviceList');
+  dl.innerHTML = (u.devices || []).map(d => `
+    <div class="device-item">
+      <div class="dot ${d.isOnline ? 'online' : 'offline'}"></div>
+      <div class="info">
+        <div class="nm">${d.name || 'Device'}</div>
+        <div class="nid mono">Node: ${d.nodeId || '—'}</div>
+      </div>
+      <span class="badge ${d.isOnline ? 'online' : 'offline'}">${d.isOnline ? 'ONLINE' : 'OFFLINE'}</span>
+    </div>`).join('');
+
+  // Nodes table
+  const tb = document.getElementById('myNodesTable');
+  tb.innerHTML = (u.nodesList || []).map(n => `
+    <tr>
+      <td class="mono text-xs">${n.id}</td>
+      <td class="text-xs">${n.region || '—'}</td>
+      <td><span style="color:${statusColor(n.status)}">${n.status}</span></td>
+      <td>${(n.load || 0).toFixed(0)}%</td>
+      <td>${parseFloat(n.gflops).toFixed(1)}</td>
+      <td class="text-neon mono">$${n.earnings.toFixed(6)}</td>
+    </tr>`).join('') || '<tr><td colspan="6" class="text-dim text-center">Initializing...</td></tr>';
+
   await refreshNotifications();
 }
 
+function statusColor(s) {
+  if (s === 'COMPUTING') return 'var(--neon)';
+  if (s === 'READY') return 'var(--neon-3)';
+  if (s === 'IDLE') return 'var(--text-dim)';
+  return 'var(--warn)';
+}
+
+function copyUid() {
+  if (!userId) return;
+  navigator.clipboard?.writeText(userId).then(() => toast('success', t('common.copied'), userId));
+}
+
 // ============================================================
-// PAYOUT
+// WITHDRAW with modal flow
 // ============================================================
 function setupPayoutMethod() {
   document.getElementById('modalTitle').textContent = 'Setup Payout Method';
   document.getElementById('modalSubtitle').textContent = 'Bank account via Stripe Connect (secure, KYC verified)';
   document.getElementById('modalBody').innerHTML = `
-    <p class="text-dim text-sm" style="margin-bottom: 16px; line-height: 1.6;">
-      We use <strong class="text-neon">Stripe Connect</strong> for payouts. Stripe verifies your identity (passport/ID) and bank account, then handles all transfers securely.
-      <br><br>
-      <strong>Security:</strong> Even if someone steals your HIMER password, they cannot withdraw money — Stripe requires separate 2FA authentication on every payout.
+    <p class="text-dim text-sm" style="margin-bottom:14px;line-height:1.6;">
+      We use <strong class="text-neon">Stripe Connect</strong> for payouts. Stripe verifies your identity and bank account.<br><br>
+      <strong>Security:</strong> Even if someone steals your User ID, they cannot withdraw — Stripe requires separate 2FA on every payout.
     </p>
-    <div style="background: var(--bg); border: 1px solid var(--line); padding: 16px;">
-      <div class="text-xs text-dim" style="margin-bottom: 8px;">Required:</div>
-      <ul style="font-size: 12px; padding-left: 18px; line-height: 1.8;">
-        <li>Government ID (passport or national ID)</li>
-        <li>Bank account or debit card</li>
-        <li>Email & phone for 2FA</li>
-      </ul>
+    <div style="background:var(--bg);border:1px solid var(--line);padding:14px;font-size:12px;">
+      Required: Government ID · Bank account · Email & phone for 2FA
     </div>
-    <p class="text-xs text-dim" style="margin-top: 14px;">
-      Stripe integration not yet live in this demo. Click below to mark as configured.
-    </p>
+    <p class="text-xs text-dim mt-3">Demo mode: clicking below marks setup as complete.</p>
   `;
   document.getElementById('modalFooter').innerHTML = `
-    <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn-ghost" onclick="closeModal()">${t('common.cancel')}</button>
     <button class="btn-primary" onclick="confirmPayoutSetup()">Setup with Stripe</button>
   `;
   openModal();
 }
 
 async function confirmPayoutSetup() {
-  const r = await api('/api/user/payout/setup', {
-    method: 'POST', body: JSON.stringify({ userId, method: 'bank' })
-  });
+  const r = await api('/api/user/payout/setup', { method: 'POST', body: JSON.stringify({ userId, method: 'bank' }) });
   closeModal();
-  if (r && r.ok) {
-    toast('success', 'Payout method configured', 'When you reach $500, you can request withdraw.');
-    refreshUser();
-  } else {
-    toast('error', 'Setup failed', r?.error || 'Try again');
-  }
+  if (r?.ok) { toast('success', 'Payout configured', 'You can request withdraw when wallet ≥ $500.'); refreshUser(); }
+  else toast('error', 'Setup failed', r?.error || 'Try again');
 }
 
 async function requestWithdraw() {
-  const r = await api('/api/user/payout/request', {
-    method: 'POST', body: JSON.stringify({ userId })
-  });
-  if (r && r.payoutId) {
-    document.getElementById('modalTitle').textContent = 'Withdraw requested';
-    document.getElementById('modalSubtitle').textContent = 'Pending admin review';
+  // Check state first via getUser
+  const u = await api('/api/user/' + userId);
+  if (!u) return toast('error', 'Connection error', 'Try again.');
+
+  // Below minimum?
+  const minW = u.minWithdraw || 500;
+  if (u.withdrawable < minW) {
+    document.getElementById('modalTitle').textContent = t('modal.belowMin.title');
+    document.getElementById('modalSubtitle').textContent = '';
     document.getElementById('modalBody').innerHTML = `
-      <div style="display: grid; gap: 12px;">
-        <div style="background: var(--bg); border: 1px solid var(--line); padding: 14px;">
-          <div class="label" style="margin-bottom: 4px;">Net amount</div>
-          <div class="text-neon" style="font-family: 'Syne'; font-size: 26px; font-weight: 800;">$${r.net.toFixed(2)}</div>
-        </div>
-        <div class="flex justify-between text-sm"><span class="text-dim">Gross</span><span>$${r.gross.toFixed(2)}</span></div>
-        <div class="flex justify-between text-sm"><span class="text-dim">Fee (2%)</span><span>$${r.fee.toFixed(2)}</span></div>
-        <div class="flex justify-between text-sm"><span class="text-dim">Payout ID</span><span class="mono text-xs">${r.payoutId}</span></div>
-        <div class="text-xs text-dim mt-3">Funds arrive in your bank account within 1-3 business days after admin approval.</div>
-      </div>
-    `;
+      <p class="text-dim" style="line-height:1.6;margin-bottom:14px;">${t('modal.belowMin.msg')}</p>
+      <div style="background:var(--bg);border:1px solid var(--line);padding:18px;text-align:center;">
+        <div class="text-dim text-xs">Current</div>
+        <div class="text-neon" style="font-family:'Syne';font-size:32px;font-weight:800;">$${u.withdrawable.toFixed(2)} <span class="text-dim" style="font-size:18px;">/ $${minW}</span></div>
+      </div>`;
     document.getElementById('modalFooter').innerHTML = `<button class="btn-primary" onclick="closeModal()">OK</button>`;
-    openModal();
+    return openModal();
+  }
+
+  // No payout setup?
+  if (!u.payoutSetup) {
+    document.getElementById('modalTitle').textContent = t('modal.noPayout.title');
+    document.getElementById('modalSubtitle').textContent = '';
+    document.getElementById('modalBody').innerHTML = `<p class="text-dim" style="line-height:1.6;">${t('modal.noPayout.msg')}</p>`;
+    document.getElementById('modalFooter').innerHTML = `
+      <button class="btn-ghost" onclick="closeModal()">${t('common.cancel')}</button>
+      <button class="btn-primary" onclick="closeModal(); setupPayoutMethod();">${t('user.setupPayout')}</button>`;
+    return openModal();
+  }
+
+  // Show confirm modal
+  const gross = u.withdrawable;
+  const fee = gross * 0.02;
+  const net = gross - fee;
+  document.getElementById('modalTitle').textContent = t('modal.confirmWithdraw.title');
+  document.getElementById('modalSubtitle').textContent = 'Review before submitting';
+  document.getElementById('modalBody').innerHTML = `
+    <div style="display:grid;gap:10px;">
+      <div style="background:var(--bg);border:1px solid var(--line);padding:14px;">
+        <div class="label" style="margin-bottom:4px;">You'll receive (net)</div>
+        <div class="text-neon" style="font-family:'Syne';font-size:30px;font-weight:800;">$${net.toFixed(2)}</div>
+      </div>
+      <div class="flex justify-between text-sm"><span class="text-dim">Gross</span><span>$${gross.toFixed(2)}</span></div>
+      <div class="flex justify-between text-sm"><span class="text-dim">Fee (2%)</span><span>$${fee.toFixed(2)}</span></div>
+      <div class="text-xs text-dim mt-3" style="line-height:1.5;">Cerere supusă spre validare. Banii vor fi virați după ce admin confirmă disponibilitatea fondurilor. Timp tipic: 1-3 zile lucrătoare.</div>
+    </div>`;
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="btn-ghost" onclick="closeModal()">${t('common.cancel')}</button>
+    <button class="btn-primary" onclick="confirmWithdraw()">${t('common.confirm')}</button>`;
+  openModal();
+}
+
+async function confirmWithdraw() {
+  const r = await api('/api/user/payout/request', { method: 'POST', body: JSON.stringify({ userId }) });
+  closeModal();
+  if (r && r.id) {
+    toast('success', 'Withdraw requested', `$${parseFloat(r.net).toFixed(2)} pending admin approval.`);
     refreshUser();
   } else {
-    toast('warn', 'Withdraw failed', r?.error || 'Try again');
+    toast('error', 'Withdraw failed', r?.error || 'Try again');
   }
 }
 
@@ -1731,7 +1560,7 @@ async function requestWithdraw() {
 async function refreshNotifications() {
   if (!userId) return;
   const r = await api('/api/user/' + userId + '/notifications');
-  if (r && r.notifications) {
+  if (r?.notifications) {
     notifications = r.notifications;
     unreadCount = notifications.filter(n => !n.read).length;
     renderNotifications();
@@ -1743,23 +1572,15 @@ function renderNotifications() {
   const bell = document.getElementById('navBell');
   bell.classList.toggle('has-unread', unreadCount > 0 && notificationsEnabled);
   bell.classList.toggle('off', !notificationsEnabled);
-
-  if (!notificationsEnabled) {
-    list.innerHTML = `<div class="notif-empty">${t('notif.empty', 'Notifications disabled.')}</div>`;
-    return;
-  }
-  if (notifications.length === 0) {
-    list.innerHTML = `<div class="notif-empty">${t('notif.empty')}</div>`;
-    return;
-  }
-  const iconMap = { contract_signed: '✎', contract_completed: '✓', payment: '$', system: 'i', reward: '★' };
-  list.innerHTML = notifications.map(n => `
+  if (!notificationsEnabled) { list.innerHTML = `<div class="notif-empty">Notifications disabled.</div>`; return; }
+  if (notifications.length === 0) { list.innerHTML = `<div class="notif-empty">${t('notif.empty')}</div>`; return; }
+  const iconMap = { contract_signed: '✎', contract_completed: '✓', payment: '$', system: 'i' };
+  list.innerHTML = notifications.slice(0, 20).map(n => `
     <div class="notif-item ${n.type} ${n.read ? '' : 'unread'}">
-      <div><div class="icon-wrap">${iconMap[n.type] || 'i'}</div><span class="notif-title">${t(n.titleKey) || n.title || ''}</span></div>
-      <div class="notif-msg">${t(n.messageKey) || n.message || ''}</div>
+      <div><div class="icon-wrap">${iconMap[n.type] || 'i'}</div><span class="notif-title">${t(n.titleKey)}</span></div>
+      <div class="notif-msg">${t(n.messageKey)}</div>
       <div class="notif-time">${timeAgo(n.ts)}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function timeAgo(ts) {
@@ -1779,28 +1600,10 @@ async function toggleNotifEnabled() {
   notificationsEnabled = !notificationsEnabled;
   localStorage.setItem('himer_notif', notificationsEnabled ? 'on' : 'off');
   document.getElementById('notifToggle').classList.toggle('on', notificationsEnabled);
-  const sett = document.getElementById('settNotifToggle');
-  if (sett) sett.classList.toggle('on', notificationsEnabled);
+  document.getElementById('settNotifToggle')?.classList.toggle('on', notificationsEnabled);
   renderNotifications();
-  if (userId) {
-    await api('/api/user/notifications/toggle', {
-      method: 'POST', body: JSON.stringify({ userId, enabled: notificationsEnabled })
-    });
-  }
+  if (userId) await api('/api/user/notifications/toggle', { method: 'POST', body: JSON.stringify({ userId, enabled: notificationsEnabled }) });
   toast('info', notificationsEnabled ? 'Notifications ON' : 'Notifications OFF', '');
-}
-
-function toggleAnimations() {
-  animationsReduced = !animationsReduced;
-  localStorage.setItem('himer_anim', animationsReduced ? 'reduced' : 'normal');
-  document.getElementById('settAnimToggle').classList.toggle('on', animationsReduced);
-}
-
-function statusColor(s) {
-  if (s === 'COMPUTING') return 'var(--neon)';
-  if (s === 'READY') return 'var(--neon-3)';
-  if (s === 'IDLE') return 'var(--text-dim)';
-  return 'var(--warn)';
 }
 
 // ============================================================
@@ -1808,203 +1611,55 @@ function statusColor(s) {
 // ============================================================
 function renderMilestones() {
   const list = document.getElementById('milestonesList');
-  if (!list || !milestones.length) return;
-  list.innerHTML = milestones.map(m => `
-    <div class="milestone ${m.completed ? 'completed' : ''}">
-      <div class="milestone-head">
+  if (!list) return;
+  const items = [
+    { lbl: '10 real nodes', target: 10, current: metrics.realNodes || 0, reward: 'Beta access' },
+    { lbl: '100 real nodes', target: 100, current: metrics.realNodes || 0, reward: 'Desktop agent launch' },
+    { lbl: '500 real nodes', target: 500, current: metrics.realNodes || 0, reward: 'Public API' },
+    { lbl: '1000 contracts', target: 1000, current: metrics.contractsCompleted || 0, reward: 'P2P marketplace' },
+  ];
+  list.innerHTML = items.map(m => {
+    const pct = Math.min(100, (m.current / m.target) * 100);
+    const done = m.current >= m.target;
+    return `
+    <div class="user-card" style="margin-bottom:0;${done ? 'border-color:var(--neon);' : ''}">
+      <div class="flex justify-between" style="gap:12px;align-items:flex-start;">
         <div>
-          <div class="milestone-title">${m.label}</div>
-          <div class="milestone-reward">🎁 ${m.reward}</div>
+          <div style="font-weight:700;">${m.lbl}</div>
+          <div class="text-xs" style="color:var(--neon-3);margin-top:4px;">🎁 ${m.reward}</div>
         </div>
-        <span class="badge ${m.completed ? 'paid' : 'pending'}">${m.completed ? t('mile.unlocked', 'Unlocked') : t('mile.locked', 'Locked')}</span>
+        <span class="badge ${done ? 'online' : 'offline'}">${done ? t('mile.unlocked') : t('mile.locked')}</span>
       </div>
-      <div class="milestone-progress-bar"><div style="width: ${m.percent}%"></div></div>
-      <div class="milestone-stats">
+      <div class="withdraw-progress-bar" style="margin:14px 0 8px;"><div style="width:${pct}%"></div></div>
+      <div class="flex justify-between text-xs text-dim">
         <span>${formatNum(m.current)} / ${formatNum(m.target)}</span>
-        <span>${m.percent.toFixed(1)}%</span>
+        <span>${pct.toFixed(1)}%</span>
       </div>
-    </div>
-  `).join('');
-}
-
-// ============================================================
-// ADMIN
-// ============================================================
-let adminLoginAttempts = 0;
-
-async function adminLogin() {
-  const input = document.getElementById('adminKey');
-  const k = input.value.trim();
-  if (!k) { shakeAdminBox(); return; }
-  const r = await api('/api/admin/overview', { headers: { 'X-Admin-Key': k } });
-  if (r && !r.error) {
-    adminKey = k;
-    document.getElementById('adminLogin').style.display = 'none';
-    document.getElementById('adminUnlocked').style.display = '';
-    toast('success', 'Access granted', '');
-    refreshAdmin();
-    if (window._adminInterval) clearInterval(window._adminInterval);
-    window._adminInterval = setInterval(refreshAdmin, 3000);
-  } else {
-    adminLoginAttempts++;
-    shakeAdminBox();
-    input.value = '';
-    const attempts = document.getElementById('adminAttempts');
-    attempts.style.display = '';
-    attempts.textContent = `// ${t('admin.unauthorized')} · attempts: ${adminLoginAttempts}`;
-    if (adminLoginAttempts >= 5) {
-      attempts.textContent = '// Too many attempts. Wait 30s.';
-      input.disabled = true;
-      setTimeout(() => { input.disabled = false; adminLoginAttempts = 0; attempts.style.display = 'none'; }, 30000);
-    }
-  }
-}
-
-function shakeAdminBox() {
-  const box = document.getElementById('adminLoginBox');
-  box.classList.remove('admin-shake');
-  void box.offsetWidth;
-  box.classList.add('admin-shake');
-}
-
-function adminLogout() {
-  adminKey = null;
-  if (window._adminInterval) clearInterval(window._adminInterval);
-  document.getElementById('adminLogin').style.display = '';
-  document.getElementById('adminUnlocked').style.display = 'none';
-  document.getElementById('adminKey').value = '';
-}
-
-function adminTab(name) {
-  document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
-  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('adm-' + name).classList.add('active');
-  if (name === 'payouts') refreshPayouts();
-  if (name === 'users') refreshUsersList();
-}
-
-async function refreshAdmin() {
-  const r = await api('/api/admin/overview', { headers: { 'X-Admin-Key': adminKey } });
-  if (!r || r.error) return;
-
-  // Reality
-  setText('rRealNodes', formatNum(r.reality.realNodes));
-  setText('rSeedNodes', formatNum(r.reality.seedNodes));
-  setText('rTotalNodes', formatNum(r.reality.totalDisplayed));
-  setText('rRealUsers', formatNum(r.reality.realUsers));
-  setText('rActiveReal', formatNum(r.reality.activeRealNodes));
-  setText('rPayoutUsers', formatNum(r.reality.usersWithPayoutSetup));
-
-  // Treasury
-  setText('admPlat', '$' + r.revenue.platform60.toFixed(4));
-  setText('admUsers', '$' + r.revenue.users40.toFixed(4));
-  setText('admTreasury', '$' + r.treasury.balance.toFixed(2));
-  setText('admOwed', '$' + r.treasury.obligationsToUsers.toFixed(2));
-  setText('admNet', '$' + r.treasury.netAvailable.toFixed(2));
-  setText('admAdRev', '$' + r.revenue.adRevenue.toFixed(4));
-
-  // Ad stats
-  setText('admImpressions', formatNum(r.adStats.impressions));
-  setText('admClicks', formatNum(r.adStats.clicks));
-  setText('admCtr', r.adStats.ctr);
-  setText('admMonthly', '$' + r.adStats.estimatedMonthly.toFixed(2));
-}
-
-async function refreshPayouts() {
-  const r = await api('/api/admin/payouts', { headers: { 'X-Admin-Key': adminKey } });
-  if (!r || !r.payouts) return;
-  const tbody = document.getElementById('admPayoutsTable');
-  if (r.payouts.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-dim">No requests yet</td></tr>';
-    return;
-  }
-  tbody.innerHTML = r.payouts.map(p => `
-    <tr>
-      <td class="mono text-xs">${p.id}</td>
-      <td class="mono text-xs">${p.userId.slice(0, 12)}...</td>
-      <td>$${p.gross.toFixed(2)}</td>
-      <td>$${p.fee.toFixed(2)}</td>
-      <td class="text-neon">$${p.net.toFixed(2)}</td>
-      <td><span class="badge ${p.status === 'PAID' ? 'paid' : 'pending'}">${p.status}</span></td>
-      <td class="text-xs text-dim">${new Date(p.requestedAt).toLocaleDateString()}</td>
-      <td>${p.status === 'PENDING_REVIEW' ? `<button class="btn-ghost" style="padding: 4px 10px; font-size: 10px;" onclick="approvePayout('${p.id}')">Approve</button>` : '—'}</td>
-    </tr>
-  `).join('');
-}
-
-async function approvePayout(payoutId) {
-  const r = await api('/api/admin/payouts/approve', {
-    method: 'POST',
-    headers: { 'X-Admin-Key': adminKey },
-    body: JSON.stringify({ payoutId })
-  });
-  if (r && r.ok) {
-    toast('success', 'Payout approved', payoutId);
-    refreshPayouts();
-    refreshAdmin();
-  }
-}
-
-async function refreshUsersList() {
-  const r = await api('/api/admin/users', { headers: { 'X-Admin-Key': adminKey } });
-  if (!r || !r.users) return;
-  const tbody = document.getElementById('admUsersTable');
-  if (r.users.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-dim">No users yet</td></tr>';
-    return;
-  }
-  tbody.innerHTML = r.users.map(u => `
-    <tr>
-      <td class="mono text-xs">${u.id.slice(0, 14)}...</td>
-      <td class="text-xs">${u.email || '—'}</td>
-      <td class="text-neon">$${u.totalEarnings.toFixed(4)}</td>
-      <td>$${u.withdrawable.toFixed(4)}</td>
-      <td>${u.nodesCount}</td>
-      <td>${u.payoutSetup ? '<span class="badge paid">YES</span>' : '<span class="badge pending">NO</span>'}</td>
-      <td class="text-xs text-dim">${new Date(u.joinedAt).toLocaleDateString()}</td>
-    </tr>
-  `).join('');
-}
-
-async function createJob() {
-  const type = document.getElementById('jobType').value.trim();
-  if (!type) { toast('warn', 'Job type required', ''); return; }
-  const r = await api('/api/admin/job', {
-    method: 'POST',
-    headers: { 'X-Admin-Key': adminKey },
-    body: JSON.stringify({
-      type, nodes: parseInt(document.getElementById('jobNodes').value),
-      reward: parseFloat(document.getElementById('jobReward').value)
-    })
-  });
-  if (r?.jobId) {
-    toast('success', 'Job launched', r.jobId);
-    document.getElementById('jobType').value = '';
-  } else {
-    toast('error', 'Error', r?.error || 'Failed');
-  }
+    </div>`;
+  }).join('');
 }
 
 // ============================================================
 // AI ASSISTANT
 // ============================================================
 function toggleAI() {
-  const chat = document.getElementById('aiChat');
-  const fab = document.getElementById('aiFab');
-  chat.classList.toggle('open');
-  fab.classList.toggle('open');
-  if (chat.classList.contains('open')) buildAIQuickButtons();
+  document.getElementById('aiChat').classList.toggle('open');
+  document.getElementById('aiFab').classList.toggle('open');
+  buildAIQuickButtons();
 }
 
 function buildAIQuickButtons() {
-  const quick = document.getElementById('aiQuick');
-  const questions = [
-    { lbl: '💰 ' + t('user.calc.accumulated', 'Earnings'), q: 'How much money can I earn?' },
-    { lbl: '🔒 ' + (t('nav.privacy') || 'Privacy'), q: 'Is HIMER safe? What about my data?' },
+  document.getElementById('aiQuick').innerHTML = [
+    { lbl: '💰 Earnings', q: 'How much can I earn?' },
+    { lbl: '🔒 Privacy', q: 'Is HIMER safe?' },
     { lbl: '💳 Withdraw', q: 'How do payments work?' },
-    { lbl: '⚙ Setup', q: 'How do I get started?' }
-  ];
-  quick.innerHTML = questions.map(q => `<button class="ai-quick-btn" onclick="document.getElementById('aiInput').value='${q.q}'; askAI()">${q.lbl}</button>`).join('');
+    { lbl: '📱 Multi-device', q: 'Can I use multiple devices?' }
+  ].map(q => `<button class="ai-quick-btn" onclick="askAIQuick('${q.q.replace(/'/g, "\\'")}')">${q.lbl}</button>`).join('');
+}
+
+function askAIQuick(q) {
+  document.getElementById('aiInput').value = q;
+  askAI();
 }
 
 async function askAI() {
@@ -2013,76 +1668,40 @@ async function askAI() {
   const q = input.value.trim();
   if (!q) return;
   input.value = '';
-
-  // User message
-  const userDiv = document.createElement('div');
-  userDiv.className = 'ai-msg user';
-  userDiv.textContent = q;
-  body.appendChild(userDiv);
-
-  // Thinking indicator
-  const thinkDiv = document.createElement('div');
-  thinkDiv.className = 'ai-msg bot thinking';
-  thinkDiv.textContent = t('ai.thinking');
-  body.appendChild(thinkDiv);
+  body.insertAdjacentHTML('beforeend', `<div class="ai-msg user">${escapeHtml(q)}</div>`);
+  const thinkId = 'th-' + Date.now();
+  body.insertAdjacentHTML('beforeend', `<div class="ai-msg bot thinking" id="${thinkId}">${t('ai.thinking')}</div>`);
   body.scrollTop = body.scrollHeight;
-
-  // Try FAQ first
-  const r = await api('/api/ai/ask', {
-    method: 'POST',
-    body: JSON.stringify({ question: q, lang: currentLang, useClaude: false })
-  });
-
-  thinkDiv.remove();
-  const botDiv = document.createElement('div');
-  botDiv.className = 'ai-msg bot';
-  let answer = '';
-  if (r && r.source === 'faq' && r.key) {
-    answer = t(r.key, '...');
-  } else if (r && r.source === 'claude' && r.text) {
-    answer = r.text;
-  } else if (r && r.source === 'fallback' && r.key) {
-    answer = t(r.key, "I don't have an answer for that.");
-  } else {
-    answer = t('ai.faq.fallback', "I don't have an answer for that.");
-  }
-  botDiv.textContent = answer;
-  body.appendChild(botDiv);
+  const r = await api('/api/ai/ask', { method: 'POST', body: JSON.stringify({ question: q, lang: currentLang, useClaude: false }) });
+  document.getElementById(thinkId)?.remove();
+  let ans = '';
+  if (r?.source === 'faq' && r.key) ans = t(r.key);
+  else if (r?.source === 'claude' && r.text) ans = r.text;
+  else ans = t('ai.faq.fallback');
+  body.insertAdjacentHTML('beforeend', `<div class="ai-msg bot">${escapeHtml(ans)}</div>`);
   body.scrollTop = body.scrollHeight;
 }
+
+function escapeHtml(s) { return s.replace(/[<>&"]/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;' }[c])); }
 
 // ============================================================
 // TOAST & MODAL
 // ============================================================
 function toast(type, title, message, duration = 4500) {
   if (!notificationsEnabled && type !== 'error') return;
-  const container = document.getElementById('toastContainer');
   const el = document.createElement('div');
   el.className = 'toast ' + type;
-  const icons = { success: '✓', error: '✕', warn: '!', info: 'i', contract: '✎' };
-  el.innerHTML = `
-    <div class="toast-icon">${icons[type] || 'i'}</div>
-    <div class="toast-body">
-      <div class="toast-title">${title}</div>
-      <div class="toast-message">${message}</div>
-    </div>
-    <button class="toast-close" onclick="this.parentElement.classList.add('exit'); setTimeout(()=>this.parentElement.remove(), 300);">✕</button>
-  `;
-  container.appendChild(el);
+  const icons = { success: '✓', error: '✕', warn: '!', info: 'i' };
+  el.innerHTML = `<div class="toast-icon">${icons[type] || 'i'}</div><div class="toast-body"><div class="toast-title">${escapeHtml(title)}</div><div class="toast-message">${escapeHtml(message)}</div></div><button class="toast-close" onclick="this.parentElement.classList.add('exit');setTimeout(()=>this.parentElement.remove(),300);">✕</button>`;
+  document.getElementById('toastContainer').appendChild(el);
   setTimeout(() => { el.classList.add('exit'); setTimeout(() => el.remove(), 300); }, duration);
 }
 
 function openModal() { document.getElementById('modalBackdrop').classList.add('active'); }
 function closeModal() { document.getElementById('modalBackdrop').classList.remove('active'); }
-document.getElementById('modalBackdrop').addEventListener('click', (e) => { if (e.target.id === 'modalBackdrop') closeModal(); });
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeModal();
-    document.getElementById('notifPanel').classList.remove('open');
-    document.getElementById('aiChat').classList.remove('open');
-    document.getElementById('aiFab').classList.remove('open');
-    closeNodePopup();
-  }
+document.getElementById('modalBackdrop').addEventListener('click', e => { if (e.target.id === 'modalBackdrop') closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); document.getElementById('notifPanel').classList.remove('open'); document.getElementById('aiChat').classList.remove('open'); closeNodePopup(); }
 });
 
 // ============================================================
@@ -2091,43 +1710,27 @@ document.addEventListener('keydown', (e) => {
 function connectWS() {
   try {
     ws = new WebSocket(WS_URL);
-    ws.onopen = () => { wsConnected = true; subscribeUserWS(); };
-    ws.onmessage = (e) => {
+    ws.onopen = () => { subscribeUserWS(); };
+    ws.onmessage = e => {
       try {
         const msg = JSON.parse(e.data);
         if (msg.type === 'SNAPSHOT') {
-          metrics = msg.metrics;
-          nodesSample = msg.nodesSample;
-          regions = msg.regions;
-          if (msg.milestones) { milestones = msg.milestones; renderMilestones(); }
-        } else if (msg.type === 'DELTA') {
-          metrics = msg.metrics;
-          for (const ch of msg.changed) {
-            const idx = nodesSample.findIndex(n => n.id === ch.id);
-            if (idx >= 0) nodesSample[idx] = ch;
-          }
+          metrics = msg.metrics || metrics;
+          nodesSample = msg.nodesSample || [];
+          regions = msg.regions || {};
+          renderMilestones();
         } else if (msg.type === 'NOTIFICATIONS') {
           for (const n of msg.notifications) {
-            if (notificationsEnabled) {
-              const tt = n.type === 'contract_signed' ? 'contract' : n.type === 'contract_completed' ? 'success' : 'info';
-              toast(tt, t(n.titleKey, n.title || ''), t(n.messageKey, n.message || ''));
-            }
-            if (!notifications.find(x => x.id === n.id)) {
-              notifications.unshift(n);
-              unreadCount++;
-            }
-            // Push to jobs feed for dashboard
-            if (n.type === 'contract_signed' || n.type === 'contract_completed') {
-              pushJobFeed(`${t(n.titleKey, n.title)} · ${n.meta?.jobId || ''}`, n.type === 'contract_completed' ? 'success' : 'success');
-            }
+            if (notificationsEnabled) toast(n.type === 'contract_completed' ? 'success' : 'info', t(n.titleKey), t(n.messageKey));
+            if (!notifications.find(x => x.id === n.id)) { notifications.unshift(n); unreadCount++; }
           }
           renderNotifications();
         }
         updateUI();
       } catch (err) {}
     };
-    ws.onclose = () => { wsConnected = false; setTimeout(connectWS, 3000); };
-    ws.onerror = () => { wsConnected = false; };
+    ws.onclose = () => { clearTimeout(wsReconnectTimer); wsReconnectTimer = setTimeout(connectWS, 3000); };
+    ws.onerror = () => {};
   } catch (e) {}
 }
 
@@ -2141,44 +1744,35 @@ function subscribeUserWS() {
 // UI UPDATES
 // ============================================================
 function updateUI() {
-  setText('heroStat1', formatNum(metrics.totalNodes));
-  setText('heroStat2', formatNum(metrics.totalGflops));
+  setText('heroStat1', formatNum(metrics.activeNodes || 0));
+  setText('heroStat2', formatNum(metrics.totalGflops || 0));
   setText('heroStat3', formatNum(metrics.contractsCompleted || 0));
-  setText('kpiTotal', formatNum(metrics.totalNodes));
-  setText('kpiActive', formatNum(metrics.activeNodes));
-  setText('kpiGflops', formatNum(metrics.totalGflops));
+  setText('kpiTotal', formatNum(metrics.totalNodes || 0));
+  setText('kpiActive', formatNum(metrics.activeNodes || 0));
+  setText('kpiGflops', formatNum(metrics.totalGflops || 0));
   setText('kpiJobs', formatNum(metrics.contractsCompleted || 0));
-  setText('renderInfo', `${nodesSample.length} nodes · sampling`);
+  setText('renderInfo', `${nodesSample.length} nodes`);
 
   const rl = document.getElementById('regionList');
   if (rl) {
     const entries = Object.entries(regions);
     if (entries.length > 0) {
-      rl.innerHTML = entries.map(([name, r]) => `
-        <div class="region-item">
-          <div class="name">◇ ${name}</div>
-          <div class="nums">${r.count} · ${r.active} active · ${(r.gflops || 0).toFixed(0)} GF</div>
-        </div>`).join('');
+      rl.innerHTML = entries.map(([n, r]) => `<div class="region-item"><div class="name">◇ ${n}</div><div class="nums">${r.count} · ${r.active} active · ${(r.gflops || 0).toFixed(0)} GF</div></div>`).join('');
     }
   }
   if (Math.random() < 0.2) addFeedItem();
 }
 
 function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
-
 function formatNum(n) {
   if (!n && n !== 0) return '0';
+  n = parseFloat(n);
   if (n > 1e6) return (n / 1e6).toFixed(1) + 'M';
   if (n > 1e3) return (n / 1e3).toFixed(1) + 'K';
   return Math.round(n).toString();
 }
 
-const feedMessages = [
-  'Contract finalized · AI Training · ',
-  'Reward distributed · 12 nodes · ',
-  'Node connected · ',
-  'Render completed · ',
-];
+const feedMessages = ['Contract finalized · AI Training · ', 'Reward distributed · ', 'Node connected · ', 'Render completed · '];
 function addFeedItem() {
   const feed = document.getElementById('feed');
   if (!feed) return;
@@ -2210,9 +1804,7 @@ function drawHeroNetwork() {
   for (let i = 1; i < points.length; i++) {
     for (let j = i + 1; j < points.length; j++) {
       const dx = points[i].x - points[j].x, dy = points[i].y - points[j].y;
-      if (Math.hypot(dx, dy) < 90) {
-        html += `<line x1="${points[i].x}" y1="${points[i].y}" x2="${points[j].x}" y2="${points[j].y}" stroke="rgba(0,240,200,0.15)" stroke-width="0.5"/>`;
-      }
+      if (Math.hypot(dx, dy) < 90) html += `<line x1="${points[i].x}" y1="${points[i].y}" x2="${points[j].x}" y2="${points[j].y}" stroke="rgba(0,240,200,0.15)" stroke-width="0.5"/>`;
     }
     html += `<line x1="${cx}" y1="${cy}" x2="${points[i].x}" y2="${points[i].y}" stroke="rgba(107,140,255,0.08)" stroke-width="0.3"/>`;
   }
@@ -2220,51 +1812,63 @@ function drawHeroNetwork() {
     const isCore = p.key === 'core';
     const r = isCore ? 8 : 2 + Math.random() * 2;
     const color = isCore ? '#00f0c8' : ['#00f0c8', '#6b8cff', '#ff3d80'][Math.random() * 3 | 0];
-    html += `<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${color}" opacity="0.9">
-      <animate attributeName="opacity" values="0.3;1;0.3" dur="${2 + Math.random()*3}s" begin="${Math.random() * 4}s" repeatCount="indefinite"/>
-    </circle>`;
+    html += `<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${color}" opacity="0.9"><animate attributeName="opacity" values="0.3;1;0.3" dur="${2 + Math.random()*3}s" begin="${Math.random() * 4}s" repeatCount="indefinite"/></circle>`;
   }
   svg.innerHTML = html;
 }
 
 // ============================================================
-// NEURAL CANVAS + CLICK ON NODE
+// NEURAL CANVAS — CRITICAL FIX with ResizeObserver
 // ============================================================
-const canvas = document.getElementById('neural-canvas');
-const ctx = canvas?.getContext('2d');
-let canvasW = 0, canvasH = 0, dpr = 1;
+let canvas, ctx, canvasW = 0, canvasH = 0, dpr = 1;
+let canvasReady = false;
+
+function initCanvas() {
+  canvas = document.getElementById('neural-canvas');
+  if (!canvas) return;
+  ctx = canvas.getContext('2d');
+  resizeCanvas();
+  // Watch for size changes
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => resizeCanvas());
+    ro.observe(document.getElementById('canvasWrap'));
+  }
+  window.addEventListener('resize', resizeCanvas);
+  // Click handler
+  canvas.addEventListener('click', onCanvasClick);
+  canvasReady = true;
+}
 
 function resizeCanvas() {
   if (!canvas) return;
+  const wrap = document.getElementById('canvasWrap');
+  if (!wrap) return;
+  const rect = wrap.getBoundingClientRect();
   dpr = window.devicePixelRatio || 1;
-  canvasW = canvas.offsetWidth;
-  canvasH = canvas.offsetHeight;
-  canvas.width = canvasW * dpr;
-  canvas.height = canvasH * dpr;
+  canvasW = Math.max(rect.width, 100);
+  canvasH = Math.max(rect.height, 100);
+  canvas.width = Math.floor(canvasW * dpr);
+  canvas.height = Math.floor(canvasH * dpr);
+  canvas.style.width = canvasW + 'px';
+  canvas.style.height = canvasH + 'px';
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
-window.addEventListener('resize', resizeCanvas);
-setTimeout(resizeCanvas, 100);
 
 function project(lat, lng) {
   return [((lng + 180) / 360) * canvasW, ((90 - lat) / 180) * canvasH];
 }
 
-// Click pe nod
-if (canvas) {
-  canvas.addEventListener('click', async (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    // Caut nod cel mai apropiat
-    let nearest = null, minDist = 20;
-    for (const n of nodesSample) {
-      const [px, py] = project(n.lat, n.lng);
-      const d = Math.hypot(px - x, py - y);
-      if (d < minDist) { minDist = d; nearest = n; }
-    }
-    if (nearest) showNodePopup(nearest, e.clientX - rect.left, e.clientY - rect.top);
-  });
+async function onCanvasClick(e) {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  let nearest = null, minDist = 25;
+  for (const n of nodesSample) {
+    const [px, py] = project(n.lat, n.lng);
+    const d = Math.hypot(px - x, py - y);
+    if (d < minDist) { minDist = d; nearest = n; }
+  }
+  if (nearest) showNodePopup(nearest, x, y);
 }
 
 async function showNodePopup(node, x, y) {
@@ -2275,20 +1879,17 @@ async function showNodePopup(node, x, y) {
   popup.classList.add('open');
   document.getElementById('popupId').textContent = node.id;
   document.getElementById('popupContent').innerHTML = `<div class="text-dim text-xs">Loading...</div>`;
-
-  // Fetch detail
-  const detail = await api('/api/node/' + node.id);
-  const d = detail && !detail.error ? detail : { region: node.r || '?', status: { I: 'IDLE', R: 'READY', C: 'COMPUTING' }[node.s], load: node.l, gflops: node.g, uptime: node.u, trustScore: 100, contractsCompleted: 0, type: 'demo' };
-  document.getElementById('popupContent').innerHTML = `
-    <div class="row"><span>Region</span><span>${d.region}</span></div>
-    <div class="row"><span>Status</span><span style="color:${statusColor(d.status)}">${d.status}</span></div>
-    <div class="row"><span>Load</span><span>${d.load}%</span></div>
-    <div class="row"><span>GFLOPS</span><span>${d.gflops}</span></div>
-    <div class="row"><span>Uptime</span><span>${Math.floor(d.uptime / 60)}m</span></div>
-    <div class="row"><span>Trust</span><span class="text-neon">${d.trustScore}</span></div>
-    <div class="row"><span>Contracts</span><span>${d.contractsCompleted}</span></div>
-    <div class="row"><span>Type</span><span class="badge ${d.type === 'verified' ? 'real' : 'seed'}">${d.type}</span></div>
-  `;
+  const d = await api('/api/node/' + node.id);
+  if (d && !d.error) {
+    document.getElementById('popupContent').innerHTML = `
+      <div class="row"><span>Region</span><span>${d.region}</span></div>
+      <div class="row"><span>Status</span><span style="color:${statusColor(d.status)}">${d.status}</span></div>
+      <div class="row"><span>Load</span><span>${d.load}%</span></div>
+      <div class="row"><span>GFLOPS</span><span>${d.gflops}</span></div>
+      <div class="row"><span>Uptime</span><span>${Math.floor(d.uptime / 60)}m</span></div>
+      <div class="row"><span>Trust</span><span class="text-neon">${d.trustScore}</span></div>
+      <div class="row"><span>Contracts</span><span>${d.contractsCompleted}</span></div>`;
+  }
 }
 
 function closeNodePopup() {
@@ -2296,20 +1897,22 @@ function closeNodePopup() {
 }
 
 let pulseTime = 0, lastFrame = 0;
-function renderNeuralCanvas(ts) {
-  if (!ctx || canvasW === 0) { requestAnimationFrame(renderNeuralCanvas); return; }
-  if (ts - lastFrame < (animationsReduced ? 100 : 33)) { requestAnimationFrame(renderNeuralCanvas); return; }
+function renderCanvas(ts) {
+  if (!canvasReady || canvasW < 50) { requestAnimationFrame(renderCanvas); return; }
+  if (ts - lastFrame < 33) { requestAnimationFrame(renderCanvas); return; }
   lastFrame = ts;
   pulseTime += 0.02;
 
-  ctx.fillStyle = 'rgba(10, 13, 24, 0.15)';
+  ctx.fillStyle = 'rgba(10,13,24,0.15)';
   ctx.fillRect(0, 0, canvasW, canvasH);
 
-  ctx.strokeStyle = 'rgba(120, 200, 255, 0.04)';
+  // Grid lines
+  ctx.strokeStyle = 'rgba(120,200,255,0.04)';
   ctx.lineWidth = 1;
   for (let i = 0; i <= 12; i++) { const x = (i / 12) * canvasW; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvasH); ctx.stroke(); }
   for (let i = 0; i <= 6; i++) { const y = (i / 6) * canvasH; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvasW, y); ctx.stroke(); }
 
+  // Connections between active nodes
   const active = nodesSample.filter(n => n.s === 'C');
   for (let i = 0; i < Math.min(active.length, 30); i++) {
     const a = active[i], b = active[(i + 7) % active.length];
@@ -2322,6 +1925,8 @@ function renderNeuralCanvas(ts) {
     ctx.strokeStyle = grad; ctx.lineWidth = 0.5;
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   }
+
+  // Nodes
   for (const n of nodesSample) {
     const [x, y] = project(n.lat, n.lng);
     let color, size;
@@ -2337,29 +1942,44 @@ function renderNeuralCanvas(ts) {
     ctx.fillStyle = color;
     ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
   }
-  requestAnimationFrame(renderNeuralCanvas);
+  requestAnimationFrame(renderCanvas);
 }
 
 // ============================================================
-// AD TRACKING
+// PWA INSTALL
 // ============================================================
-function trackAdImpressions() {
-  const slots = document.querySelectorAll('.ad-slot');
-  if (!slots.length) return;
-  const observed = new WeakSet();
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting && !observed.has(e.target)) {
-        observed.add(e.target);
-        api('/api/ad/impression', { method: 'POST', body: JSON.stringify({ slot: e.target.dataset.slot }) });
-      }
-    });
-  }, { threshold: 0.5 });
-  slots.forEach(s => {
-    obs.observe(s);
-    s.addEventListener('click', () => {
-      api('/api/ad/click', { method: 'POST', body: JSON.stringify({ slot: s.dataset.slot }) });
-    });
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if (!localStorage.getItem('himer_install_dismissed')) {
+    setTimeout(() => document.getElementById('installPrompt').classList.add('show'), 3000);
+  }
+});
+
+function triggerInstall() {
+  if (!deferredInstallPrompt) {
+    toast('info', 'Install via browser menu', 'Open menu → "Add to Home Screen" / "Install"');
+    dismissInstall();
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then((choice) => {
+    if (choice.outcome === 'accepted') toast('success', 'Installing...', 'HIMER will appear on your home screen.');
+    deferredInstallPrompt = null;
+    dismissInstall();
+  });
+}
+
+function dismissInstall() {
+  document.getElementById('installPrompt').classList.remove('show');
+  localStorage.setItem('himer_install_dismissed', '1');
+}
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
 
@@ -2371,11 +1991,20 @@ buildLangDropdown();
 document.getElementById('langCurrent').textContent = currentLang.toUpperCase();
 document.getElementById('notifToggle').classList.toggle('on', notificationsEnabled);
 drawHeroNetwork();
-requestAnimationFrame(renderNeuralCanvas);
+initCanvas();
+requestAnimationFrame(renderCanvas);
 connectWS();
 setInterval(() => { if (userId) refreshUser(); }, 8000);
-setTimeout(trackAdImpressions, 1000);
 if (userId) setTimeout(subscribeUserWS, 1500);
+
+// Re-join on page load if we have stored userId (this ensures device reconnects properly)
+if (userId) {
+  setTimeout(() => {
+    // Silent rejoin to refresh device session
+    api('/api/user/join', { method: 'POST', body: JSON.stringify({ userId, fp: DEVICE_FP, lang: currentLang }) })
+      .then(r => { if (r?.nodeId) { userNodeId = r.nodeId; localStorage.setItem('himer_nid', r.nodeId); } });
+  }, 2000);
+}
 
 </script>
 </body>

@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060a">
+<title>HIMER · Business Client Portal</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%236b8cff'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%2305060a'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #05060a; --bg-2: #0a0d18;
+  --surface: rgba(15, 20, 35, 0.7);
+  --line: rgba(120, 200, 255, 0.12);
+  --line-strong: rgba(120, 200, 255, 0.3);
+  --text: #e6ecf5; --text-dim: #7a8499;
+  --neon: #00f0c8; --neon-2: #ff3d80; --neon-3: #6b8cff;
+  --warn: #ffb547; --success: #00f0c8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'JetBrains Mono', monospace; background: var(--bg); color: var(--text);
+  min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.5;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(107,140,255,0.08), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(0,240,200,0.05), transparent 50%),
+    linear-gradient(rgba(120,200,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,200,255,0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+}
+h1, h2, h3 { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+.label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-dim); }
+
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 24px; background: rgba(5,6,10,0.85);
+  backdrop-filter: blur(20px); border-bottom: 1px solid var(--line); gap: 12px;
+}
+.logo { display: flex; align-items: center; gap: 12px; font-family: 'Syne'; font-weight: 800; font-size: 18px; }
+.logo .mark {
+  width: 30px; height: 30px;
+  background: conic-gradient(from 0deg, var(--neon-3), var(--neon), var(--neon-2), var(--neon-3));
+  mask: radial-gradient(circle at center, transparent 30%, black 32%, black 48%, transparent 50%), linear-gradient(black, black);
+  -webkit-mask: radial-gradient(circle at center, transparent 30%, black 32%, black 48%, transparent 50%), linear-gradient(black, black);
+  mask-composite: intersect; -webkit-mask-composite: source-in;
+}
+.client-badge {
+  padding: 3px 10px; font-size: 10px; letter-spacing: 0.15em;
+  background: var(--neon-3); color: #000; font-weight: 700;
+}
+.nav-right { display: flex; gap: 14px; align-items: center; font-size: 12px; }
+.btn-logout {
+  padding: 8px 14px; background: transparent; border: 1px solid var(--line);
+  color: var(--text-dim); cursor: pointer; font-family: inherit; font-size: 11px;
+}
+.btn-logout:hover { color: var(--neon-3); border-color: var(--neon-3); }
+
+.page { display: none; padding-top: 70px; position: relative; z-index: 2; }
+.page.active { display: block; }
+
+.login-wrap {
+  min-height: calc(100vh - 70px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.login-card {
+  background: var(--surface); border: 1px solid var(--line-strong);
+  padding: 40px; max-width: 420px; width: 100%; backdrop-filter: blur(20px);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+.login-card h2 { font-size: 28px; margin-bottom: 8px; }
+.login-card .sub { color: var(--text-dim); font-size: 13px; margin-bottom: 28px; }
+
+input.field, select.field, textarea.field {
+  width: 100%; padding: 13px 16px; background: var(--bg);
+  border: 1px solid var(--line); color: var(--text);
+  font-family: inherit; font-size: 13px; margin-bottom: 14px;
+}
+input.field:focus, textarea.field:focus, select.field:focus { outline: none; border-color: var(--neon-3); }
+.field-label { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
+.field-group { margin-bottom: 14px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px; font-family: inherit; font-weight: 700; font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  border: none; transition: all 0.2s; min-height: 42px;
+}
+.btn-primary {
+  background: var(--neon-3); color: #000;
+  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+}
+.btn-primary:hover { background: #fff; }
+.btn-ghost { background: transparent; border: 1px solid var(--line-strong); color: var(--text); }
+.btn-ghost:hover { border-color: var(--neon-3); color: var(--neon-3); }
+.btn-small { padding: 6px 12px; font-size: 10px; min-height: 32px; }
+
+.error-msg {
+  background: rgba(255,61,128,0.08); border: 1px solid var(--neon-2);
+  padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: var(--neon-2);
+  display: none;
+}
+.error-msg.show { display: block; }
+
+.client-wrap { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 70px); }
+.client-side { border-right: 1px solid var(--line); padding: 22px 0; background: var(--bg-2); }
+.client-side .label { padding: 0 22px 12px; }
+.client-side a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 22px;
+  color: var(--text-dim); font-size: 13px; cursor: pointer;
+  transition: all 0.2s; border-left: 2px solid transparent;
+}
+.client-side a:hover, .client-side a.active {
+  color: var(--neon-3); background: rgba(107,140,255,0.05);
+  border-left-color: var(--neon-3);
+}
+.client-main { padding: 28px; min-width: 0; }
+.client-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 26px; flex-wrap: wrap; gap: 14px; }
+.client-header h2 { font-size: 28px; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  padding: 24px; margin-bottom: 20px;
+}
+.card h3 { font-size: 18px; margin-bottom: 14px; font-family: 'JetBrains Mono'; font-weight: 700; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+.kpi { border: 1px solid var(--line); background: var(--surface); padding: 18px; }
+.kpi .label { font-size: 10px; margin-bottom: 8px; }
+.kpi .val { font-family: 'Syne'; font-size: 26px; font-weight: 800; color: var(--neon-3); line-height: 1; }
+
+.balance-display {
+  background: linear-gradient(135deg, rgba(107,140,255,0.08), rgba(0,240,200,0.05));
+  border: 1px solid var(--line-strong); padding: 28px; text-align: center;
+  margin-bottom: 18px;
+}
+.balance-amount { font-family: 'Syne'; font-size: 52px; font-weight: 800; color: var(--neon-3); line-height: 1; }
+.balance-currency { font-size: 22px; opacity: 0.6; }
+.balance-label { color: var(--text-dim); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px; }
+
+.api-key-display {
+  background: var(--bg); border: 1px solid var(--warn);
+  padding: 14px; font-family: 'JetBrains Mono'; font-size: 12px;
+  word-break: break-all; user-select: all; cursor: pointer;
+  position: relative;
+}
+.api-key-display::before {
+  content: '⚠ Keep this secret'; position: absolute; top: -8px; left: 12px;
+  background: var(--bg-2); padding: 0 6px; font-size: 9px; color: var(--warn);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.api-key-hidden { color: var(--text-dim); }
+
+.code-block {
+  background: var(--bg); border: 1px solid var(--line);
+  padding: 16px; font-size: 11px; line-height: 1.6;
+  overflow-x: auto; white-space: pre; color: var(--text);
+}
+.code-block .kw { color: var(--neon-2); }
+.code-block .str { color: var(--neon); }
+.code-block .com { color: var(--text-dim); }
+
+table.data { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.data th, table.data td { padding: 10px; text-align: left; border-bottom: 1px solid var(--line); }
+table.data th { color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; }
+table.data tr:hover { background: rgba(107,140,255,0.03); }
+.badge { display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; border: 1px solid; }
+.badge.pending { color: var(--warn); border-color: var(--warn); }
+.badge.running { color: var(--neon-3); border-color: var(--neon-3); }
+.badge.done { color: var(--neon); border-color: var(--neon); }
+.badge.failed { color: var(--neon-2); border-color: var(--neon-2); }
+
+/* AI CHAT */
+.ai-fab {
+  position: fixed; bottom: 24px; right: 24px; z-index: 90;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--neon-3), var(--neon));
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(107,140,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  color: #000;
+}
+.ai-chat {
+  position: fixed; bottom: 92px; right: 24px; z-index: 89;
+  width: 380px; max-width: calc(100vw - 32px); height: 520px; max-height: calc(100vh - 140px);
+  background: var(--bg-2); border: 1px solid var(--line-strong);
+  display: none; flex-direction: column;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+.ai-chat.open { display: flex; }
+.ai-chat-header { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.ai-chat-body { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+.ai-msg { padding: 10px 14px; font-size: 13px; line-height: 1.6; max-width: 85%; }
+.ai-msg.user { align-self: flex-end; background: var(--neon-3); color: #000; border-radius: 12px 12px 0 12px; }
+.ai-msg.bot { align-self: flex-start; background: var(--bg); border: 1px solid var(--line); border-radius: 12px 12px 12px 0; }
+.ai-chat-input { padding: 14px 16px; border-top: 1px solid var(--line); display: flex; gap: 8px; }
+.ai-chat-input input { flex: 1; padding: 10px 14px; background: var(--bg); border: 1px solid var(--line); color: var(--text); font-family: inherit; font-size: 13px; }
+.ai-chat-input input:focus { outline: none; border-color: var(--neon-3); }
+.ai-chat-input button { background: var(--neon-3); color: #000; border: none; padding: 10px 16px; cursor: pointer; font-weight: 700; font-size: 12px; }
+.ai-quick { display: flex; gap: 6px; flex-wrap: wrap; padding: 8px 20px 14px; border-top: 1px solid var(--line); }
+.ai-quick-btn { padding: 6px 12px; background: var(--bg); border: 1px solid var(--line); color: var(--text-dim); font-size: 11px; cursor: pointer; }
+.ai-quick-btn:hover { color: var(--neon-3); border-color: var(--neon-3); }
+
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(5,6,10,0.85); backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-backdrop.active { display: flex; }
+.modal {
+  background: var(--bg-2); border: 1px solid var(--line-strong);
+  max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+.modal-header { padding: 24px 30px 14px; border-bottom: 1px solid var(--line); }
+.modal-header h3 { font-family: 'Syne'; font-size: 22px; }
+.modal-body { padding: 22px 30px; }
+.modal-footer { padding: 14px 30px 24px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.modal-close {
+  position: absolute; top: 18px; right: 18px; background: none;
+  border: 1px solid var(--line); color: var(--text-dim);
+  width: 32px; height: 32px; cursor: pointer; font-size: 14px;
+}
+
+.toast-container { position: fixed; top: 84px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; max-width: 380px; }
+.toast {
+  background: rgba(10,13,24,0.95); backdrop-filter: blur(20px);
+  border: 1px solid var(--line-strong); border-left: 3px solid var(--neon-3);
+  padding: 14px 18px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+}
+.toast.success { border-left-color: var(--neon); }
+.toast.error { border-left-color: var(--neon-2); }
+.toast-title { font-family: 'Syne'; font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+.toast-message { font-size: 12px; color: var(--text-dim); }
+
+.mt-2 { margin-top: 8px; } .mt-3 { margin-top: 16px; }
+.text-dim { color: var(--text-dim); } .text-neon { color: var(--neon-3); }
+.text-sm { font-size: 12px; } .text-xs { font-size: 11px; }
+.flex { display: flex; } .items-center { align-items: center; } .justify-between { justify-content: space-between; } .gap-3 { gap: 16px; }
+.text-center { text-align: center; }
+
+@media (max-width: 900px) {
+  .client-wrap { grid-template-columns: 1fr; }
+  .client-side { display: none; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .client-main { padding: 18px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">
+    <div class="mark"></div>
+    HIMER <span class="client-badge">BUSINESS</span>
+  </div>
+  <div class="nav-right">
+    <span id="clientEmail" class="text-dim mono"></span>
+    <button class="btn-logout" id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+  </div>
+</nav>
+
+<!-- LOGIN -->
+<div class="page active" id="page-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <h2>Business Portal</h2>
+      <div class="sub">Sign in with credentials provided by your account manager.</div>
+      <div class="error-msg" id="loginError"></div>
+      <div class="field-group">
+        <div class="field-label">Email</div>
+        <input class="field" type="email" id="loginEmail" placeholder="your@business.com" autocomplete="username">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Password</div>
+        <input class="field" type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doLogin()" id="loginBtn">Sign in</button>
+      <p class="text-xs text-dim mt-3 text-center">First-time login requires password change.<br>Need an account? Contact <span class="text-neon">sales@himer.network</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- FORCE PASSWORD CHANGE -->
+<div class="page" id="page-changepw">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div style="background:rgba(255,181,71,0.08);border:1px solid var(--warn);padding:14px;margin-bottom:18px;font-size:12px;">
+        <div style="color:var(--warn);font-weight:700;margin-bottom:6px;">⚠ Password change required</div>
+        <div>Set a strong password before accessing your account.</div>
+      </div>
+      <h2>Set new password</h2>
+      <div class="sub">Minimum 8 characters.</div>
+      <div class="error-msg" id="cpError"></div>
+      <div class="field-group">
+        <div class="field-label">New password</div>
+        <input class="field" type="password" id="newPw" placeholder="At least 8 characters">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Confirm</div>
+        <input class="field" type="password" id="newPw2" placeholder="Type again" onkeydown="if(event.key==='Enter') doChangePassword()">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doChangePassword()" id="cpBtn">Set new password</button>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page" id="page-dashboard">
+  <div class="client-wrap">
+    <aside class="client-side">
+      <span class="label">Account</span>
+      <a class="client-link active" data-tab="overview" onclick="clientTab('overview')">⬢ Overview</a>
+      <a class="client-link" data-tab="api" onclick="clientTab('api')">⚙ API & Integration</a>
+      <a class="client-link" data-tab="jobs" onclick="clientTab('jobs')">↗ Compute Jobs</a>
+      <a class="client-link" data-tab="docs" onclick="clientTab('docs')">📖 Docs</a>
+    </aside>
+    <main class="client-main">
+      <div class="client-header">
+        <div>
+          <span class="label">— Business Portal</span>
+          <h2 id="clientTabTitle">Overview</h2>
+        </div>
+      </div>
+
+      <!-- TAB: OVERVIEW -->
+      <div class="client-tab" id="tab-overview">
+        <div class="balance-display">
+          <div class="balance-label">Account Balance</div>
+          <div class="balance-amount"><span class="balance-currency">$</span><span id="ovBalance">0</span></div>
+          <p class="text-xs text-dim mt-3">Need more? Contact your account manager to top-up.</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi"><div class="label">Total Spent</div><div class="val mono" id="ovSpent">$0</div></div>
+          <div class="kpi"><div class="label">Total Topped Up</div><div class="val mono" id="ovTopup">$0</div></div>
+          <div class="kpi"><div class="label">Rate Limit</div><div class="val" id="ovRate">—</div></div>
+        </div>
+
+        <div class="card">
+          <h3>Quick start</h3>
+          <p class="text-sm text-dim" style="margin-bottom:14px;">Launch your first compute job in seconds.</p>
+          <button class="btn btn-primary" onclick="openLaunchJob()">+ Launch test job</button>
+        </div>
+
+        <div class="card">
+          <h3>Account info</h3>
+          <table class="data">
+            <tr><td>Client ID</td><td class="mono text-xs" id="ovClientId">—</td></tr>
+            <tr><td>Email</td><td id="ovEmailVal">—</td></tr>
+            <tr><td>Company</td><td id="ovCompany">—</td></tr>
+            <tr><td>Created</td><td id="ovCreated">—</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: API -->
+      <div class="client-tab" id="tab-api" style="display:none;">
+        <div class="card">
+          <h3>Your API Key</h3>
+          <p class="text-sm text-dim" style="margin-bottom:14px;">Use this key in the <code style="background:var(--bg);padding:2px 6px;">X-API-Key</code> header for programmatic access. Keep it secret.</p>
+          <div class="api-key-display" id="apiKeyDisplay" onclick="copyApiKey()">Loading...</div>
+          <p class="text-xs text-dim mt-3">Click to copy. To rotate, contact your account manager.</p>
+        </div>
+
+        <div class="card">
+          <h3>Quickstart code</h3>
+          <p class="text-sm text-dim" style="margin-bottom:14px;">Try it with curl:</p>
+          <div class="code-block" id="curlExample">Loading...</div>
+        </div>
+
+        <div class="card">
+          <h3>JavaScript example</h3>
+          <div class="code-block" id="jsExample">Loading...</div>
+        </div>
+
+        <div class="card">
+          <h3>Python example</h3>
+          <div class="code-block" id="pyExample">Loading...</div>
+        </div>
+      </div>
+
+      <!-- TAB: JOBS -->
+      <div class="client-tab" id="tab-jobs" style="display:none;">
+        <div class="card">
+          <div class="flex justify-between items-center" style="margin-bottom:14px;">
+            <h3 style="margin:0;">Your Compute Jobs</h3>
+            <button class="btn btn-primary btn-small" onclick="openLaunchJob()">+ Launch Job</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>Job ID</th><th>Type</th><th>Nodes</th><th>Cost</th>
+                  <th>Status</th><th>Created</th><th>Duration</th>
+                </tr>
+              </thead>
+              <tbody id="jobsTable"><tr><td colspan="7" class="text-dim text-center">No jobs yet</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: DOCS -->
+      <div class="client-tab" id="tab-docs" style="display:none;">
+        <div class="card">
+          <h3>API Reference</h3>
+          <h4 style="margin-top:14px;font-size:14px;color:var(--neon-3);">POST /api/v1/compute</h4>
+          <p class="text-sm text-dim mt-2">Launch a compute job programmatically.</p>
+          <div class="code-block mt-3"><span class="com">// Headers</span>
+Content-Type: application/json
+X-API-Key: hmr_live_xxxxxxxxxx
+
+<span class="com">// Body</span>
+{
+  "type": <span class="str">"ai-training"</span>,    <span class="com">// "ai-training" | "rendering" | "compute"</span>
+  "nodes": 5,                <span class="com">// 1-100</span>
+  "payload": { ... }         <span class="com">// optional, your job data</span>
+}
+
+<span class="com">// Response</span>
+{
+  "jobId": <span class="str">"J-XXX"</span>,
+  "status": <span class="str">"queued"</span>,
+  "cost": 0.25
+}</div>
+        </div>
+
+        <div class="card">
+          <h3>Pricing</h3>
+          <table class="data">
+            <tr><th>Operation</th><th>Price</th></tr>
+            <tr><td>Per node per job</td><td class="mono">$0.05</td></tr>
+            <tr><td>Custom enterprise</td><td>Contact sales</td></tr>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>Support</h3>
+          <p class="text-sm">For integration questions, dedicated infrastructure, or volume discounts:</p>
+          <p class="text-sm mt-3">📧 <span class="text-neon">enterprise@himer.network</span></p>
+          <p class="text-sm">💬 Use the AI assistant (bottom-right) for instant answers.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- AI -->
+<button class="ai-fab" onclick="toggleAI()" id="aiFab" title="AI Assistant">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+  </svg>
+</button>
+<div class="ai-chat" id="aiChat">
+  <div class="ai-chat-header">
+    <h4 style="font-family:'Syne';font-size:16px;">Business Assistant</h4>
+    <button class="modal-close" style="position:static;border:none;" onclick="toggleAI()">✕</button>
+  </div>
+  <div class="ai-chat-body" id="aiChatBody">
+    <div class="ai-msg bot">Hi! Ask about API integration, pricing, job types, or anything else.</div>
+  </div>
+  <div class="ai-quick">
+    <button class="ai-quick-btn" onclick="askQuick('How do I integrate?')">Integration</button>
+    <button class="ai-quick-btn" onclick="askQuick('What does it cost?')">Pricing</button>
+    <button class="ai-quick-btn" onclick="askQuick('What job types are supported?')">Job types</button>
+    <button class="ai-quick-btn" onclick="askQuick('How do I top-up my balance?')">Top-up</button>
+  </div>
+  <div class="ai-chat-input">
+    <input type="text" id="aiInput" placeholder="Ask anything..." onkeydown="if(event.key==='Enter') askAI()">
+    <button onclick="askAI()">Send</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-header"><h3 id="modalTitle">—</h3><p id="modalSubtitle"></p></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="config.js"></script>
+<script>
+'use strict';
+
+const BACKEND_URL = window.HIMER_BACKEND || location.origin;
+
+let token = localStorage.getItem('himer_client_token') || null;
+let clientInfo = null;
+
+// ============================================================
+// AI FAQ (CLIENT - matches backend keys)
+// ============================================================
+const CLIENT_FAQ_TEXTS = {
+  'aiclient.faq.api': 'HIMER offers a REST API. Use your API key in X-API-Key header. Endpoint: POST /api/v1/compute. SDK coming soon for Python, JS, Go.',
+  'aiclient.faq.apiKey': 'Your API key is shown in the API tab. Treat it like a password. Contact your account manager to rotate.',
+  'aiclient.faq.pricing': 'Standard pricing: $0.05 per node per job. Enterprise/volume discounts available — contact sales@himer.network.',
+  'aiclient.faq.topup': 'Top-ups are handled manually by our team. Email accounts@himer.network with the amount and we\'ll send a wire transfer invoice.',
+  'aiclient.faq.sla': 'Standard SLA: 99.5% uptime, jobs complete within 5 min for <100 nodes. Enterprise SLA available with dedicated infrastructure.',
+  'aiclient.faq.start': '1) Get API key (API tab). 2) Send POST /api/v1/compute with X-API-Key header. 3) Receive jobId. 4) Poll status. See Docs tab for full examples.',
+  'aiclient.faq.rateLimit': 'Default 60 requests/minute. Need higher? Contact your account manager. Enterprise plans get unlimited.',
+  'aiclient.faq.docs': 'Docs are in the Docs tab. Includes endpoint reference, code examples in cURL/JS/Python, and pricing.',
+  'aiclient.faq.endpoint': 'Main endpoint: POST https://your-backend/api/v1/compute. See Docs tab for params.',
+  'aiclient.faq.jobTypes': 'Supported: ai-training, rendering, inference, compute (general). Custom types available for enterprise.',
+  'aiclient.faq.aiTraining': 'TensorFlow, PyTorch, JAX supported. Pass training config in payload. Models stay private; we never see your data.',
+  'aiclient.faq.rendering': 'Blender, Cycles, V-Ray supported. Send scene files + params via payload. Results returned via webhook.',
+  'aiclient.faq.inference': 'Real-time inference jobs supported. Low-latency mode adds $0.01 per node. Use type: "inference".',
+  'aiclient.faq.simulation': 'Monte Carlo, physics, climate sims all supported. Use type: "compute" with your simulation params.',
+  'aiclient.faq.nodes': 'Specify nodes (1-100) per job. More nodes = faster results. We auto-distribute geographically for redundancy.',
+  'aiclient.faq.results': 'Results returned synchronously for fast jobs (<30s). For long jobs, provide callback_url in payload — we POST results when done.',
+  'aiclient.faq.invoice': 'Monthly invoices sent on the 1st. Contains all top-ups and usage. Email accounting@himer.network for custom billing.',
+  'aiclient.faq.support': 'Business support: enterprise@himer.network · Response within 4h business hours. Critical issues: 24/7 phone line on enterprise plans.',
+  'aiclient.faq.security': 'TLS 1.3 in transit. Job data encrypted at rest. Nodes run in WASM sandbox — they cannot read your payload, only process it.',
+  'aiclient.faq.privacy': 'We never inspect or store your job payloads beyond execution. Audit logs cover only metadata (job ID, cost, status).',
+  'aiclient.faq.enterprise': 'Enterprise: dedicated infrastructure, custom SLA, volume pricing, dedicated account manager. Starts at $5k/month. Contact sales@himer.network.',
+  'aiclient.faq.compare': 'vs AWS/GCP: ~50% cheaper for batch compute, global node distribution, no vendor lock-in. We don\'t replace cloud for everything — we\'re ideal for parallelizable compute.',
+  'aiclient.faq.speed': 'Latency: 50-200ms to nearest node. Throughput: scales with nodes assigned. For real-time, use type: "inference".',
+  'aiclient.faq.languages': 'Any language with HTTP support. Native SDKs coming: Python (Q1), JavaScript (Q2), Go (Q3).',
+  'aiclient.faq.retry': 'Failed jobs auto-retry once. Charges only on success. If a job fails twice, you get a credit. Check status field.',
+  'aiclient.faq.suspend': 'Accounts can be suspended for unpaid balances. Balance is preserved. Reactivation requires payment + admin review.',
+  'aiclient.faq.password': 'Change password via account manager or by clicking Logout → forgot password (coming soon). For now, email enterprise@himer.network.',
+  'aiclient.faq.partnership': 'Reseller / partner program available for agencies. Earn 20% of client spend. Contact partners@himer.network.',
+  'aiclient.faq.trial': 'Free trial: contact sales for $50 credit. No credit card needed. Email sales@himer.network.',
+  'aiclient.faq.scaling': 'Auto-scaling: set min/max nodes per job. We dynamically allocate based on availability. Coming Q3.',
+  'aiclient.faq.fallback': "I don't have a specific answer. Contact enterprise@himer.network for personalized assistance."
+};
+
+function tClient(key) { return CLIENT_FAQ_TEXTS[key] || CLIENT_FAQ_TEXTS['aiclient.faq.fallback']; }
+
+// ============================================================
+// PAGES
+// ============================================================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name)?.classList.add('active');
+}
+
+function clientTab(name) {
+  document.querySelectorAll('.client-link').forEach(a => a.classList.toggle('active', a.dataset.tab === name));
+  document.querySelectorAll('.client-tab').forEach(t => t.style.display = 'none');
+  const tab = document.getElementById('tab-' + name);
+  if (tab) tab.style.display = '';
+  const titles = { overview: 'Overview', api: 'API & Integration', jobs: 'Compute Jobs', docs: 'Documentation' };
+  document.getElementById('clientTabTitle').textContent = titles[name] || name;
+}
+
+// ============================================================
+// API
+// ============================================================
+async function api(path, opts = {}) {
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  try {
+    const res = await fetch(BACKEND_URL + path, { ...opts, headers });
+    if (res.status === 401) { logout(true); return null; }
+    return await res.json();
+  } catch (e) { return null; }
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginError');
+  err.classList.remove('show');
+  if (!email || !password) {
+    err.textContent = 'Email and password required';
+    err.classList.add('show'); return;
+  }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  const r = await api('/api/client/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+  btn.disabled = false; btn.textContent = 'Sign in';
+  if (!r || r.error) {
+    err.textContent = r?.error || 'Login failed';
+    err.classList.add('show'); return;
+  }
+  token = r.token;
+  clientInfo = r.client;
+  localStorage.setItem('himer_client_token', token);
+  localStorage.setItem('himer_client_email', r.client.email);
+  document.getElementById('clientEmail').textContent = r.client.email;
+  document.getElementById('logoutBtn').style.display = '';
+  if (r.client.mustChangePassword) {
+    showPage('changepw');
+  } else {
+    enterDashboard();
+  }
+}
+
+async function doChangePassword() {
+  const pw = document.getElementById('newPw').value;
+  const pw2 = document.getElementById('newPw2').value;
+  const err = document.getElementById('cpError');
+  err.classList.remove('show');
+  if (pw.length < 8) { err.textContent = 'Minimum 8 characters'; err.classList.add('show'); return; }
+  if (pw !== pw2) { err.textContent = 'Passwords do not match'; err.classList.add('show'); return; }
+  const btn = document.getElementById('cpBtn');
+  btn.disabled = true; btn.textContent = 'Setting...';
+  const r = await api('/api/client/change-password', { method: 'POST', body: JSON.stringify({ newPassword: pw }) });
+  btn.disabled = false; btn.textContent = 'Set new password';
+  if (!r || r.error) { err.textContent = r?.error || 'Failed'; err.classList.add('show'); return; }
+  toast('success', 'Password updated', 'Logging you in...');
+  const email = localStorage.getItem('himer_client_email');
+  const r2 = await api('/api/client/login', { method: 'POST', body: JSON.stringify({ email, password: pw }) });
+  if (r2?.token) {
+    token = r2.token;
+    localStorage.setItem('himer_client_token', token);
+    clientInfo = r2.client;
+  }
+  enterDashboard();
+}
+
+function logout(silent) {
+  token = null;
+  clientInfo = null;
+  localStorage.removeItem('himer_client_token');
+  if (!silent) toast('info', 'Logged out', '');
+  document.getElementById('logoutBtn').style.display = 'none';
+  document.getElementById('clientEmail').textContent = '';
+  showPage('login');
+}
+
+function enterDashboard() {
+  showPage('dashboard');
+  refreshData();
+  if (!window._clientTimer) {
+    window._clientTimer = setInterval(refreshData, 8000);
+  }
+}
+
+// ============================================================
+// DATA
+// ============================================================
+async function refreshData() {
+  const r = await api('/api/client/me');
+  if (!r || r.error) return;
+  const c = r.client;
+  document.getElementById('clientEmail').textContent = c.email;
+  document.getElementById('ovBalance').textContent = c.balance.toFixed(2);
+  document.getElementById('ovSpent').textContent = '$' + c.totalSpent.toFixed(2);
+  document.getElementById('ovTopup').textContent = '$' + c.totalToppedUp.toFixed(2);
+  document.getElementById('ovRate').textContent = c.rateLimit + '/min';
+  document.getElementById('ovClientId').textContent = c.id;
+  document.getElementById('ovEmailVal').textContent = c.email;
+  document.getElementById('ovCompany').textContent = c.company || '—';
+  document.getElementById('ovCreated').textContent = new Date(c.createdAt).toLocaleDateString();
+
+  // API key
+  const keyEl = document.getElementById('apiKeyDisplay');
+  if (c.apiKey) {
+    keyEl.textContent = c.apiKey;
+    keyEl.classList.remove('api-key-hidden');
+    updateCodeExamples(c.apiKey);
+  } else {
+    keyEl.textContent = 'Change password to view API key';
+    keyEl.classList.add('api-key-hidden');
+  }
+
+  // Jobs
+  const jobsTb = document.getElementById('jobsTable');
+  if (r.jobs.length === 0) {
+    jobsTb.innerHTML = '<tr><td colspan="7" class="text-dim text-center">No jobs yet — launch your first one!</td></tr>';
+  } else {
+    jobsTb.innerHTML = r.jobs.map(j => {
+      const duration = j.completedAt && j.startedAt
+        ? Math.round((new Date(j.completedAt) - new Date(j.startedAt)) / 1000) + 's'
+        : '—';
+      return `
+        <tr>
+          <td class="mono text-xs">${j.id}</td>
+          <td>${j.type}</td>
+          <td>${j.nodesNeeded}</td>
+          <td class="mono">$${j.cost.toFixed(2)}</td>
+          <td><span class="badge ${j.status.toLowerCase()}">${j.status}</span></td>
+          <td class="text-xs">${new Date(j.createdAt).toLocaleTimeString()}</td>
+          <td class="text-xs">${duration}</td>
+        </tr>`;
+    }).join('');
+  }
+}
+
+function updateCodeExamples(apiKey) {
+  const url = BACKEND_URL + '/api/v1/compute';
+  document.getElementById('curlExample').innerHTML = `curl -X POST ${url} \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: ${apiKey}" \\
+  -d '{"type":"compute","nodes":5}'`;
+  document.getElementById('jsExample').innerHTML = `<span class="kw">const</span> res = <span class="kw">await</span> fetch(<span class="str">"${url}"</span>, {
+  method: <span class="str">"POST"</span>,
+  headers: {
+    <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>,
+    <span class="str">"X-API-Key"</span>: <span class="str">"${apiKey}"</span>
+  },
+  body: JSON.stringify({ type: <span class="str">"compute"</span>, nodes: 5 })
+});
+<span class="kw">const</span> job = <span class="kw">await</span> res.json();
+console.log(job.jobId);`;
+  document.getElementById('pyExample').innerHTML = `<span class="kw">import</span> requests
+res = requests.post(
+  <span class="str">"${url}"</span>,
+  headers={<span class="str">"X-API-Key"</span>: <span class="str">"${apiKey}"</span>},
+  json={<span class="str">"type"</span>: <span class="str">"compute"</span>, <span class="str">"nodes"</span>: 5}
+)
+job = res.json()
+<span class="kw">print</span>(job[<span class="str">"jobId"</span>])`;
+}
+
+function copyApiKey() {
+  const key = document.getElementById('apiKeyDisplay').textContent;
+  if (key.startsWith('hmr_')) {
+    navigator.clipboard?.writeText(key);
+    toast('success', 'API key copied', '');
+  }
+}
+
+// ============================================================
+// LAUNCH JOB
+// ============================================================
+function openLaunchJob() {
+  document.getElementById('modalTitle').textContent = 'Launch Compute Job';
+  document.getElementById('modalSubtitle').textContent = 'Test the network with a small job.';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="field-label">Job type</div>
+    <select class="field" id="jobType">
+      <option value="compute">Compute (general)</option>
+      <option value="ai-training">AI Training</option>
+      <option value="rendering">Rendering</option>
+      <option value="inference">Inference</option>
+    </select>
+    <div class="field-label">Number of nodes (1-100)</div>
+    <input class="field" type="number" id="jobNodes" value="5" min="1" max="100">
+    <p class="text-xs text-dim">Cost: $0.05 per node. <strong id="jobCostPreview">$0.25</strong> total.</p>
+  `;
+  document.getElementById('jobNodes').oninput = (e) => {
+    const n = parseInt(e.target.value) || 0;
+    document.getElementById('jobCostPreview').textContent = '$' + (n * 0.05).toFixed(2);
+  };
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" id="launchJobBtn" onclick="doLaunchJob()">Launch</button>
+  `;
+  openModal();
+}
+
+async function doLaunchJob() {
+  const type = document.getElementById('jobType').value;
+  const nodes = parseInt(document.getElementById('jobNodes').value) || 5;
+  const btn = document.getElementById('launchJobBtn');
+  btn.disabled = true; btn.textContent = 'Launching...';
+  const r = await api('/api/client/job', { method: 'POST', body: JSON.stringify({ type, nodes }) });
+  closeModal();
+  if (r?.jobId) {
+    toast('success', 'Job launched', r.jobId);
+    refreshData();
+    clientTab('jobs');
+  } else {
+    toast('error', 'Launch failed', r?.error || 'Insufficient balance?');
+  }
+}
+
+// ============================================================
+// AI
+// ============================================================
+function toggleAI() {
+  document.getElementById('aiChat').classList.toggle('open');
+}
+
+function askQuick(q) {
+  document.getElementById('aiInput').value = q;
+  askAI();
+}
+
+async function askAI() {
+  const input = document.getElementById('aiInput');
+  const body = document.getElementById('aiChatBody');
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+  body.insertAdjacentHTML('beforeend', `<div class="ai-msg user">${escapeHtml(q)}</div>`);
+  body.insertAdjacentHTML('beforeend', `<div class="ai-msg bot" id="thinking">Thinking...</div>`);
+  body.scrollTop = body.scrollHeight;
+  const r = await api('/api/client/ai/ask', { method: 'POST', body: JSON.stringify({ question: q, lang: 'en' }) });
+  document.getElementById('thinking')?.remove();
+  let ans = 'I don\'t have an answer for that.';
+  if (r?.source === 'faq' && r.key) ans = tClient(r.key);
+  else if (r?.text) ans = r.text;
+  body.insertAdjacentHTML('beforeend', `<div class="ai-msg bot">${escapeHtml(ans)}</div>`);
+  body.scrollTop = body.scrollHeight;
+}
+
+function escapeHtml(s) { return s.replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])); }
+
+// ============================================================
+// MODAL/TOAST
+// ============================================================
+function openModal() { document.getElementById('modalBackdrop').classList.add('active'); }
+function closeModal() { document.getElementById('modalBackdrop').classList.remove('active'); }
+document.getElementById('modalBackdrop').addEventListener('click', e => { if (e.target.id === 'modalBackdrop') closeModal(); });
+
+function toast(type, title, message) {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `<div><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div>`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 4500);
+}
+
+// ============================================================
+// AUTOSTART
+// ============================================================
+(async () => {
+  if (token) {
+    const r = await api('/api/client/me');
+    if (r && !r.error) {
+      clientInfo = r.client;
+      document.getElementById('clientEmail').textContent = r.client.email;
+      document.getElementById('logoutBtn').style.display = '';
+      if (r.client.mustChangePassword) showPage('changepw');
+      else enterDashboard();
+      return;
+    }
+    token = null;
+    localStorage.removeItem('himer_client_token');
+  }
+  showPage('login');
+})();
+</script>
+</body>
+</html>

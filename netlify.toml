@@ -1,15 +1,48 @@
+# Netlify deployment config
+
 [build]
   publish = "."
+
+# Inject backend URL via snippet
+# Customize BACKEND_URL in Netlify env vars: Site settings > Environment variables
+# Add: BACKEND_URL = https://himer-orchestrator.onrender.com
 
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options = "DENY"
+    X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+
+# SPA-style: serve index.html for unknown paths
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+[[redirects]]
+  from = "/client"
+  to = "/client.html"
+  status = 200
+
+[[redirects]]
+  from = "/business"
+  to = "/client.html"
   status = 200

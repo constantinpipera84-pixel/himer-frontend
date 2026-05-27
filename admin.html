@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05060a">
+<meta name="robots" content="noindex, nofollow">
+<title>HIMER · Admin Console</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23ff3d80'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%2305060a'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #05060a; --bg-2: #0a0d18;
+  --surface: rgba(15, 20, 35, 0.7);
+  --line: rgba(120, 200, 255, 0.12);
+  --line-strong: rgba(120, 200, 255, 0.3);
+  --text: #e6ecf5; --text-dim: #7a8499;
+  --neon: #00f0c8; --neon-2: #ff3d80; --neon-3: #6b8cff;
+  --warn: #ffb547; --success: #00f0c8; --danger: #ff3d80;
+  --seed: #ffb547; --real-active: #00f0c8; --real-inactive: #6b8cff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'JetBrains Mono', monospace; background: var(--bg); color: var(--text);
+  min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.5;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,61,128,0.08), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(0,240,200,0.05), transparent 50%),
+    linear-gradient(rgba(120,200,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,200,255,0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+}
+h1, h2, h3 { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+.label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-dim); }
+
+/* NAV */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 24px; background: rgba(5,6,10,0.85);
+  backdrop-filter: blur(20px); border-bottom: 1px solid var(--line); gap: 12px;
+}
+.logo {
+  display: flex; align-items: center; gap: 12px; font-family: 'Syne';
+  font-weight: 800; font-size: 18px;
+}
+.logo .mark {
+  width: 30px; height: 30px;
+  background: conic-gradient(from 0deg, var(--neon-2), var(--neon), var(--neon-3), var(--neon-2));
+  mask: radial-gradient(circle at center, transparent 30%, black 32%, black 48%, transparent 50%), linear-gradient(black, black);
+  -webkit-mask: radial-gradient(circle at center, transparent 30%, black 32%, black 48%, transparent 50%), linear-gradient(black, black);
+  mask-composite: intersect; -webkit-mask-composite: source-in;
+}
+.admin-badge {
+  padding: 3px 10px; font-size: 10px; letter-spacing: 0.15em;
+  background: var(--neon-2); color: #fff; font-weight: 700;
+}
+.nav-right { display: flex; gap: 14px; align-items: center; font-size: 12px; }
+.btn-logout {
+  padding: 8px 14px; background: transparent; border: 1px solid var(--line);
+  color: var(--text-dim); cursor: pointer; font-family: inherit; font-size: 11px;
+}
+.btn-logout:hover { color: var(--neon-2); border-color: var(--neon-2); }
+
+/* PAGES */
+.page { display: none; padding-top: 70px; position: relative; z-index: 2; }
+.page.active { display: block; }
+
+/* LOGIN */
+.login-wrap {
+  min-height: calc(100vh - 70px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.login-card {
+  background: var(--surface); border: 1px solid var(--line-strong);
+  padding: 40px; max-width: 420px; width: 100%; backdrop-filter: blur(20px);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+.login-card h2 { font-size: 28px; margin-bottom: 8px; }
+.login-card .sub { color: var(--text-dim); font-size: 13px; margin-bottom: 28px; }
+
+input.field, select.field {
+  width: 100%; padding: 13px 16px; background: var(--bg);
+  border: 1px solid var(--line); color: var(--text);
+  font-family: inherit; font-size: 13px; margin-bottom: 14px;
+}
+input.field:focus { outline: none; border-color: var(--neon); }
+.field-label { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
+.field-group { margin-bottom: 14px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px; font-family: inherit; font-weight: 700; font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  border: none; transition: all 0.2s; min-height: 42px;
+}
+.btn-primary {
+  background: var(--neon); color: #000;
+  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+}
+.btn-primary:hover { background: #fff; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-danger {
+  background: var(--neon-2); color: #fff;
+  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+}
+.btn-danger:hover { background: #ff5fa0; }
+.btn-warn {
+  background: var(--warn); color: #000;
+  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+}
+.btn-ghost {
+  background: transparent; border: 1px solid var(--line-strong); color: var(--text);
+}
+.btn-ghost:hover { border-color: var(--neon); color: var(--neon); }
+.btn-small { padding: 6px 12px; font-size: 10px; min-height: 32px; }
+
+.error-msg {
+  background: rgba(255,61,128,0.08); border: 1px solid var(--neon-2);
+  padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: var(--neon-2);
+  display: none;
+}
+.error-msg.show { display: block; }
+
+.warning-box {
+  background: rgba(255,181,71,0.08); border: 1px solid var(--warn);
+  padding: 14px; margin-bottom: 18px; font-size: 12px;
+}
+.warning-box .title { color: var(--warn); font-weight: 700; margin-bottom: 6px; }
+
+/* ADMIN DASHBOARD */
+.admin-wrap { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 70px); }
+.admin-side { border-right: 1px solid var(--line); padding: 22px 0; background: var(--bg-2); }
+.admin-side .label { padding: 0 22px 12px; }
+.admin-side a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 22px;
+  color: var(--text-dim); font-size: 13px; cursor: pointer;
+  transition: all 0.2s; border-left: 2px solid transparent;
+}
+.admin-side a:hover, .admin-side a.active {
+  color: var(--neon-2); background: rgba(255,61,128,0.05);
+  border-left-color: var(--neon-2);
+}
+.admin-side .badge {
+  margin-left: auto; min-width: 18px; height: 18px;
+  background: var(--neon-2); color: #fff; font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 6px; border-radius: 9px; font-weight: 700;
+}
+.admin-main { padding: 28px; min-width: 0; }
+
+.admin-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 26px; flex-wrap: wrap; gap: 14px; }
+.admin-header h2 { font-size: 28px; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+.kpi { border: 1px solid var(--line); background: var(--surface); padding: 18px; }
+.kpi .label { font-size: 10px; margin-bottom: 8px; }
+.kpi .val { font-family: 'Syne'; font-size: 26px; font-weight: 800; color: var(--text); line-height: 1; }
+.kpi.real .val { color: var(--neon); }
+.kpi.seed .val { color: var(--warn); }
+.kpi.pending .val { color: var(--neon-2); }
+.kpi .delta { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  padding: 22px; margin-bottom: 18px;
+}
+.card h3 { font-size: 18px; margin-bottom: 14px; font-family: 'JetBrains Mono'; font-weight: 700; }
+
+/* REALITY VIEW with legend */
+.reality-wrap { position: relative; }
+.legend {
+  display: flex; gap: 18px; flex-wrap: wrap; margin: 14px 0;
+  padding: 12px 14px; background: var(--bg); border: 1px solid var(--line); font-size: 12px;
+}
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.legend-dot.seed { background: var(--seed); box-shadow: 0 0 8px var(--seed); }
+.legend-dot.real-active { background: var(--real-active); box-shadow: 0 0 10px var(--real-active); }
+.legend-dot.real-inactive { background: var(--real-inactive); box-shadow: 0 0 6px var(--real-inactive); }
+.canvas-wrap {
+  position: relative; width: 100%; height: 460px;
+  background: rgba(0,0,0,0.4); overflow: hidden; border: 1px solid var(--line);
+}
+#admin-canvas {
+  position: absolute; top: 0; left: 0;
+  width: 100% !important; height: 100% !important; display: block;
+  cursor: pointer;
+}
+
+table.data { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.data th, table.data td { padding: 10px; text-align: left; border-bottom: 1px solid var(--line); }
+table.data th { color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; }
+table.data tr:hover { background: rgba(255,61,128,0.03); }
+table.data .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.badge {
+  display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; border: 1px solid;
+}
+.badge.pending { color: var(--warn); border-color: var(--warn); }
+.badge.approved { color: var(--neon-3); border-color: var(--neon-3); }
+.badge.paid { color: var(--neon); border-color: var(--neon); }
+.badge.rejected { color: var(--neon-2); border-color: var(--neon-2); }
+.badge.online { color: var(--neon); border-color: var(--neon); }
+.badge.offline { color: var(--text-dim); border-color: var(--text-dim); }
+.badge.suspended { color: var(--neon-2); border-color: var(--neon-2); }
+
+/* MODAL */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(5,6,10,0.85); backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-backdrop.active { display: flex; }
+.modal {
+  background: var(--bg-2); border: 1px solid var(--line-strong);
+  max-width: 580px; width: 100%; max-height: 90vh; overflow-y: auto;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  position: relative;
+}
+.modal-header { padding: 24px 30px 14px; border-bottom: 1px solid var(--line); }
+.modal-header h3 { font-family: 'Syne'; font-size: 22px; }
+.modal-header p { color: var(--text-dim); font-size: 13px; margin-top: 8px; }
+.modal-body { padding: 22px 30px; }
+.modal-footer { padding: 14px 30px 24px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.modal-close {
+  position: absolute; top: 18px; right: 18px; background: none;
+  border: 1px solid var(--line); color: var(--text-dim);
+  width: 32px; height: 32px; cursor: pointer; font-size: 14px;
+}
+
+/* TOAST */
+.toast-container { position: fixed; top: 84px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; max-width: 380px; }
+.toast {
+  background: rgba(10,13,24,0.95); backdrop-filter: blur(20px);
+  border: 1px solid var(--line-strong); border-left: 3px solid var(--neon);
+  padding: 14px 18px; display: flex; gap: 12px; align-items: flex-start;
+  animation: toastIn 0.4s;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+}
+.toast.success { border-left-color: var(--neon); }
+.toast.error { border-left-color: var(--neon-2); }
+.toast.warn { border-left-color: var(--warn); }
+.toast.info { border-left-color: var(--neon-3); }
+@keyframes toastIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.toast-title { font-family: 'Syne'; font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+.toast-message { font-size: 12px; color: var(--text-dim); }
+
+.credentials-box {
+  background: var(--bg); border: 2px solid var(--warn);
+  padding: 16px; margin: 14px 0; font-family: 'JetBrains Mono';
+}
+.credentials-box .label { color: var(--warn); margin-bottom: 6px; }
+.credentials-box .value { font-size: 14px; word-break: break-all; color: var(--text); user-select: all; cursor: pointer; padding: 8px; background: var(--bg-2); margin: 4px 0; }
+.credentials-box .warn { font-size: 11px; color: var(--warn); margin-top: 10px; line-height: 1.5; }
+
+.gap-2 { gap: 8px; } .gap-3 { gap: 16px; }
+.mt-2 { margin-top: 8px; } .mt-3 { margin-top: 16px; } .mt-4 { margin-top: 24px; }
+.text-dim { color: var(--text-dim); } .text-neon { color: var(--neon); }
+.text-pink { color: var(--neon-2); } .text-warn { color: var(--warn); }
+.text-sm { font-size: 12px; } .text-xs { font-size: 11px; }
+.flex { display: flex; } .items-center { align-items: center; } .justify-between { justify-content: space-between; }
+.text-center { text-align: center; } .text-right { text-align: right; }
+
+@media (max-width: 900px) {
+  .admin-wrap { grid-template-columns: 1fr; }
+  .admin-side { display: none; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .admin-main { padding: 18px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">
+    <div class="mark"></div>
+    HIMER <span class="admin-badge">ADMIN</span>
+  </div>
+  <div class="nav-right">
+    <span id="adminEmail" class="text-dim mono"></span>
+    <button class="btn-logout" id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+  </div>
+</nav>
+
+<!-- LOGIN PAGE -->
+<div class="page active" id="page-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <h2>Admin Console</h2>
+      <div class="sub">Restricted access. Authorized personnel only.</div>
+      <div class="error-msg" id="loginError"></div>
+      <div class="field-group">
+        <div class="field-label">Email</div>
+        <input class="field" type="email" id="loginEmail" placeholder="admin@himer.network" autocomplete="username">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Password</div>
+        <input class="field" type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doLogin()" id="loginBtn">Sign in</button>
+      <p class="text-xs text-dim mt-3 text-center">Default password forced to change on first login.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FORCE PASSWORD CHANGE -->
+<div class="page" id="page-changepw">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="warning-box">
+        <div class="title">⚠ Password change required</div>
+        <div>Either this is your first login, or your password expired (3 month rotation policy).</div>
+      </div>
+      <h2>Set new password</h2>
+      <div class="sub">Minimum 8 characters. Use a strong unique password.</div>
+      <div class="error-msg" id="cpError"></div>
+      <div class="field-group">
+        <div class="field-label">New password</div>
+        <input class="field" type="password" id="newPw" placeholder="At least 8 characters">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Confirm new password</div>
+        <input class="field" type="password" id="newPw2" placeholder="Type again" onkeydown="if(event.key==='Enter') doChangePassword()">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doChangePassword()" id="cpBtn">Set new password</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="page" id="page-admin">
+  <div class="admin-wrap">
+    <aside class="admin-side">
+      <span class="label">Operations</span>
+      <a class="admin-link active" data-tab="reality" onclick="adminTab('reality')">⬢ Reality View</a>
+      <a class="admin-link" data-tab="payouts" onclick="adminTab('payouts')">$ Payouts <span class="badge" id="payoutsBadge" style="display:none;">0</span></a>
+      <a class="admin-link" data-tab="users" onclick="adminTab('users')">◇ Users</a>
+      <a class="admin-link" data-tab="clients" onclick="adminTab('clients')">⚙ Business Clients</a>
+      <a class="admin-link" data-tab="treasury" onclick="adminTab('treasury')">€ Treasury</a>
+      <a class="admin-link" data-tab="audit" onclick="adminTab('audit')">! Audit Log</a>
+    </aside>
+    <main class="admin-main">
+      <div class="admin-header">
+        <div>
+          <span class="label">— Admin Console</span>
+          <h2 id="adminTabTitle">Reality View</h2>
+        </div>
+        <button class="btn btn-ghost btn-small" onclick="refreshOverview()">↻ Refresh</button>
+      </div>
+
+      <!-- TAB: REALITY -->
+      <div class="admin-tab" id="tab-reality">
+        <div class="kpi-grid">
+          <div class="kpi real"><div class="label">Real Nodes</div><div class="val" id="kReal">—</div><div class="delta">verified users</div></div>
+          <div class="kpi seed"><div class="label">Seed Nodes</div><div class="val" id="kSeed">—</div><div class="delta">demo (not paid)</div></div>
+          <div class="kpi"><div class="label">Real Users</div><div class="val" id="kUsers">—</div><div class="delta" id="kUsersPayout">—</div></div>
+          <div class="kpi pending"><div class="label">Pending Payouts</div><div class="val" id="kPending">—</div><div class="delta">awaiting approval</div></div>
+        </div>
+
+        <div class="card reality-wrap">
+          <h3>Network Map — Reality View</h3>
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot seed"></div><span>Yellow = Seed node (demo)</span></div>
+            <div class="legend-item"><div class="legend-dot real-active"></div><span>Green = Real node, active</span></div>
+            <div class="legend-item"><div class="legend-dot real-inactive"></div><span>Blue = Real node, inactive</span></div>
+          </div>
+          <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="admin-canvas"></canvas>
+          </div>
+          <p class="text-xs text-dim mt-3">Public users see all nodes as identical cyan ("neural pulses"). Only this admin view distinguishes seed vs real.</p>
+        </div>
+
+        <div class="card">
+          <h3>Revenue Split</h3>
+          <table class="data">
+            <tr><td>Platform (60%)</td><td class="text-right text-neon mono" id="revPlatform">$0</td></tr>
+            <tr><td>Users (40%)</td><td class="text-right text-neon mono" id="revUsers">$0</td></tr>
+            <tr><td>Ad Revenue</td><td class="text-right text-neon mono" id="revAd">$0</td></tr>
+            <tr><td><strong>Total</strong></td><td class="text-right text-neon mono" id="revTotal" style="font-weight:700;">$0</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: PAYOUTS -->
+      <div class="admin-tab" id="tab-payouts" style="display:none;">
+        <div class="card">
+          <h3>Pending Payout Approvals</h3>
+          <p class="text-xs text-dim" style="margin-bottom:14px;">Confirm payouts one by one. Each approved payout becomes a Stripe transfer to user's bank.</p>
+          <div style="overflow-x:auto;">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>Payout ID</th><th>User</th><th>Gross</th><th>Fee</th><th>Net</th>
+                  <th>Requested</th><th>Status</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="payoutsTable"><tr><td colspan="8" class="text-dim text-center">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: USERS -->
+      <div class="admin-tab" id="tab-users" style="display:none;">
+        <div class="card">
+          <h3>Registered Users</h3>
+          <div style="overflow-x:auto;">
+            <table class="data">
+              <thead><tr><th>User ID</th><th>Email</th><th>Total Earned</th><th>Available</th><th>Devices</th><th>Payout</th><th>Joined</th></tr></thead>
+              <tbody id="usersTable"><tr><td colspan="7" class="text-dim text-center">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: BUSINESS CLIENTS -->
+      <div class="admin-tab" id="tab-clients" style="display:none;">
+        <div class="card">
+          <div class="flex justify-between items-center" style="margin-bottom:14px;">
+            <h3 style="margin:0;">Business Clients</h3>
+            <button class="btn btn-primary btn-small" onclick="openCreateClient()">+ Create Client</button>
+          </div>
+          <p class="text-xs text-dim" style="margin-bottom:14px;">Manually managed business clients. Each gets login credentials, API key, and balance.</p>
+          <div style="overflow-x:auto;">
+            <table class="data">
+              <thead><tr><th>Client ID</th><th>Email / Company</th><th>Balance</th><th>Total Spent</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="clientsTable"><tr><td colspan="6" class="text-dim text-center">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: TREASURY -->
+      <div class="admin-tab" id="tab-treasury" style="display:none;">
+        <div class="kpi-grid">
+          <div class="kpi real"><div class="label">Treasury Balance</div><div class="val" id="trBalance">—</div><div class="delta">cash on hand</div></div>
+          <div class="kpi"><div class="label">Total In</div><div class="val" id="trIn">—</div><div class="delta">from clients</div></div>
+          <div class="kpi"><div class="label">Total Out</div><div class="val" id="trOut">—</div><div class="delta">to users</div></div>
+          <div class="kpi pending"><div class="label">Obligations</div><div class="val" id="trObl">—</div><div class="delta">user wallets total</div></div>
+        </div>
+        <div class="card">
+          <h3>How Treasury Works</h3>
+          <ul class="text-sm" style="padding-left:18px;line-height:1.8;">
+            <li><strong>In:</strong> business clients top-up balance → cash arrives → treasury grows</li>
+            <li><strong>Out:</strong> users request withdraws → admin approves → cash leaves treasury → Stripe transfer</li>
+            <li><strong>Net Available:</strong> Balance minus pending approvals → that's what's safe to approve next</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- TAB: AUDIT -->
+      <div class="admin-tab" id="tab-audit" style="display:none;">
+        <div class="card">
+          <h3>Admin Audit Log</h3>
+          <p class="text-xs text-dim" style="margin-bottom:14px;">All actions performed by admins are logged here.</p>
+          <div style="overflow-x:auto;">
+            <table class="data">
+              <thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Target</th><th>IP</th></tr></thead>
+              <tbody id="auditTable"><tr><td colspan="5" class="text-dim text-center">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-header"><h3 id="modalTitle">—</h3><p id="modalSubtitle"></p></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="config.js"></script>
+<script>
+'use strict';
+
+const BACKEND_URL = window.HIMER_BACKEND || location.origin;
+
+// ============================================================
+// STATE
+// ============================================================
+let token = localStorage.getItem('himer_admin_token') || null;
+let adminInfo = null;
+let overview = null;
+let allNodes = []; // For admin reality view
+let payoutsCache = [];
+let clientsCache = [];
+
+// ============================================================
+// PAGE NAV
+// ============================================================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name)?.classList.add('active');
+}
+
+function adminTab(name) {
+  document.querySelectorAll('.admin-link').forEach(a => a.classList.toggle('active', a.dataset.tab === name));
+  document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
+  const tab = document.getElementById('tab-' + name);
+  if (tab) tab.style.display = '';
+  const titles = {
+    reality: 'Reality View', payouts: 'Payouts Approval',
+    users: 'Users', clients: 'Business Clients', treasury: 'Treasury', audit: 'Audit Log'
+  };
+  document.getElementById('adminTabTitle').textContent = titles[name] || name;
+  if (name === 'reality') { setTimeout(resizeCanvas, 50); loadMap(); }
+  if (name === 'payouts') loadPayouts();
+  if (name === 'users') loadUsers();
+  if (name === 'clients') loadClients();
+  if (name === 'treasury') refreshOverview();
+  if (name === 'audit') loadAudit();
+}
+
+// ============================================================
+// API
+// ============================================================
+async function api(path, opts = {}) {
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  try {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 15000);
+    const res = await fetch(BACKEND_URL + path, { ...opts, headers, signal: ctrl.signal });
+    const j = await res.json();
+    if (res.status === 401) {
+      logout(true);
+      return null;
+    }
+    return j;
+  } catch (e) {
+    console.error('api error', e);
+    return null;
+  }
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginError');
+  err.classList.remove('show');
+  if (!email || !password) {
+    err.textContent = 'Email and password required';
+    err.classList.add('show'); return;
+  }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  const r = await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+  btn.disabled = false; btn.textContent = 'Sign in';
+  if (!r || r.error) {
+    err.textContent = r?.error || 'Login failed';
+    err.classList.add('show');
+    return;
+  }
+  token = r.token;
+  adminInfo = r.admin;
+  localStorage.setItem('himer_admin_token', token);
+  localStorage.setItem('himer_admin_email', r.admin.email);
+  document.getElementById('adminEmail').textContent = r.admin.email;
+  document.getElementById('logoutBtn').style.display = '';
+  if (r.admin.mustChangePassword) {
+    showPage('changepw');
+  } else {
+    enterAdmin();
+  }
+}
+
+async function doChangePassword() {
+  const pw = document.getElementById('newPw').value;
+  const pw2 = document.getElementById('newPw2').value;
+  const err = document.getElementById('cpError');
+  err.classList.remove('show');
+  if (pw.length < 8) { err.textContent = 'Minimum 8 characters'; err.classList.add('show'); return; }
+  if (pw !== pw2) { err.textContent = 'Passwords do not match'; err.classList.add('show'); return; }
+  const btn = document.getElementById('cpBtn');
+  btn.disabled = true; btn.textContent = 'Setting...';
+  const r = await api('/api/admin/change-password', { method: 'POST', body: JSON.stringify({ newPassword: pw }) });
+  btn.disabled = false; btn.textContent = 'Set new password';
+  if (!r || r.error) { err.textContent = r?.error || 'Failed'; err.classList.add('show'); return; }
+  toast('success', 'Password updated', 'Use the new password from now on.');
+  // Re-login with new password to get fresh token
+  const email = localStorage.getItem('himer_admin_email');
+  const r2 = await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ email, password: pw }) });
+  if (r2 && r2.token) {
+    token = r2.token;
+    localStorage.setItem('himer_admin_token', token);
+    adminInfo = r2.admin;
+  }
+  enterAdmin();
+}
+
+function logout(silent) {
+  token = null;
+  adminInfo = null;
+  localStorage.removeItem('himer_admin_token');
+  if (!silent) toast('info', 'Logged out', '');
+  document.getElementById('logoutBtn').style.display = 'none';
+  document.getElementById('adminEmail').textContent = '';
+  showPage('login');
+}
+
+function enterAdmin() {
+  showPage('admin');
+  refreshOverview();
+  initAdminCanvas();
+  // Auto-refresh
+  if (!window._adminTimer) {
+    window._adminTimer = setInterval(refreshOverview, 8000);
+    setInterval(() => { if (document.querySelector('.admin-link.active')?.dataset.tab === 'reality') loadMap(); }, 5000);
+  }
+}
+
+// ============================================================
+// OVERVIEW
+// ============================================================
+async function refreshOverview() {
+  const r = await api('/api/admin/overview');
+  if (!r) return;
+  overview = r;
+
+  // Reality KPIs
+  setText('kReal', formatNum(r.reality.realNodes));
+  setText('kSeed', formatNum(r.reality.seedNodes));
+  setText('kUsers', formatNum(r.reality.realUsers));
+  setText('kUsersPayout', `${r.reality.usersWithPayoutSetup} payout-ready`);
+  setText('kPending', r.pendingPayoutCount);
+
+  // Revenue
+  setText('revPlatform', '$' + r.revenue.platform60.toFixed(4));
+  setText('revUsers', '$' + r.revenue.users40.toFixed(4));
+  setText('revAd', '$' + r.revenue.adRevenue.toFixed(4));
+  setText('revTotal', '$' + r.revenue.total.toFixed(4));
+
+  // Treasury
+  setText('trBalance', '$' + r.treasury.balance.toFixed(2));
+  setText('trIn', '$' + r.treasury.totalIn.toFixed(2));
+  setText('trOut', '$' + r.treasury.totalOut.toFixed(2));
+  setText('trObl', '$' + r.treasury.obligationsToUsers.toFixed(2));
+
+  // Badge
+  const b = document.getElementById('payoutsBadge');
+  if (r.pendingPayoutCount > 0) {
+    b.textContent = r.pendingPayoutCount;
+    b.style.display = '';
+  } else {
+    b.style.display = 'none';
+  }
+}
+
+// ============================================================
+// MAP (ADMIN REALITY VIEW)
+// ============================================================
+let canvas, ctx, canvasW = 0, canvasH = 0, dpr = 1;
+
+function initAdminCanvas() {
+  canvas = document.getElementById('admin-canvas');
+  if (!canvas) return;
+  ctx = canvas.getContext('2d');
+  resizeCanvas();
+  if (window.ResizeObserver) {
+    new ResizeObserver(() => resizeCanvas()).observe(document.getElementById('canvasWrap'));
+  }
+  window.addEventListener('resize', resizeCanvas);
+  requestAnimationFrame(renderAdminCanvas);
+}
+
+function resizeCanvas() {
+  if (!canvas) return;
+  const wrap = document.getElementById('canvasWrap');
+  if (!wrap) return;
+  const rect = wrap.getBoundingClientRect();
+  dpr = window.devicePixelRatio || 1;
+  canvasW = Math.max(rect.width, 100);
+  canvasH = Math.max(rect.height, 100);
+  canvas.width = Math.floor(canvasW * dpr);
+  canvas.height = Math.floor(canvasH * dpr);
+  canvas.style.width = canvasW + 'px';
+  canvas.style.height = canvasH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function project(lat, lng) {
+  return [((lng + 180) / 360) * canvasW, ((90 - lat) / 180) * canvasH];
+}
+
+async function loadMap() {
+  const r = await api('/api/admin/map');
+  if (r?.nodes) allNodes = r.nodes;
+}
+
+let pulseTime = 0, lastFrame = 0;
+function renderAdminCanvas(ts) {
+  if (!canvas || canvasW < 50) { requestAnimationFrame(renderAdminCanvas); return; }
+  if (ts - lastFrame < 33) { requestAnimationFrame(renderAdminCanvas); return; }
+  lastFrame = ts;
+  pulseTime += 0.02;
+
+  ctx.fillStyle = 'rgba(10,13,24,0.15)';
+  ctx.fillRect(0, 0, canvasW, canvasH);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(120,200,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 12; i++) { const x = (i / 12) * canvasW; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvasH); ctx.stroke(); }
+  for (let i = 0; i <= 6; i++) { const y = (i / 6) * canvasH; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvasW, y); ctx.stroke(); }
+
+  // Draw nodes — color by source AND status
+  for (const n of allNodes) {
+    const [x, y] = project(n.lat, n.lng);
+    const isReal = n.source === 'real';
+    const isActive = n.s === 'C';
+    let color, size, glow;
+    if (isReal && isActive) { color = '#00f0c8'; size = 4 + Math.sin(pulseTime + x * 0.01) * 1.5; glow = 14; }
+    else if (isReal) { color = '#6b8cff'; size = 3.5; glow = 8; }
+    else { color = '#ffb547'; size = 1.8; glow = 0; }
+    if (glow > 0) {
+      const g = ctx.createRadialGradient(x, y, 0, x, y, glow);
+      g.addColorStop(0, color); g.addColorStop(1, color + '00');
+      ctx.fillStyle = g;
+      ctx.globalAlpha = 0.4;
+      ctx.beginPath(); ctx.arc(x, y, glow, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
+  }
+  requestAnimationFrame(renderAdminCanvas);
+}
+
+// ============================================================
+// PAYOUTS
+// ============================================================
+async function loadPayouts() {
+  const r = await api('/api/admin/payouts');
+  if (!r?.payouts) return;
+  payoutsCache = r.payouts;
+  const tbody = document.getElementById('payoutsTable');
+  if (payoutsCache.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="text-dim text-center">No payouts yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = payoutsCache.map(p => `
+    <tr>
+      <td class="mono text-xs">${p.id}</td>
+      <td class="mono text-xs">${p.user_id}</td>
+      <td>$${parseFloat(p.gross_amount).toFixed(2)}</td>
+      <td>$${parseFloat(p.fee).toFixed(2)}</td>
+      <td class="text-neon">$${parseFloat(p.net_amount).toFixed(2)}</td>
+      <td class="text-xs">${new Date(p.requested_at).toLocaleString()}</td>
+      <td><span class="badge ${p.status.toLowerCase().replace('_review','')}">${p.status.replace('_', ' ')}</span></td>
+      <td class="actions">
+        ${p.status === 'PENDING_REVIEW' ? `
+          <button class="btn btn-primary btn-small" onclick="approvePayout('${p.id}', ${p.net_amount})">Approve</button>
+          <button class="btn btn-danger btn-small" onclick="rejectPayout('${p.id}')">Reject</button>
+        ` : `<span class="text-dim text-xs">—</span>`}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function approvePayout(id, amount) {
+  document.getElementById('modalTitle').textContent = 'Confirm payout approval';
+  document.getElementById('modalSubtitle').textContent = 'This action will transfer money to user.';
+  document.getElementById('modalBody').innerHTML = `
+    <p class="text-sm" style="line-height:1.6;">You are about to approve payout <strong class="mono">${id}</strong>.</p>
+    <div style="background:var(--bg);border:1px solid var(--line);padding:14px;margin:14px 0;">
+      <div class="label">Net amount</div>
+      <div class="text-neon" style="font-family:'Syne';font-size:28px;font-weight:800;">$${amount.toFixed(2)}</div>
+    </div>
+    <p class="text-xs text-dim">In production, this triggers a Stripe transfer. In demo, it marks as PAID.</p>
+  `;
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" id="confirmApprove">Confirm</button>
+  `;
+  document.getElementById('confirmApprove').onclick = async () => {
+    closeModal();
+    const r = await api('/api/admin/payouts/approve', { method: 'POST', body: JSON.stringify({ payoutId: id }) });
+    if (r?.ok) {
+      toast('success', 'Payout approved', `$${amount.toFixed(2)} sent`);
+      loadPayouts();
+      refreshOverview();
+    } else {
+      toast('error', 'Failed', r?.error || 'Unknown error');
+    }
+  };
+  openModal();
+}
+
+function rejectPayout(id) {
+  document.getElementById('modalTitle').textContent = 'Reject payout';
+  document.getElementById('modalSubtitle').textContent = 'Money will be returned to user wallet.';
+  document.getElementById('modalBody').innerHTML = `
+    <p class="text-sm">Payout <strong class="mono">${id}</strong></p>
+    <div class="field-label mt-3">Reason (shown to user)</div>
+    <input class="field" id="rejectReason" placeholder="e.g., Account verification needed">
+  `;
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-danger" id="confirmReject">Reject</button>
+  `;
+  document.getElementById('confirmReject').onclick = async () => {
+    const reason = document.getElementById('rejectReason').value;
+    closeModal();
+    const r = await api('/api/admin/payouts/reject', { method: 'POST', body: JSON.stringify({ payoutId: id, reason }) });
+    if (r?.ok) {
+      toast('info', 'Payout rejected', 'Funds returned to user wallet');
+      loadPayouts(); refreshOverview();
+    } else {
+      toast('error', 'Failed', r?.error || 'Unknown error');
+    }
+  };
+  openModal();
+}
+
+// ============================================================
+// USERS
+// ============================================================
+async function loadUsers() {
+  const r = await api('/api/admin/users');
+  if (!r?.users) return;
+  const tbody = document.getElementById('usersTable');
+  if (r.users.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="text-dim text-center">No users yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = r.users.map(u => `
+    <tr>
+      <td class="mono text-xs">${u.id}</td>
+      <td>${u.email || '<span class="text-dim">—</span>'}</td>
+      <td class="text-neon mono">$${u.totalEarnings.toFixed(4)}</td>
+      <td class="mono">$${u.withdrawable.toFixed(4)}</td>
+      <td>${u.deviceCount || 0}</td>
+      <td>${u.payoutSetup ? '<span class="badge approved">SET</span>' : '<span class="text-dim text-xs">—</span>'}</td>
+      <td class="text-xs">${new Date(u.joinedAt).toLocaleDateString()}</td>
+    </tr>
+  `).join('');
+}
+
+// ============================================================
+// CLIENTS
+// ============================================================
+async function loadClients() {
+  const r = await api('/api/admin/clients');
+  if (!r?.clients) return;
+  clientsCache = r.clients;
+  const tbody = document.getElementById('clientsTable');
+  if (r.clients.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-dim text-center">No business clients yet. Create one to get started.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = r.clients.map(c => `
+    <tr>
+      <td class="mono text-xs">${c.id}</td>
+      <td>
+        <div>${c.email}</div>
+        ${c.company ? `<div class="text-xs text-dim">${c.company}</div>` : ''}
+      </td>
+      <td class="text-neon mono">$${c.balance.toFixed(2)}</td>
+      <td class="mono text-xs">$${c.totalSpent.toFixed(2)}</td>
+      <td><span class="badge ${c.isActive ? 'online' : 'suspended'}">${c.isActive ? 'ACTIVE' : 'SUSPENDED'}</span></td>
+      <td class="actions">
+        <button class="btn btn-ghost btn-small" onclick="openTopUp('${c.id}', '${c.email}')">+ Top-up</button>
+        ${c.isActive
+          ? `<button class="btn btn-danger btn-small" onclick="openSuspend('${c.id}', '${c.email}')">Suspend</button>`
+          : `<button class="btn btn-primary btn-small" onclick="reactivateClient('${c.id}')">Reactivate</button>`}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openCreateClient() {
+  document.getElementById('modalTitle').textContent = 'Create Business Client';
+  document.getElementById('modalSubtitle').textContent = 'They will receive login credentials + API key';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="field-label">Email *</div>
+    <input class="field" id="cliEmail" placeholder="contact@business.com">
+    <div class="field-label">Contact name</div>
+    <input class="field" id="cliName" placeholder="John Smith">
+    <div class="field-label">Company</div>
+    <input class="field" id="cliCompany" placeholder="ACME Corp">
+    <div class="field-label">Initial balance ($)</div>
+    <input class="field" type="number" id="cliBalance" placeholder="0" value="0" min="0">
+    <div class="field-label">Rate limit (req/min)</div>
+    <input class="field" type="number" id="cliRate" placeholder="60" value="60" min="1">
+  `;
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" id="cliCreateBtn" onclick="doCreateClient()">Create</button>
+  `;
+  openModal();
+}
+
+async function doCreateClient() {
+  const email = document.getElementById('cliEmail').value.trim();
+  const name = document.getElementById('cliName').value.trim();
+  const company = document.getElementById('cliCompany').value.trim();
+  const initialBalance = parseFloat(document.getElementById('cliBalance').value) || 0;
+  const rateLimit = parseInt(document.getElementById('cliRate').value) || 60;
+  if (!email) { toast('error', 'Email required', ''); return; }
+  const btn = document.getElementById('cliCreateBtn');
+  btn.disabled = true; btn.textContent = 'Creating...';
+  const r = await api('/api/admin/clients/create', { method: 'POST', body: JSON.stringify({ email, name, company, initialBalance, rateLimit }) });
+  btn.disabled = false; btn.textContent = 'Create';
+  if (!r || r.error) { toast('error', 'Create failed', r?.error || ''); return; }
+  showCredentialsModal(r);
+  loadClients();
+}
+
+function showCredentialsModal(r) {
+  document.getElementById('modalTitle').textContent = 'Client created — SAVE THESE NOW';
+  document.getElementById('modalSubtitle').textContent = 'These credentials will not be shown again. Copy and send to the client.';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="credentials-box">
+      <div class="label">CLIENT ID</div>
+      <div class="value" onclick="copyText(this.textContent)">${r.clientId}</div>
+      <div class="label mt-2">EMAIL</div>
+      <div class="value" onclick="copyText(this.textContent)">${r.email}</div>
+      <div class="label mt-2">INITIAL PASSWORD (must change on first login)</div>
+      <div class="value" onclick="copyText(this.textContent)">${r.initialPassword}</div>
+      <div class="label mt-2">API KEY</div>
+      <div class="value" onclick="copyText(this.textContent)">${r.apiKey}</div>
+      <div class="label mt-2">LOGIN URL</div>
+      <div class="value" onclick="copyText(this.textContent)">${location.origin}/client.html</div>
+      <div class="warn">⚠ Save these credentials NOW. The password and API key will not be visible again from the admin panel. Send them securely to the client (encrypted email or password manager).</div>
+    </div>
+  `;
+  document.getElementById('modalFooter').innerHTML = `<button class="btn btn-primary" onclick="closeModal()">Done</button>`;
+  openModal();
+}
+
+function copyText(t) {
+  navigator.clipboard?.writeText(t);
+  toast('success', 'Copied', t.slice(0, 30) + (t.length > 30 ? '...' : ''));
+}
+
+function openTopUp(clientId, email) {
+  document.getElementById('modalTitle').textContent = 'Top-up client balance';
+  document.getElementById('modalSubtitle').textContent = email;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="field-label">Amount ($)</div>
+    <input class="field" type="number" id="topupAmt" placeholder="100" min="1" step="0.01">
+    <p class="text-xs text-dim">Money is added to client balance immediately and recorded in treasury ledger.</p>
+  `;
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="doTopUp('${clientId}')">Top-up</button>
+  `;
+  openModal();
+}
+
+async function doTopUp(clientId) {
+  const amount = parseFloat(document.getElementById('topupAmt').value);
+  if (!amount || amount <= 0) { toast('error', 'Invalid amount', ''); return; }
+  closeModal();
+  const r = await api('/api/admin/clients/topup', { method: 'POST', body: JSON.stringify({ clientId, amount }) });
+  if (r?.ok) { toast('success', 'Top-up done', `New balance: $${r.newBalance.toFixed(2)}`); loadClients(); refreshOverview(); }
+  else toast('error', 'Top-up failed', r?.error || '');
+}
+
+function openSuspend(clientId, email) {
+  document.getElementById('modalTitle').textContent = 'Suspend client';
+  document.getElementById('modalSubtitle').textContent = email;
+  document.getElementById('modalBody').innerHTML = `
+    <p class="text-sm">Suspending will prevent login and API access. They keep their balance.</p>
+    <div class="field-label mt-3">Reason</div>
+    <input class="field" id="suspReason" placeholder="e.g., Payment overdue">
+  `;
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-danger" onclick="doSuspend('${clientId}')">Suspend</button>
+  `;
+  openModal();
+}
+
+async function doSuspend(clientId) {
+  const reason = document.getElementById('suspReason').value;
+  closeModal();
+  const r = await api('/api/admin/clients/suspend', { method: 'POST', body: JSON.stringify({ clientId, reason }) });
+  if (r?.ok) { toast('info', 'Client suspended', ''); loadClients(); }
+  else toast('error', 'Failed', r?.error || '');
+}
+
+async function reactivateClient(clientId) {
+  const r = await api('/api/admin/clients/reactivate', { method: 'POST', body: JSON.stringify({ clientId }) });
+  if (r?.ok) { toast('success', 'Client reactivated', ''); loadClients(); }
+}
+
+// ============================================================
+// AUDIT
+// ============================================================
+async function loadAudit() {
+  const r = await api('/api/admin/audit');
+  if (!r?.audit) return;
+  const tbody = document.getElementById('auditTable');
+  if (r.audit.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="text-dim text-center">No actions logged yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = r.audit.map(a => `
+    <tr>
+      <td class="text-xs">${new Date(a.created_at).toLocaleString()}</td>
+      <td class="mono text-xs">${a.admin_id}</td>
+      <td><span class="text-pink">${a.action}</span></td>
+      <td class="mono text-xs">${a.target_type || ''} ${a.target_id || ''}</td>
+      <td class="text-xs text-dim">${a.ip_address || '—'}</td>
+    </tr>
+  `).join('');
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+function formatNum(n) {
+  if (!n && n !== 0) return '0';
+  n = parseFloat(n);
+  if (n > 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n > 1e3) return (n / 1e3).toFixed(1) + 'K';
+  return Math.round(n).toString();
+}
+function openModal() { document.getElementById('modalBackdrop').classList.add('active'); }
+function closeModal() { document.getElementById('modalBackdrop').classList.remove('active'); }
+document.getElementById('modalBackdrop').addEventListener('click', e => { if (e.target.id === 'modalBackdrop') closeModal(); });
+
+function toast(type, title, message) {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `<div><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div>`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 4500);
+}
+
+// ============================================================
+// AUTOSTART
+// ============================================================
+(async () => {
+  if (token) {
+    // Try to fetch overview to verify token
+    const r = await api('/api/admin/overview');
+    if (r && !r.error) {
+      adminInfo = { mustChangePassword: r.mustChangePassword };
+      document.getElementById('adminEmail').textContent = localStorage.getItem('himer_admin_email') || '';
+      document.getElementById('logoutBtn').style.display = '';
+      if (r.mustChangePassword) {
+        showPage('changepw');
+      } else {
+        enterAdmin();
+      }
+      return;
+    }
+    // Token invalid
+    token = null;
+    localStorage.removeItem('himer_admin_token');
+  }
+  showPage('login');
+})();
+</script>
+</body>
+</html>
