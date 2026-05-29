@@ -2,7 +2,7 @@
  * HIMER Service Worker
  * Strategy: network-first with cache fallback for shell pages
  */
-const CACHE_NAME = 'himer-v4-shell';
+const CACHE_NAME = 'himer-v5-full-shell';
 const SHELL_URLS = ['/', '/index.html', '/admin.html', '/client.html', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
@@ -57,4 +57,55 @@ self.addEventListener('fetch', (event) => {
       }))
     );
   }
+});
+
+// ============================================================
+// PUSH NOTIFICATIONS
+// ============================================================
+self.addEventListener('push', (event) => {
+  let data = { title: 'HIMER', body: 'You have an update.' };
+  try { if (event.data) data = event.data.json(); } catch (_) {}
+  const options = {
+    body: data.body || '',
+    icon: data.icon || '/icon-192.png',
+    badge: data.badge || '/icon-192.png',
+    tag: data.tag || 'himer',
+    data: data.data || {},
+    vibrate: [200, 100, 200],
+    requireInteraction: false,
+  };
+  event.waitUntil(self.registration.showNotification(data.title || 'HIMER', options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((wins) => {
+      // Focus existing window if open
+      for (const w of wins) {
+        if (w.url.includes(self.location.origin) && 'focus' in w) {
+          w.navigate(url).catch(() => {});
+          return w.focus();
+        }
+      }
+      // Otherwise open new
+      if (self.clients.openWindow) return self.clients.openWindow(url);
+    })
+  );
+});
+
+self.addEventListener('pushsubscriptionchange', (event) => {
+  // Re-subscribe if endpoint changed
+  event.waitUntil(
+    self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: event.oldSubscription.options.applicationServerKey })
+      .then((sub) => {
+        // Notify backend (best effort)
+        fetch('/api/push/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subscription: sub.toJSON() }),
+        }).catch(() => {});
+      })
+  );
 });

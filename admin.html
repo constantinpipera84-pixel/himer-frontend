@@ -273,6 +273,9 @@ table.data .actions { display: flex; gap: 6px; flex-wrap: wrap; }
   .admin-main { padding: 18px; }
 }
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9299178250957649" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -282,8 +285,15 @@ table.data .actions { display: flex; gap: 6px; flex-wrap: wrap; }
     HIMER <span class="admin-badge">ADMIN</span>
   </div>
   <div class="nav-right">
+    <div class="admin-lang" onclick="toggleAdminLang(event)" style="cursor:pointer;padding:6px 12px;border:1px solid var(--line);border-radius:4px;display:flex;gap:6px;align-items:center;font-size:11px;position:relative;">
+      <span id="adminLangCurrent">EN</span><span style="font-size:9px;">▼</span>
+      <div id="adminLangDropdown" style="position:absolute;top:100%;right:0;background:var(--bg-2);border:1px solid var(--line);border-radius:4px;margin-top:4px;display:none;min-width:120px;z-index:100;">
+        <div style="padding:8px 14px;cursor:pointer;" onclick="setAdminLang('en')">English</div>
+        <div style="padding:8px 14px;cursor:pointer;" onclick="setAdminLang('ro')">Română</div>
+      </div>
+    </div>
     <span id="adminEmail" class="text-dim mono"></span>
-    <button class="btn-logout" id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+    <button class="btn-logout" id="logoutBtn" onclick="logout()" style="display:none;" data-i18n="admin.logout">Logout</button>
   </div>
 </nav>
 
@@ -291,19 +301,19 @@ table.data .actions { display: flex; gap: 6px; flex-wrap: wrap; }
 <div class="page active" id="page-login">
   <div class="login-wrap">
     <div class="login-card">
-      <h2>Admin Console</h2>
-      <div class="sub">Restricted access. Authorized personnel only.</div>
+      <h2 data-i18n="admin.console.title">Admin Console</h2>
+      <div class="sub" data-i18n="admin.console.sub">Restricted access. Authorized personnel only.</div>
       <div class="error-msg" id="loginError"></div>
       <div class="field-group">
-        <div class="field-label">Email</div>
+        <div class="field-label" data-i18n="admin.login.email">Email</div>
         <input class="field" type="email" id="loginEmail" placeholder="admin@himer.network" autocomplete="username">
       </div>
       <div class="field-group">
-        <div class="field-label">Password</div>
+        <div class="field-label" data-i18n="admin.login.password">Password</div>
         <input class="field" type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()">
       </div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doLogin()" id="loginBtn">Sign in</button>
-      <p class="text-xs text-dim mt-3 text-center">Default password forced to change on first login.</p>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doLogin()" id="loginBtn" data-i18n="admin.login.signin">Sign in</button>
+      <p class="text-xs text-dim mt-3 text-center" data-i18n="admin.login.note">Default password forced to change on first login.</p>
     </div>
   </div>
 </div>
@@ -313,21 +323,21 @@ table.data .actions { display: flex; gap: 6px; flex-wrap: wrap; }
   <div class="login-wrap">
     <div class="login-card">
       <div class="warning-box">
-        <div class="title">⚠ Password change required</div>
-        <div>Either this is your first login, or your password expired (3 month rotation policy).</div>
+        <div class="title" data-i18n="admin.cp.title">⚠ Password change required</div>
+        <div data-i18n="admin.cp.reason">Either this is your first login, or your password expired (3 month rotation policy).</div>
       </div>
-      <h2>Set new password</h2>
-      <div class="sub">Minimum 8 characters. Use a strong unique password.</div>
+      <h2 data-i18n="admin.cp.new">Set new password</h2>
+      <div class="sub" data-i18n="admin.cp.sub">Minimum 8 characters. Use a strong unique password.</div>
       <div class="error-msg" id="cpError"></div>
       <div class="field-group">
-        <div class="field-label">New password</div>
+        <div class="field-label" data-i18n="admin.cp.npw">New password</div>
         <input class="field" type="password" id="newPw" placeholder="At least 8 characters">
       </div>
       <div class="field-group">
-        <div class="field-label">Confirm new password</div>
+        <div class="field-label" data-i18n="admin.cp.cpw">Confirm new password</div>
         <input class="field" type="password" id="newPw2" placeholder="Type again" onkeydown="if(event.key==='Enter') doChangePassword()">
       </div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doChangePassword()" id="cpBtn">Set new password</button>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doChangePassword()" id="cpBtn" data-i18n="admin.cp.btn">Set new password</button>
     </div>
   </div>
 </div>
@@ -337,11 +347,13 @@ table.data .actions { display: flex; gap: 6px; flex-wrap: wrap; }
   <div class="admin-wrap">
     <aside class="admin-side">
       <span class="label">Operations</span>
-      <a class="admin-link active" data-tab="reality" onclick="adminTab('reality')">⬢ Reality View</a>
-      <a class="admin-link" data-tab="payouts" onclick="adminTab('payouts')">$ Payouts <span class="badge" id="payoutsBadge" style="display:none;">0</span></a>
-      <a class="admin-link" data-tab="users" onclick="adminTab('users')">◇ Users</a>
-      <a class="admin-link" data-tab="clients" onclick="adminTab('clients')">⚙ Business Clients</a>
-      <a class="admin-link" data-tab="treasury" onclick="adminTab('treasury')">€ Treasury</a>
+      <a class="admin-link active" data-tab="reality" onclick="adminTab('reality')" data-i18n="admin.tab.reality">⬢ Reality View</a>
+      <a class="admin-link" data-tab="payouts" onclick="adminTab('payouts')" data-i18n="admin.tab.payouts">$ Payouts <span class="badge" id="payoutsBadge" style="display:none;">0</span></a>
+      <a class="admin-link" data-tab="users" onclick="adminTab('users')" data-i18n="admin.tab.users">◇ Users</a>
+      <a class="admin-link" data-tab="clients" onclick="adminTab('clients')" data-i18n="admin.tab.clients">⚙ Business Clients</a>
+      <a class="admin-link" data-tab="treasury" onclick="adminTab('treasury')" data-i18n="admin.tab.treasury">€ Treasury</a>
+      <a class="admin-link" data-tab="owner" onclick="adminTab('owner')" data-i18n="admin.tab.owner">★ Owner Mode</a>
+      <a class="admin-link" data-tab="contacts" onclick="adminTab('contacts')">✉ Contacts</a>
       <a class="admin-link" data-tab="audit" onclick="adminTab('audit')">! Audit Log</a>
     </aside>
     <main class="admin-main">
@@ -369,10 +381,10 @@ table.data .actions { display: flex; gap: 6px; flex-wrap: wrap; }
             <div class="legend-item"><div class="legend-dot real-active"></div><span>Green = Real node, active</span></div>
             <div class="legend-item"><div class="legend-dot real-inactive"></div><span>Blue = Real node, inactive</span></div>
           </div>
-          <div class="canvas-wrap" id="canvasWrap">
-            <canvas id="admin-canvas"></canvas>
+          <div class="canvas-wrap" id="canvasWrap" style="height:520px;">
+            <div id="adminMap" style="width:100%;height:100%;background:#0a0d18;"></div>
           </div>
-          <p class="text-xs text-dim mt-3">Public users see all nodes as identical cyan ("neural pulses"). Only this admin view distinguishes seed vs real.</p>
+          <p class="text-xs text-dim mt-3">Real nodes shown at their geolocated positions. Seed nodes are randomized regions. Click any marker for details.</p>
         </div>
 
         <div class="card">
@@ -453,6 +465,158 @@ table.data .actions { display: flex; gap: 6px; flex-wrap: wrap; }
         </div>
       </div>
 
+      <!-- TAB: OWNER MODE -->
+      <div class="admin-tab" id="tab-owner" style="display:none;">
+        <div class="card" style="border-color:var(--neon);background:rgba(0,240,200,0.03);">
+          <h3 style="color:var(--neon);">★ Owner Mode</h3>
+          <p class="text-xs text-dim" style="line-height:1.6;">
+            Welcome, owner. You have a special API key with <strong class="text-neon">unlimited free access</strong> to the HIMER network.
+            Use it for your own AI training, rendering, data processing — all free, all paid by users' contributed compute.
+            Your jobs are tagged "owner" and don't count towards revenue.
+          </p>
+        </div>
+
+        <!-- Owner API Key -->
+        <div class="card">
+          <h3>Your Owner API Key</h3>
+          <div id="ownerKeyBox" class="text-dim text-sm">Loading owner credentials...</div>
+        </div>
+
+        <!-- Submit Compute Job -->
+        <div class="card">
+          <h3>Submit Compute Job</h3>
+          <p class="text-xs text-dim" style="margin-bottom:14px;">Submit a workload to the network. Free for you. Tracked separately from paying clients.</p>
+          <div style="display:grid;gap:10px;max-width:560px;">
+            <div>
+              <label class="label">Job Name</label>
+              <input type="text" id="ownerJobName" class="field" placeholder="e.g., Stable Diffusion fine-tune batch 1" style="margin:0;">
+            </div>
+            <div>
+              <label class="label">Job Type</label>
+              <select id="ownerJobType" class="field" style="margin:0;">
+                <option value="compute">Generic compute</option>
+                <option value="ml_training">ML training</option>
+                <option value="ml_inference">ML inference</option>
+                <option value="render">3D rendering</option>
+                <option value="scraping">Web scraping</option>
+                <option value="data_processing">Data processing</option>
+              </select>
+            </div>
+            <div class="flex gap-3" style="flex-wrap:wrap;">
+              <div style="flex:1;min-width:120px;">
+                <label class="label">GFLOP-seconds</label>
+                <input type="number" id="ownerJobGflops" class="field" placeholder="5000" value="5000" style="margin:0;">
+              </div>
+              <div style="flex:1;min-width:120px;">
+                <label class="label">RAM GB</label>
+                <input type="number" id="ownerJobRam" class="field" placeholder="2" value="2" style="margin:0;">
+              </div>
+              <div style="flex:1;min-width:120px;">
+                <label class="label">Bandwidth Mbps</label>
+                <input type="number" id="ownerJobBw" class="field" placeholder="10" value="10" style="margin:0;">
+              </div>
+            </div>
+            <div>
+              <label class="label">Input Data (JSON, optional)</label>
+              <textarea id="ownerJobInput" class="field" rows="4" placeholder='{"model": "bert-base", "input_text": "..."}' style="margin:0;font-family:JetBrains Mono;font-size:11px;"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="submitOwnerJob()" style="margin-top:8px;">Submit Job (FREE)</button>
+            <div id="ownerJobResult"></div>
+          </div>
+        </div>
+
+        <!-- My Owner Jobs -->
+        <div class="card">
+          <h3 class="flex justify-between" style="align-items:center;">
+            <span>Your Recent Jobs</span>
+            <button class="btn btn-small" onclick="loadOwnerJobs()">↻ Refresh</button>
+          </h3>
+          <div style="overflow-x:auto;">
+            <table class="data">
+              <thead><tr><th>Job ID</th><th>Name</th><th>Type</th><th>Status</th><th>GFLOP-s</th><th>Created</th></tr></thead>
+              <tbody id="ownerJobsTable"><tr><td colspan="6" class="text-dim text-center">Click Refresh to load</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Revenue Dashboard -->
+        <div class="kpi-grid">
+          <div class="kpi real"><div class="label">Today's Revenue</div><div class="val" id="ownerRevToday">—</div><div class="delta">all sources</div></div>
+          <div class="kpi"><div class="label">Month's Revenue</div><div class="val" id="ownerRevMonth">—</div><div class="delta">running total</div></div>
+          <div class="kpi"><div class="label">Active Clients</div><div class="val" id="ownerActiveClients">—</div><div class="delta">paying</div></div>
+          <div class="kpi pending"><div class="label">Your Free Jobs</div><div class="val" id="ownerOwnerJobs">—</div><div class="delta">total submitted</div></div>
+        </div>
+      </div>
+
+      <!-- TAB: CONTACTS -->
+      <div class="admin-tab" id="tab-contacts" style="display:none;">
+        <div class="card">
+          <h3>Platform Contact Info</h3>
+          <p class="text-xs text-dim" style="margin-bottom:16px;line-height:1.6;">These appear across the public site (footer, contact buttons, business signup confirmations). Edit and save.</p>
+          <div style="display:grid;gap:12px;max-width:520px;">
+            <div>
+              <label class="label">Company Name</label>
+              <input type="text" id="setCompanyName" class="field" placeholder="HIMER Network" style="margin:0;">
+            </div>
+            <div>
+              <label class="label">Business Email</label>
+              <input type="email" id="setContactEmail" class="field" placeholder="himer.nodes@gmail.com" style="margin:0;">
+            </div>
+            <div>
+              <label class="label">Support Email</label>
+              <input type="email" id="setSupportEmail" class="field" placeholder="himer.nodes@gmail.com" style="margin:0;">
+            </div>
+            <div>
+              <label class="label">Phone</label>
+              <input type="text" id="setPhone" class="field" placeholder="+40 ..." style="margin:0;">
+            </div>
+            <div>
+              <label class="label">Telegram</label>
+              <input type="text" id="setTelegram" class="field" placeholder="@himer" style="margin:0;">
+            </div>
+            <div>
+              <label class="label">Address</label>
+              <input type="text" id="setAddress" class="field" placeholder="(optional)" style="margin:0;">
+            </div>
+            <button class="btn btn-primary" onclick="saveContacts()" style="margin-top:8px;">Save Contacts</button>
+            <div id="contactsResult"></div>
+          </div>
+        </div>
+
+        <!-- ADMIN-ONLY: Cost Calculator (client pricing — never shown to users) -->
+        <div class="card">
+          <h3>Client Cost Calculator <span class="badge pending">ADMIN ONLY</span></h3>
+          <p class="text-xs text-dim" style="margin-bottom:14px;">Internal tool: estimate what a client would pay. Never shown to contributors.</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;align-items:end;">
+            <div>
+              <label class="label">Workload (GFLOP-s/day)</label>
+              <select class="field" id="acalcWorkload" onchange="adminCostCalc()" style="margin:0;">
+                <option value="100000">Light (100K/day)</option>
+                <option value="1000000" selected>Mid (1M/day)</option>
+                <option value="10000000">Heavy (10M/day)</option>
+                <option value="100000000">Scale (100M/day)</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Days/month</label>
+              <input type="number" class="field" id="acalcDays" value="22" min="1" max="31" onchange="adminCostCalc()" style="margin:0;">
+            </div>
+            <div>
+              <div class="label">Client pays (PAYG)</div>
+              <div class="text-neon" style="font-family:Syne;font-size:24px;font-weight:800;" id="acalcRevenue">$—</div>
+            </div>
+            <div>
+              <div class="label">→ To contributors (40%)</div>
+              <div class="text-dim" style="font-family:Syne;font-size:20px;font-weight:800;" id="acalcUsers">$—</div>
+            </div>
+            <div>
+              <div class="label" style="color:var(--neon);">→ HIMER profit (60%)</div>
+              <div class="text-neon" style="font-family:Syne;font-size:24px;font-weight:800;" id="acalcProfit">$—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- TAB: AUDIT -->
       <div class="admin-tab" id="tab-audit" style="display:none;">
         <div class="card">
@@ -489,6 +653,94 @@ table.data .actions { display: flex; gap: 6px; flex-wrap: wrap; }
 const BACKEND_URL = window.HIMER_BACKEND || location.origin;
 
 // ============================================================
+// I18N (Admin)
+// ============================================================
+const ADMIN_I18N = {
+  en: {
+    'admin.logout': 'Logout',
+    'admin.console.title': 'Admin Console',
+    'admin.console.sub': 'Restricted access. Authorized personnel only.',
+    'admin.login.email': 'Email',
+    'admin.login.password': 'Password',
+    'admin.login.signin': 'Sign in',
+    'admin.login.note': 'Default password forced to change on first login.',
+    'admin.cp.title': '⚠ Password change required',
+    'admin.cp.reason': 'Either this is your first login, or your password expired (3 month rotation policy).',
+    'admin.cp.new': 'Set new password',
+    'admin.cp.sub': 'Minimum 8 characters. Use a strong unique password.',
+    'admin.cp.npw': 'New password',
+    'admin.cp.cpw': 'Confirm new password',
+    'admin.cp.btn': 'Set new password',
+    'admin.tab.reality': '⬢ Reality View',
+    'admin.tab.payouts': '$ Payouts ',
+    'admin.tab.users': '◇ Users',
+    'admin.tab.clients': '⚙ Business Clients',
+    'admin.tab.treasury': '€ Treasury',
+    'admin.tab.owner': '★ Owner Mode',
+    'admin.tab.contacts': '☎ Contacts',
+  },
+  ro: {
+    'admin.logout': 'Deconectare',
+    'admin.console.title': 'Panou Administrare',
+    'admin.console.sub': 'Acces restricționat. Doar personal autorizat.',
+    'admin.login.email': 'Email',
+    'admin.login.password': 'Parolă',
+    'admin.login.signin': 'Conectare',
+    'admin.login.note': 'Parola implicită trebuie schimbată la prima conectare.',
+    'admin.cp.title': '⚠ Schimbare parolă necesară',
+    'admin.cp.reason': 'Fie e prima ta conectare, fie parola a expirat (rotație la 3 luni).',
+    'admin.cp.new': 'Setează parolă nouă',
+    'admin.cp.sub': 'Minim 8 caractere. Folosește o parolă unică și puternică.',
+    'admin.cp.npw': 'Parolă nouă',
+    'admin.cp.cpw': 'Confirmă parola nouă',
+    'admin.cp.btn': 'Setează parola nouă',
+    'admin.tab.reality': '⬢ Vedere Reală',
+    'admin.tab.payouts': '$ Plăți ',
+    'admin.tab.users': '◇ Utilizatori',
+    'admin.tab.clients': '⚙ Clienți Business',
+    'admin.tab.treasury': '€ Trezorerie',
+    'admin.tab.owner': '★ Mod Proprietar',
+    'admin.tab.contacts': '☎ Contacte',
+  }
+};
+let adminLang = localStorage.getItem('himer_admin_lang') || 'en';
+
+function applyAdminI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const val = ADMIN_I18N[adminLang]?.[key] || ADMIN_I18N.en?.[key];
+    if (val) {
+      // Preserve child elements like badges
+      const badge = el.querySelector('.badge');
+      if (badge) {
+        // Reset text but keep badge
+        el.textContent = val;
+        el.appendChild(badge);
+      } else {
+        el.textContent = val;
+      }
+    }
+  });
+}
+function setAdminLang(code) {
+  if (!ADMIN_I18N[code]) code = 'en';
+  adminLang = code;
+  localStorage.setItem('himer_admin_lang', code);
+  document.getElementById('adminLangCurrent').textContent = code.toUpperCase();
+  document.getElementById('adminLangDropdown').style.display = 'none';
+  applyAdminI18n();
+}
+function toggleAdminLang(e) {
+  e?.stopPropagation();
+  const dd = document.getElementById('adminLangDropdown');
+  dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+}
+document.addEventListener('click', () => {
+  const dd = document.getElementById('adminLangDropdown');
+  if (dd) dd.style.display = 'none';
+});
+
+// ============================================================
 // STATE
 // ============================================================
 let token = localStorage.getItem('himer_admin_token') || null;
@@ -513,7 +765,7 @@ function adminTab(name) {
   if (tab) tab.style.display = '';
   const titles = {
     reality: 'Reality View', payouts: 'Payouts Approval',
-    users: 'Users', clients: 'Business Clients', treasury: 'Treasury', audit: 'Audit Log'
+    users: 'Users', clients: 'Business Clients', treasury: 'Treasury', owner: 'Owner Mode', contacts: 'Contacts', audit: 'Audit Log'
   };
   document.getElementById('adminTabTitle').textContent = titles[name] || name;
   if (name === 'reality') { setTimeout(resizeCanvas, 50); loadMap(); }
@@ -521,6 +773,8 @@ function adminTab(name) {
   if (name === 'users') loadUsers();
   if (name === 'clients') loadClients();
   if (name === 'treasury') refreshOverview();
+  if (name === 'owner') loadOwnerData();
+  if (name === 'contacts') { loadContacts(); adminCostCalc(); }
   if (name === 'audit') loadAudit();
 }
 
@@ -663,86 +917,95 @@ async function refreshOverview() {
 }
 
 // ============================================================
-// MAP (ADMIN REALITY VIEW)
+// MAP (ADMIN REALITY VIEW) — Leaflet
 // ============================================================
-let canvas, ctx, canvasW = 0, canvasH = 0, dpr = 1;
+let adminMap = null;
+let adminMarkers = [];
+let mapInited = false;
 
-function initAdminCanvas() {
-  canvas = document.getElementById('admin-canvas');
-  if (!canvas) return;
-  ctx = canvas.getContext('2d');
-  resizeCanvas();
-  if (window.ResizeObserver) {
-    new ResizeObserver(() => resizeCanvas()).observe(document.getElementById('canvasWrap'));
+function initAdminMap() {
+  if (mapInited) { setTimeout(() => adminMap && adminMap.invalidateSize(), 100); return; }
+  const el = document.getElementById('adminMap');
+  if (!el || typeof L === 'undefined') return;
+  try {
+    adminMap = L.map('adminMap', {
+      center: [25, 10],
+      zoom: 2,
+      minZoom: 2,
+      maxZoom: 10,
+      worldCopyJump: true,
+      zoomControl: true,
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap',
+      maxZoom: 10,
+    }).addTo(adminMap);
+    mapInited = true;
+    setTimeout(() => adminMap.invalidateSize(), 200);
+    renderAdminMarkers();
+  } catch (e) {
+    console.warn('[Admin Map] init failed:', e);
   }
-  window.addEventListener('resize', resizeCanvas);
-  requestAnimationFrame(renderAdminCanvas);
 }
 
-function resizeCanvas() {
-  if (!canvas) return;
-  const wrap = document.getElementById('canvasWrap');
-  if (!wrap) return;
-  const rect = wrap.getBoundingClientRect();
-  dpr = window.devicePixelRatio || 1;
-  canvasW = Math.max(rect.width, 100);
-  canvasH = Math.max(rect.height, 100);
-  canvas.width = Math.floor(canvasW * dpr);
-  canvas.height = Math.floor(canvasH * dpr);
-  canvas.style.width = canvasW + 'px';
-  canvas.style.height = canvasH + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
-
-function project(lat, lng) {
-  return [((lng + 180) / 360) * canvasW, ((90 - lat) / 180) * canvasH];
+function renderAdminMarkers() {
+  if (!adminMap || !mapInited) return;
+  for (const m of adminMarkers) adminMap.removeLayer(m);
+  adminMarkers = [];
+  const realCount = allNodes.filter(n => n.source === 'real').length;
+  const seedCount = allNodes.filter(n => n.source !== 'real').length;
+  let shown = 0;
+  for (const n of allNodes) {
+    if (typeof n.lat !== 'number' || typeof n.lng !== 'number') continue;
+    if (n.lat === 0 && n.lng === 0) continue;
+    const isReal = n.source === 'real';
+    const isActive = n.s === 'C';
+    let color, radius;
+    if (isReal && isActive) { color = '#00f0c8'; radius = 7; }
+    else if (isReal) { color = '#6b8cff'; radius = 5; }
+    else { color = '#ffb547'; radius = 3; }
+    const marker = L.circleMarker([n.lat, n.lng], {
+      radius,
+      fillColor: color,
+      color: color,
+      weight: 1,
+      opacity: 0.9,
+      fillOpacity: 0.7,
+    });
+    marker.bindPopup(`
+      <div style="font-family:JetBrains Mono;font-size:11px;min-width:160px;">
+        <div style="font-weight:700;color:${color};word-break:break-all;">${n.id || '—'}</div>
+        <div style="margin-top:6px;">
+          <div style="color:#7a8499;">Source: <strong style="color:${isReal ? '#00f0c8' : '#ffb547'};">${isReal ? 'REAL' : 'SEED'}</strong></div>
+          <div style="color:#7a8499;">Status: ${n.s === 'C' ? 'COMPUTING' : n.s === 'R' ? 'RUNNING' : 'IDLE'}</div>
+          <div style="color:#7a8499;">Load: ${n.l || 0}%</div>
+          <div style="color:#7a8499;">GFLOPS: ${n.g || 0}</div>
+          <div style="color:#7a8499;">Region: ${n.r || '—'}</div>
+        </div>
+      </div>`);
+    marker.addTo(adminMap);
+    adminMarkers.push(marker);
+    shown++;
+    if (shown >= 500) break;
+  }
+  const info = document.getElementById('adminMapInfo');
+  if (info) info.textContent = `${realCount} real / ${seedCount} seed · ${shown} shown`;
 }
 
 async function loadMap() {
+  initAdminMap();
   const r = await api('/api/admin/map');
-  if (r?.nodes) allNodes = r.nodes;
-}
-
-let pulseTime = 0, lastFrame = 0;
-function renderAdminCanvas(ts) {
-  if (!canvas || canvasW < 50) { requestAnimationFrame(renderAdminCanvas); return; }
-  if (ts - lastFrame < 33) { requestAnimationFrame(renderAdminCanvas); return; }
-  lastFrame = ts;
-  pulseTime += 0.02;
-
-  ctx.fillStyle = 'rgba(10,13,24,0.15)';
-  ctx.fillRect(0, 0, canvasW, canvasH);
-
-  // Grid
-  ctx.strokeStyle = 'rgba(120,200,255,0.05)';
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 12; i++) { const x = (i / 12) * canvasW; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvasH); ctx.stroke(); }
-  for (let i = 0; i <= 6; i++) { const y = (i / 6) * canvasH; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvasW, y); ctx.stroke(); }
-
-  // Draw nodes — color by source AND status
-  for (const n of allNodes) {
-    const [x, y] = project(n.lat, n.lng);
-    const isReal = n.source === 'real';
-    const isActive = n.s === 'C';
-    let color, size, glow;
-    if (isReal && isActive) { color = '#00f0c8'; size = 4 + Math.sin(pulseTime + x * 0.01) * 1.5; glow = 14; }
-    else if (isReal) { color = '#6b8cff'; size = 3.5; glow = 8; }
-    else { color = '#ffb547'; size = 1.8; glow = 0; }
-    if (glow > 0) {
-      const g = ctx.createRadialGradient(x, y, 0, x, y, glow);
-      g.addColorStop(0, color); g.addColorStop(1, color + '00');
-      ctx.fillStyle = g;
-      ctx.globalAlpha = 0.4;
-      ctx.beginPath(); ctx.arc(x, y, glow, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 1;
-    }
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
+  if (r?.nodes) {
+    allNodes = r.nodes;
+    renderAdminMarkers();
   }
-  requestAnimationFrame(renderAdminCanvas);
 }
 
-// ============================================================
+// Compatibility stubs for old calls
+function resizeCanvas() { if (adminMap) setTimeout(() => adminMap.invalidateSize(), 100); }
+function initAdminCanvas() { initAdminMap(); }
+function renderAdminCanvas() { /* replaced by Leaflet */ }
+
 // PAYOUTS
 // ============================================================
 async function loadPayouts() {
@@ -1070,6 +1333,142 @@ function toast(type, title, message) {
   }
   showPage('login');
 })();
+// ============================================================
+// OWNER MODE
+// ============================================================
+let ownerApiKey = localStorage.getItem('himer_owner_key') || null;
+
+async function loadOwnerData() {
+  document.getElementById('ownerKeyBox').innerHTML = `
+    <div style="padding:14px;background:rgba(0,240,200,0.06);border:1px solid var(--neon);font-size:13px;line-height:1.7;">
+      <strong class="text-neon">✓ You're the owner — no API key needed here.</strong><br>
+      Submit jobs directly below. They're tagged as owner jobs (free, unlimited).<br>
+      <span class="text-dim text-xs">If you want to call the API from external scripts, your owner API key is in Render logs ("OWNER API KEY CREATED"), or generate a normal client in Business Clients tab.</span>
+    </div>`;
+  loadOwnerJobs();
+}
+
+function saveOwnerKey() {
+  const key = document.getElementById('manualOwnerKey')?.value?.trim();
+  if (!key || !key.startsWith('hk_')) {
+    alert('Invalid API key format. Should start with hk_');
+    return;
+  }
+  ownerApiKey = key;
+  localStorage.setItem('himer_owner_key', key);
+  alert('Owner API key saved locally. You can now submit jobs.');
+  loadOwnerJobs();
+}
+
+async function submitOwnerJob() {
+  const name = document.getElementById('ownerJobName').value.trim() || 'Owner job';
+  const type = document.getElementById('ownerJobType').value;
+  const gflops = parseFloat(document.getElementById('ownerJobGflops').value || 0);
+  const ram = parseFloat(document.getElementById('ownerJobRam').value || 1);
+  const bw = parseFloat(document.getElementById('ownerJobBw').value || 1);
+  const inputStr = document.getElementById('ownerJobInput').value.trim();
+  let input_data = {};
+  if (inputStr) {
+    try { input_data = JSON.parse(inputStr); } catch { alert('Invalid JSON in Input Data'); return; }
+  }
+  if (gflops <= 0) { alert('GFLOP-seconds must be > 0'); return; }
+  const resEl = document.getElementById('ownerJobResult');
+  resEl.innerHTML = '<div class="text-dim">Submitting...</div>';
+  // Use admin endpoint — no API key needed, just admin login
+  const r = await api('/api/admin/owner/job', {
+    method: 'POST',
+    body: JSON.stringify({ name, job_type: type, required_gflops_seconds: gflops, required_ram_gb: ram, required_bw_mbps: bw, input_data }),
+  });
+  if (r && r.ok) {
+    resEl.innerHTML = `<div style="padding:14px;background:rgba(0,240,200,0.06);border-left:2px solid var(--neon);">
+      ✓ Job submitted (FREE)!<br>Job ID: <strong class="mono">${r.job_id}</strong><br>Status: ${r.status}</div>`;
+    loadOwnerJobs();
+  } else {
+    resEl.innerHTML = `<div style="padding:14px;background:rgba(255,61,128,0.06);border-left:2px solid var(--neon-2);">✗ ${(r && r.error) || 'Failed'}</div>`;
+  }
+}
+
+async function loadOwnerJobs() {
+  const data = await api('/api/admin/owner/jobs');
+  const tbody = document.getElementById('ownerJobsTable');
+  if (!data || !data.jobs || data.jobs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-dim text-center">No jobs yet. Submit one above.</td></tr>';
+  } else {
+    tbody.innerHTML = data.jobs.map(j => `
+      <tr>
+        <td class="mono text-xs">${j.id}</td>
+        <td>${escapeHtml(j.name || '—')}</td>
+        <td>${j.type}</td>
+        <td><span class="badge ${j.status === 'COMPLETED' ? 'real' : j.status === 'FAILED' ? 'pending' : ''}">${j.status}</span></td>
+        <td>${j.actual_gflops || j.required_gflops || 0}</td>
+        <td class="text-xs text-dim">${new Date(j.created_at).toLocaleString()}</td>
+      </tr>`).join('');
+  }
+  const ov = await api('/api/admin/overview');
+  if (ov) {
+    document.getElementById('ownerRevToday').textContent = '$' + (parseFloat(ov.revenueToday || 0)).toFixed(2);
+    document.getElementById('ownerRevMonth').textContent = '$' + (parseFloat(ov.revenueMonth || ov.totalIn || 0)).toFixed(2);
+    document.getElementById('ownerActiveClients').textContent = ov.activeClients || 0;
+    document.getElementById('ownerOwnerJobs').textContent = (data && data.jobs) ? data.jobs.length : 0;
+  }
+}
+
+function escapeHtml(s) { return (s || '').replace(/[<>&"]/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;' }[c])); }
+
+// ============================================================
+// CONTACTS
+// ============================================================
+async function loadContacts() {
+  const r = await api('/api/admin/settings');
+  const s = (r && r.settings) || {};
+  document.getElementById('setCompanyName').value = s.company_name || '';
+  document.getElementById('setContactEmail').value = s.contact_email || '';
+  document.getElementById('setSupportEmail').value = s.contact_support_email || '';
+  document.getElementById('setPhone').value = s.contact_phone || '';
+  document.getElementById('setTelegram').value = s.contact_telegram || '';
+  document.getElementById('setAddress').value = s.contact_address || '';
+}
+
+async function saveContacts() {
+  const settings = {
+    company_name: document.getElementById('setCompanyName').value.trim(),
+    contact_email: document.getElementById('setContactEmail').value.trim(),
+    contact_support_email: document.getElementById('setSupportEmail').value.trim(),
+    contact_phone: document.getElementById('setPhone').value.trim(),
+    contact_telegram: document.getElementById('setTelegram').value.trim(),
+    contact_address: document.getElementById('setAddress').value.trim(),
+  };
+  const resEl = document.getElementById('contactsResult');
+  resEl.innerHTML = '<div class="text-dim">Saving...</div>';
+  const r = await api('/api/admin/settings', { method: 'POST', body: JSON.stringify({ settings }) });
+  if (r && r.ok) {
+    resEl.innerHTML = '<div style="padding:10px;background:rgba(0,240,200,0.06);border-left:2px solid var(--neon);color:var(--neon);font-size:12px;">✓ Saved ' + r.updated + ' fields</div>';
+  } else {
+    resEl.innerHTML = '<div style="padding:10px;background:rgba(255,61,128,0.06);border-left:2px solid var(--neon-2);color:var(--neon-2);font-size:12px;">' + ((r && r.error) || 'Save failed') + '</div>';
+  }
+}
+
+// ADMIN cost calculator (shows full split — admin only)
+function adminCostCalc() {
+  const wlEl = document.getElementById('acalcWorkload');
+  const dEl = document.getElementById('acalcDays');
+  if (!wlEl || !dEl) return;
+  const total = parseFloat(wlEl.value) * parseFloat(dEl.value || 22);
+  const revenue = total * 0.0002; // client pays
+  const toUsers = revenue * 0.4;
+  const profit = revenue * 0.6;
+  document.getElementById('acalcRevenue').textContent = '$' + revenue.toFixed(2);
+  document.getElementById('acalcUsers').textContent = '$' + toUsers.toFixed(2);
+  document.getElementById('acalcProfit').textContent = '$' + profit.toFixed(2);
+}
+
+// ============================================================
+// BOOT
+// ============================================================
+// Apply i18n on first paint
+document.getElementById('adminLangCurrent').textContent = adminLang.toUpperCase();
+applyAdminI18n();
+
 </script>
 </body>
 </html>
