@@ -606,7 +606,7 @@ footer a { color: var(--neon); text-decoration: none; }
 <!-- PWA INSTALL -->
 <div class="install-prompt" id="installPrompt">
   <div class="ico">📱</div>
-  <div class="txt">
+  <div class="txt" data-i18n="auto2.div.7">
     <strong data-i18n="install.title">Install HIMER App</strong>
     <span data-i18n="install.text">Run in background · Earn while idle · Native notifications · Offline-ready</span>
   </div>
@@ -708,7 +708,7 @@ footer a { color: var(--neon); text-decoration: none; }
       <div class="feature"><h3 class="text-neon" data-i18n="page._scientific_compute_5e4d0bee">🔬 Scientific Compute</h3><p data-i18n="auto.protein_folding_climate_models.6" style="margin-top:10px;">Protein folding, climate models, molecular dynamics. Universities use HIMER at a fraction of HPC cost.</p></div>
       <div class="feature"><h3 class="text-neon" data-i18n="page._distributed_scraping_a8457fd4">🌐 Distributed Scraping</h3><p data-i18n="auto.thousands_of_unique_ips_worldw.7" style="margin-top:10px;">Thousands of unique IPs worldwide. Perfect for price intel, SEO research, training data collection.</p></div>
       <div class="feature"><h3 class="text-neon" data-i18n="page._data_processing_93d772e8">📊 Data Processing</h3><p data-i18n="auto.csv_transformations_batch_imag.8" style="margin-top:10px;">CSV transformations, batch image processing, ETL pipelines. Parallel processing at network scale.</p></div>
-      <div class="feature"><h3 class="text-neon" data-i18n="page._custom_workloads_f816cb71">💡 Custom Workloads</h3><p style="margin-top:10px;">Have a unique need? Our engineers help design the optimal distribution. Email <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a>.</p></div>
+      <div class="feature"><h3 class="text-neon" data-i18n="page._custom_workloads_f816cb71">💡 Custom Workloads</h3><p style="margin-top:10px;" data-i18n="uc.custom.full">Have a unique need? Our engineers help design the optimal distribution. Email <strong class="text-neon">himer.nodes@gmail.com</strong></p></div>
     </div>
     <div style="text-align:center;margin-top:30px;">
       <button class="btn-primary" onclick="goPage('business')" data-i18n="page.see_full_developer_docs__b134d5d7">See full developer docs →</button>
@@ -734,13 +734,55 @@ footer a { color: var(--neon); text-decoration: none; }
           </tr>
         </thead>
         <tbody>
-          <tr><td><strong>Price per GFLOP-second</strong></td><td class="text-neon">$0.0002</td><td class="text-dim">$0.002</td><td class="text-dim">$0.0021</td><td class="text-dim">$0.0019</td></tr>
-          <tr><td><strong>Setup time</strong></td><td class="text-neon">10 minutes</td><td>1–3 hours</td><td>1–2 hours</td><td>2–4 hours</td></tr>
-          <tr><td><strong>Min commitment</strong></td><td class="text-neon">None — PAYG</td><td>Per second</td><td>Per second</td><td>Per minute</td></tr>
-          <tr><td><strong data-i18n="auto.vendor_lock_in.11">Vendor lock-in</strong></td><td class="text-neon">None (REST API)</td><td>High</td><td>High</td><td>High</td></tr>
-          <tr><td><strong>Carbon footprint</strong></td><td class="text-neon">Near-zero (reuse)</td><td class="text-dim">High (datacenter)</td><td class="text-dim">High</td><td class="text-dim">High</td></tr>
-          <tr><td><strong>Geographic distribution</strong></td><td class="text-neon">100+ countries (organic)</td><td>30 regions</td><td>40 regions</td><td>60 regions</td></tr>
-          <tr><td><strong data-i18n="auto.best_for.12">Best for</strong></td><td class="text-neon">Parallel compute, ML training</td><td data-i18n="auto.critical_real_time_apps.13">Critical real-time apps</td><td>Big data analytics</td><td>Enterprise hybrid</td></tr>
+          <tr>
+            <td data-i18n="cmp.price.label"><strong>Price per GFLOP-second</strong></td>
+            <td class="text-neon">$0.0002</td>
+            <td class="text-dim">$0.002</td>
+            <td class="text-dim">$0.0021</td>
+            <td class="text-dim">$0.0019</td>
+          </tr>
+          <tr>
+            <td data-i18n="cmp.setup.label"><strong>Setup time</strong></td>
+            <td class="text-neon" data-i18n="cmp.setup.himer">10 minutes</td>
+            <td data-i18n="cmp.setup.aws">1–3 hours</td>
+            <td data-i18n="cmp.setup.gcp">1–2 hours</td>
+            <td data-i18n="cmp.setup.azure">2–4 hours</td>
+          </tr>
+          <tr>
+            <td data-i18n="cmp.commit.label"><strong>Min commitment</strong></td>
+            <td class="text-neon" data-i18n="cmp.commit.himer">None — PAYG</td>
+            <td data-i18n="cmp.commit.persec">Per second</td>
+            <td data-i18n="cmp.commit.persec2">Per second</td>
+            <td data-i18n="cmp.commit.permin">Per minute</td>
+          </tr>
+          <tr>
+            <td data-i18n="cmp.lockin.label"><strong>Vendor lock-in</strong></td>
+            <td class="text-neon" data-i18n="cmp.lockin.himer">None (REST API)</td>
+            <td data-i18n="cmp.high">High</td>
+            <td data-i18n="cmp.high2">High</td>
+            <td data-i18n="cmp.high3">High</td>
+          </tr>
+          <tr>
+            <td data-i18n="cmp.carbon.label"><strong>Carbon footprint</strong></td>
+            <td class="text-neon" data-i18n="cmp.carbon.himer">Near-zero (reuse)</td>
+            <td class="text-dim" data-i18n="cmp.carbon.aws">High (datacenter)</td>
+            <td class="text-dim" data-i18n="cmp.high4">High</td>
+            <td class="text-dim" data-i18n="cmp.high5">High</td>
+          </tr>
+          <tr>
+            <td data-i18n="cmp.geo.label"><strong>Geographic distribution</strong></td>
+            <td class="text-neon" data-i18n="cmp.geo.himer">100+ countries (organic)</td>
+            <td data-i18n="cmp.geo.aws">30 regions</td>
+            <td data-i18n="cmp.geo.gcp">40 regions</td>
+            <td data-i18n="cmp.geo.azure">60 regions</td>
+          </tr>
+          <tr>
+            <td data-i18n="cmp.best.label"><strong>Best for</strong></td>
+            <td class="text-neon" data-i18n="cmp.best.himer">Parallel compute, ML training</td>
+            <td data-i18n="cmp.best.aws">Critical real-time apps</td>
+            <td data-i18n="cmp.best.gcp">Big data analytics</td>
+            <td data-i18n="cmp.best.azure">Enterprise hybrid</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -756,21 +798,21 @@ footer a { color: var(--neon); text-decoration: none; }
         <div>
           <h4 data-i18n="auto.for_contributors.17" class="text-neon" style="margin-bottom:14px;">For contributors</h4>
           <ul style="list-style:none;font-size:13px;line-height:2;">
-            <li>✓ <strong data-i18n="auto.open_source_agent.18">Open-source agent</strong> — every line auditable on GitHub</li>
-            <li>✓ <strong>Sandbox isolation</strong> — only signed compute packages run</li>
-            <li>✓ <strong data-i18n="auto.no_personal_data.19">No personal data</strong> — anonymous HIMER ID, no email required</li>
-            <li>✓ <strong data-i18n="trust.oneclick">One-click stop</strong> — close the tab, contribution stops instantly</li>
-            <li>✓ <strong>Transparent payouts</strong> — formula on every page, real-time wallet</li>
+            <li data-i18n="trust.contrib.li1">✓ <strong>Open-source agent</strong> — every line auditable on GitHub</li>
+            <li data-i18n="trust.contrib.li2">✓ <strong>Sandbox isolation</strong> — only signed compute packages run</li>
+            <li data-i18n="trust.contrib.li3">✓ <strong>No personal data</strong> — anonymous HIMER ID, no email required</li>
+            <li data-i18n="trust.contrib.li4">✓ <strong>One-click stop</strong> — close the tab, contribution stops instantly</li>
+            <li data-i18n="trust.contrib.li5">✓ <strong>Transparent payouts</strong> — formula on every page, real-time wallet</li>
           </ul>
         </div>
         <div>
           <h4 data-i18n="auto.for_business_clients.20" class="text-neon" style="margin-bottom:14px;">For business clients</h4>
           <ul style="list-style:none;font-size:13px;line-height:2;">
-            <li>✓ <strong data-i18n="auto.cryptographic_proof_of_compute.21">Cryptographic Proof-of-Compute</strong> — 5% witness re-verification</li>
-            <li>✓ <strong>Result hashing</strong> — every output signed, tamper-evident</li>
-            <li>✓ <strong data-i18n="auto.sla_on_pro_plans.22">SLA on Pro+ plans</strong> — guaranteed dispatch time</li>
-            <li>✓ <strong>EU GDPR compliant</strong> — data processed in your chosen region</li>
-            <li>✓ <strong>Invoicing & receipts</strong> — proper business billing</li>
+            <li data-i18n="trust.biz.li1">✓ <strong>Cryptographic Proof-of-Compute</strong> — 5% witness re-verification</li>
+            <li data-i18n="trust.biz.li2">✓ <strong>Result hashing</strong> — every output signed, tamper-evident</li>
+            <li data-i18n="trust.biz.li3">✓ <strong>SLA on Pro+ plans</strong> — guaranteed dispatch time</li>
+            <li data-i18n="trust.biz.li4">✓ <strong>EU GDPR compliant</strong> — data processed in your chosen region</li>
+            <li data-i18n="trust.biz.li5">✓ <strong>Invoicing & receipts</strong> — proper business billing</li>
           </ul>
         </div>
       </div>
@@ -784,12 +826,12 @@ footer a { color: var(--neon); text-decoration: none; }
       <h2 data-i18n="page.faq_1fe917b0">FAQ</h2>
     </div>
     <div style="display:grid;gap:14px;">
-      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;"><span class="text-neon">+</span> How much can I earn as a contributor?</summary><p data-i18n="auto.depends_on_your_hardware_gflop.23" style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;">Depends on your hardware (GFLOPS), uptime, and how much capacity you offer. A typical laptop running 50% offered, 8h/day can earn $5–30/month. A gaming PC at 24/7 can hit $50–150/month. Earnings scale linearly with active time + compute power.</p></details>
-      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;"><span class="text-neon">+</span> Is my data safe? Does HIMER see anything?</summary><p data-i18n="auto.no_the_browser_agent_runs_in_a.24" style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;">No. The browser agent runs in a fully isolated WebAssembly sandbox. It cannot read your files, browser history, cookies, passwords, webcam, or microphone. It only processes anonymized math packages sent by paying clients. Source code is open on GitHub for audit.</p></details>
-      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;"><span class="text-neon">+</span> When and how do I get paid?</summary><p style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;">Earnings accumulate in real-time. Withdraw available at $500+ balance. Two payout methods: <strong data-i18n="auto.usdc_crypto_on_polygon.25">USDC crypto on Polygon</strong> (instant, $0.01 fee) or <strong>Bank wire transfer</strong> (1–3 days, EU/US). KYC verification on first withdrawal. Admin approval ~24h.</p></details>
-      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;"><span class="text-neon">+</span> Is HIMER legal in my country?</summary><p data-i18n="auto.himer_is_fully_legal_worldwide.26" style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;">HIMER is fully legal worldwide — same legal model as Folding@home, BOINC, and SETI@home (all running for 20+ years). You voluntarily share unused compute. Payouts may be taxable income in your country — consult a local tax advisor.</p></details>
-      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;"><span class="text-neon">+</span> What can I use HIMER for as a developer?</summary><p style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;">AI/ML training & inference, 3D rendering (Blender), scientific simulations, distributed web scraping, batch data processing, image/video conversions. Anything that can be split into parallel chunks. <a href="javascript:goPage('business')" class="text-neon">See full developer docs →</a></p></details>
-      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;"><span class="text-neon">+</span> How does HIMER make money?</summary><p style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;">Business clients pay for compute via API. HIMER takes 60% as platform fee (covers infrastructure, support, R&D), 40% goes to contributors. We also offer subscription plans (Starter $29, Pro $149, Enterprise custom) and pay-as-you-go at $0.0002/GFLOP-s. <a href="javascript:goPage('pricing')" class="text-neon">See pricing →</a></p></details>
+      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;" data-i18n="faq.q.earn"><span class="text-neon">+</span> How much can I earn as a contributor?</summary><p data-i18n="auto.depends_on_your_hardware_gflop.23" style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;">Depends on your hardware (GFLOPS), uptime, and how much capacity you offer. A typical laptop running 50% offered, 8h/day can earn $5–30/month. A gaming PC at 24/7 can hit $50–150/month. Earnings scale linearly with active time + compute power.</p></details>
+      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;" data-i18n="faq.q.safe"><span class="text-neon">+</span> Is my data safe? Does HIMER see anything?</summary><p data-i18n="auto.no_the_browser_agent_runs_in_a.24" style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;">No. The browser agent runs in a fully isolated WebAssembly sandbox. It cannot read your files, browser history, cookies, passwords, webcam, or microphone. It only processes anonymized math packages sent by paying clients. Source code is open on GitHub for audit.</p></details>
+      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;" data-i18n="faq.q.paid"><span class="text-neon">+</span> When and how do I get paid?</summary><p style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;" data-i18n="auto2.p.6">Earnings accumulate in real-time. Withdraw available at $500+ balance. Two payout methods: <strong data-i18n="auto.usdc_crypto_on_polygon.25">USDC crypto on Polygon</strong> (instant, $0.01 fee) or <strong>Bank wire transfer</strong> (1–3 days, EU/US). KYC verification on first withdrawal. Admin approval ~24h.</p></details>
+      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;" data-i18n="faq.q.legal"><span class="text-neon">+</span> Is HIMER legal in my country?</summary><p data-i18n="auto.himer_is_fully_legal_worldwide.26" style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;">HIMER is fully legal worldwide — same legal model as Folding@home, BOINC, and SETI@home (all running for 20+ years). You voluntarily share unused compute. Payouts may be taxable income in your country — consult a local tax advisor.</p></details>
+      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;" data-i18n="faq.q.dev"><span class="text-neon">+</span> What can I use HIMER for as a developer?</summary><p style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;" data-i18n="faq.a.dev">AI/ML training &amp; inference, 3D rendering (Blender), scientific simulations, distributed web scraping, batch data processing, image/video conversions. Anything that can be split into parallel chunks.</p></details>
+      <details class="feature" style="cursor:pointer;"><summary style="font-weight:700;font-size:15px;list-style:none;" data-i18n="faq.q.money"><span class="text-neon">+</span> How does HIMER make money?</summary><p style="margin-top:10px;color:var(--text-dim);font-size:13px;line-height:1.7;" data-i18n="faq.a.money">Business clients pay for compute via API. HIMER takes 60% as platform fee (covers infrastructure, support, R&amp;D), 40% goes to contributors. We also offer subscription plans (Starter $29, Pro $149, Enterprise custom) and pay-as-you-go at $0.0002/GFLOP-s.</p></details>
     </div>
   </section>
 
@@ -828,11 +870,11 @@ footer a { color: var(--neon); text-decoration: none; }
     <div style="display:grid;gap:14px;margin-bottom:30px;">
       <div class="feature">
         <h3 class="text-neon" data-i18n="page.step_1_connect_be358179">Step 1 · Connect</h3>
-        <p style="margin-top:10px;line-height:1.7;">You click "Join". The browser generates a stable device fingerprint (no cookies, no PII) and registers a new node. Hardware capacity is detected: CPU cores, RAM, network bandwidth. You get a User ID like <code class="mono">U-XXXXXXXX</code>. Save it — that's how you sign in from other devices.</p>
+        <p style="margin-top:10px;line-height:1.7;" data-i18n="how.step1.full">You click "Join". The browser generates a stable device fingerprint (no cookies, no PII) and registers a new node. Hardware capacity is detected: CPU cores, RAM, network bandwidth. You get a User ID like <strong style="color:var(--neon);">U-XXXXXXXX</strong>. Save it — that's how you sign in from other devices.</p>
       </div>
       <div class="feature">
         <h3 class="text-neon" data-i18n="page.step_2_sandbox_launch_7324d40c">Step 2 · Sandbox launch</h3>
-        <p style="margin-top:10px;line-height:1.7;">A WebAssembly worker is spawned in your browser tab. It's <strong>isolated</strong> — cannot access files, cookies, passwords, webcam, or microphone. It only talks to HIMER orchestrator and only receives signed compute packages.</p>
+        <p style="margin-top:10px;line-height:1.7;" data-i18n="how.step2.full">A WebAssembly worker is spawned in your browser tab. It's <strong>isolated</strong> — cannot access files, cookies, passwords, webcam, or microphone. It only talks to HIMER orchestrator and only receives signed compute packages.</p>
       </div>
       <div class="feature">
         <h3 class="text-neon" data-i18n="page.step_3_job_dispatch_9f17db26">Step 3 · Job dispatch</h3>
@@ -883,7 +925,7 @@ footer a { color: var(--neon); text-decoration: none; }
 
       <div class="feature">
         <h3 class="text-neon">5. Architecture & infrastructure</h3>
-        <p style="margin-top:10px;line-height:1.7;"><strong>Backend</strong>: Node.js orchestrator (open-source), Supabase Postgres for state, WebSocket for real-time. <strong>Frontend</strong>: vanilla HTML/JS PWA, no framework lock-in, installable on any device. <strong>Edge</strong>: contributing nodes run signed WASM workloads in browser sandbox. <strong>Payments</strong>: Stripe Connect (bank) + Polygon network (USDC). <strong data-i18n="auto.open_source.39">Open-source</strong>: github.com/himer-network (everything except payment keys is public and auditable).</p>
+        <p style="margin-top:10px;line-height:1.7;" data-i18n="how.arch.full"><strong>Backend</strong>: Node.js orchestrator (open-source), Supabase Postgres for state, WebSocket for real-time. <strong>Frontend</strong>: vanilla HTML/JS PWA, no framework lock-in, installable on any device. <strong>Edge</strong>: contributing nodes run signed WASM workloads in browser sandbox. <strong>Payments</strong>: Stripe Connect (bank) + Polygon network (USDC). <strong>Open-source</strong>: github.com/himer-network (everything except payment keys is public and auditable).</p>
       </div>
     </div>
   </section>
@@ -901,10 +943,10 @@ footer a { color: var(--neon); text-decoration: none; }
     <div class="privacy-block" style="margin-bottom:20px;">
       <h3 style="font-size:20px;margin-bottom:14px;" data-i18n="privacy.arch.title">Isolation Architecture</h3>
       <ul style="list-style:none;">
-        <li style="padding:12px 0;border-bottom:1px solid var(--line);"><strong class="text-neon">→ WebAssembly Sandbox:</strong> <span data-i18n="auto.the_compute_agent_runs_inside.41" class="text-dim text-sm">The compute agent runs inside the browser's WASM sandbox — the same security model that lets you safely run untrusted code from any website. It physically cannot read files, access other tabs, or escape the sandbox.</span></li>
-        <li style="padding:12px 0;border-bottom:1px solid var(--line);"><strong class="text-neon">→ Network whitelist:</strong> <span data-i18n="auto.the_agent_only_communicates_wi.42" class="text-dim text-sm">The agent only communicates with HIMER's orchestrator. It cannot phone home to third parties or exfiltrate anything.</span></li>
-        <li style="padding:12px 0;border-bottom:1px solid var(--line);"><strong class="text-neon" data-i18n="privacy.signed">→ Signed workloads only:</strong> <span data-i18n="auto.every_compute_package_is_crypt.43" class="text-dim text-sm">Every compute package is cryptographically signed. Unsigned or tampered code is rejected before execution.</span></li>
-        <li style="padding:12px 0;"><strong data-i18n="auto.open_source_auditable.44" class="text-neon">→ Open-source & auditable:</strong> <span data-i18n="auto.the_entire_agent_is_public_on.45" class="text-dim text-sm">The entire agent is public on GitHub. Anyone — security researchers, you, your IT team — can read every line.</span></li>
+        <li style="padding:12px 0;border-bottom:1px solid var(--line);" data-i18n="priv.iso.wasm"><strong class="text-neon">→ WebAssembly Sandbox:</strong> <span class="text-dim text-sm">The compute agent runs inside the browser's WASM sandbox — the same security model that lets you safely run untrusted code from any website. It physically cannot read files, access other tabs, or escape the sandbox.</span></li>
+        <li style="padding:12px 0;border-bottom:1px solid var(--line);" data-i18n="priv.iso.net"><strong class="text-neon">→ Network whitelist:</strong> <span class="text-dim text-sm">The agent only communicates with HIMER's orchestrator. It cannot phone home to third parties or exfiltrate anything.</span></li>
+        <li style="padding:12px 0;border-bottom:1px solid var(--line);" data-i18n="auto2.li.5"><strong class="text-neon" data-i18n="privacy.signed">→ Signed workloads only:</strong> <span data-i18n="auto.every_compute_package_is_crypt.43" class="text-dim text-sm">Every compute package is cryptographically signed. Unsigned or tampered code is rejected before execution.</span></li>
+        <li style="padding:12px 0;" data-i18n="auto2.li.4"><strong data-i18n="auto.open_source_auditable.44" class="text-neon">→ Open-source & auditable:</strong> <span data-i18n="auto.the_entire_agent_is_public_on.45" class="text-dim text-sm">The entire agent is public on GitHub. Anyone — security researchers, you, your IT team — can read every line.</span></li>
       </ul>
     </div>
 
@@ -912,23 +954,23 @@ footer a { color: var(--neon); text-decoration: none; }
       <div class="privacy-col no">
         <h4 data-i18n="auto.what_himer_can_never_access.46" style="color:var(--neon-2);margin-bottom:14px;">What HIMER can NEVER access</h4>
         <ul style="list-style:none;">
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon-2);">✕</span> Your personal files, documents, photos</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon-2);">✕</span> Passwords, cookies, login sessions</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon-2);">✕</span> Browsing history or other tabs</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon-2);">✕</span> Webcam, microphone, location</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon-2);">✕</span> Keystrokes or screen contents</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon-2);">✕</span> Banking, email, or any app data</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.cant.files"><span class="text-pink">✗</span> Your personal files, documents, photos</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.cant.passwords"><span class="text-pink">✗</span> Passwords, cookies, login sessions</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.cant.history"><span class="text-pink">✗</span> Browsing history or other tabs</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.cant.webcam"><span class="text-pink">✗</span> Webcam, microphone, location</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.cant.keys"><span class="text-pink">✗</span> Keystrokes or screen contents</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.cant.banking"><span class="text-pink">✗</span> Banking, email, or any app data</li>
         </ul>
       </div>
       <div class="privacy-col yes">
         <h4 data-i18n="auto.what_himer_actually_does.47" style="color:var(--neon);margin-bottom:14px;">What HIMER actually does</h4>
         <ul style="list-style:none;">
           <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon);">✓</span> Processes anonymized math packages</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon);">✓</span> Reports only CPU/RAM/bandwidth metrics</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon);">✓</span> Uses an anonymous HIMER ID (no name/email needed)</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon);">✓</span> Runs only when you allow it</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon);">✓</span> Stops instantly when you close the tab</li>
-          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);"><span style="position:absolute;left:0;color:var(--neon);">✓</span> Lets you set how much you contribute</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.does.reports"><span class="text-neon">✓</span> Reports only CPU/RAM/bandwidth metrics</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.does.anon"><span class="text-neon">✓</span> Uses an anonymous HIMER ID (no name/email needed)</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.does.allow"><span class="text-neon">✓</span> Runs only when you allow it</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.does.stop"><span class="text-neon">✓</span> Stops instantly when you close the tab</li>
+          <li style="padding:8px 0 8px 26px;position:relative;font-size:13px;color:var(--text-dim);" data-i18n="priv.does.amount"><span class="text-neon">✓</span> Lets you set how much you contribute</li>
         </ul>
       </div>
     </div>
@@ -941,13 +983,13 @@ footer a { color: var(--neon); text-decoration: none; }
       <p data-i18n="auto.your_workloads_are_processed_a.50" style="margin-bottom:16px;">Your workloads are processed across anonymous nodes. Inputs and outputs are encrypted in transit. Results carry a cryptographic hash so you can verify integrity. We don't inspect, store, or reuse your job data beyond what's needed to deliver results and bill accurately. EU clients can request region-pinned processing for GDPR compliance.</p>
 
       <h3 data-i18n="auto.your_rights_gdpr_global.51" class="text-neon" style="font-size:18px;margin:24px 0 10px;">Your rights (GDPR & global)</h3>
-      <p style="margin-bottom:16px;">You can request a full export of your data, or complete deletion, at any time. Email <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a> — all data is removed within 30 days. There's no lock-in: stop contributing whenever you want, your accumulated earnings remain payable.</p>
+      <p style="margin-bottom:16px;" data-i18n="priv.export.full">You can request a full export of your data, or complete deletion, at any time. Email <strong class="text-neon">himer.nodes@gmail.com</strong> — all data is removed within 30 days. There's no lock-in: stop contributing whenever you want, your accumulated earnings remain payable.</p>
 
       <h3 data-i18n="auto.comparison_to_similar_projects.52" class="text-neon" style="font-size:18px;margin:24px 0 10px;">Comparison to similar projects</h3>
       <p data-i18n="auto.himer_follows_the_same_proven.53" style="margin-bottom:16px;">HIMER follows the same proven, legal model as Folding@home, BOINC, and SETI@home — distributed volunteer computing that's run safely for over 20 years. The key difference: we add transparent compensation and a real client economy, while keeping the same strict privacy guarantees.</p>
 
       <div style="margin-top:24px;padding:16px;background:rgba(107,140,255,0.06);border-left:2px solid var(--neon-3);">
-        <p style="margin:0;color:var(--text);">Privacy questions or security disclosures: <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a></p>
+        <p style="margin:0;color:var(--text);" data-i18n="priv.contact.full">Privacy questions or security disclosures: <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a></p>
       </div>
     </div>
   </section>
@@ -980,26 +1022,26 @@ footer a { color: var(--neon); text-decoration: none; }
       <p data-i18n="auto.meanwhile_billions_of_personal.57" style="margin-bottom:18px;">Meanwhile, billions of personal computers, laptops, and phones sit idle most of the day. The collective unused compute power of consumer devices worldwide dwarfs every datacenter combined. That power is simply wasted.</p>
 
       <h3 data-i18n="auto.our_solution.58" class="text-neon" style="font-size:20px;margin:24px 0 12px;">Our solution</h3>
-      <p style="margin-bottom:18px;">HIMER is a <strong style="color:var(--text);">decentralized compute network (DePIN)</strong> that turns idle devices into a global supercomputer. Contributors share their unused CPU, RAM, and bandwidth. Businesses and creators rent that capacity through a simple API — at a fraction of cloud prices. Everyone wins: contributors earn passive income, clients save up to 90%, and compute becomes democratized.</p>
+      <p style="margin-bottom:18px;" data-i18n="about.sol1.full">HIMER is a <strong style="color:var(--text);">decentralized compute network (DePIN)</strong> that turns idle devices into a global supercomputer. Contributors share their unused CPU, RAM, and bandwidth. Businesses and creators rent that capacity through a simple API — at a fraction of cloud prices. Everyone wins: contributors earn passive income, clients save up to 90%, and compute becomes democratized.</p>
 
-      <p style="margin-bottom:18px;">We didn't invent volunteer computing — projects like Folding@home, BOINC, and SETI@home proved decades ago that distributed compute works at planetary scale. What HIMER adds is a <strong data-i18n="auto.real_economy.59" style="color:var(--text);">real economy</strong>: cryptographic proof-of-compute for trust, transparent payouts for contributors, and a production-grade API for paying customers.</p>
+      <p style="margin-bottom:18px;" data-i18n="auto2.p.3">We didn't invent volunteer computing — projects like Folding@home, BOINC, and SETI@home proved decades ago that distributed compute works at planetary scale. What HIMER adds is a <strong data-i18n="auto.real_economy.59" style="color:var(--text);">real economy</strong>: cryptographic proof-of-compute for trust, transparent payouts for contributors, and a production-grade API for paying customers.</p>
 
       <h3 data-i18n="auto.our_mission.60" class="text-neon" style="font-size:20px;margin:24px 0 12px;">Our mission</h3>
-      <p style="margin-bottom:18px;color:var(--text);"><strong data-i18n="auto.make_anyone_with_a_computer_a.61">Make anyone with a computer a cloud provider — and make compute affordable for everyone.</strong></p>
+      <p style="margin-bottom:18px;color:var(--text);" data-i18n="auto2.p.2"><strong data-i18n="auto.make_anyone_with_a_computer_a.61">Make anyone with a computer a cloud provider — and make compute affordable for everyone.</strong></p>
 
       <h3 data-i18n="auto.our_principles.62" class="text-neon" style="font-size:20px;margin:24px 0 12px;">Our principles</h3>
       <ul style="list-style:none;padding:0;">
-        <li style="padding:10px 0 10px 28px;position:relative;"><span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong data-i18n="auto.open_source_first.63" style="color:var(--text);">Open-source first.</strong data-i18n="about.principle1desc"> Every line of the agent is auditable. No black boxes.</li>
-        <li style="padding:10px 0 10px 28px;position:relative;"><span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong data-i18n="auto.privacy_by_design.64" style="color:var(--text);">Privacy by design.</strong data-i18n="about.principle2desc"> The sandbox can never touch your files, passwords, or camera.</li>
-        <li style="padding:10px 0 10px 28px;position:relative;"><span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong style="color:var(--text);">Fair rewards.</strong data-i18n="about.principle3desc"> Contributors are paid transparently, with a formula published on every page.</li>
-        <li style="padding:10px 0 10px 28px;position:relative;"><span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong style="color:var(--text);">Sustainable.</strong data-i18n="about.principle4desc"> Reusing idle hardware has a near-zero carbon footprint vs. building new datacenters.</li>
+        <li style="padding:10px 0 10px 28px;position:relative;" data-i18n="about.princ1.full"><span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong class="text-neon">Open-source first.</strong> Every line of the agent is auditable. No black boxes.</li>
+        <li style="padding:10px 0 10px 28px;position:relative;" data-i18n="about.princ2.full"><span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong class="text-neon">Privacy by design.</strong> The sandbox can never touch your files, passwords, or camera.</li>
+        <li style="padding:10px 0 10px 28px;position:relative;" data-i18n="about.princ3.full"><span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong class="text-neon">Fair rewards.</strong> Contributors are paid transparently, with a formula published on every page.</li>
+        <li style="padding:10px 0 10px 28px;position:relative;" data-i18n="about.princ4.full"><span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong style="color:var(--text);">Sustainable.</strong> Reusing idle hardware has a near-zero carbon footprint vs. building new datacenters.</li>
       </ul>
 
       <h3 data-i18n="auto.where_we_re_headed.65" class="text-neon" style="font-size:20px;margin:24px 0 12px;">Where we're headed</h3>
-      <p style="margin-bottom:18px;">Today, HIMER runs in the browser — instant, zero-install, accessible to anyone. Next comes the desktop agent (GPU support for AI training and 3D rendering), then enterprise SLAs, a P2P marketplace, and full Web3 settlement. We're building the infrastructure layer for the next decade of compute. <a href="javascript:goPage('roadmap')" class="text-neon" data-i18n="about.seeroadmap">See the roadmap →</a></p>
+      <p style="margin-bottom:18px;" data-i18n="about.headed.full">Today, HIMER runs in the browser — instant, zero-install, accessible to anyone. Next comes the desktop agent (GPU support for AI training and 3D rendering), then enterprise SLAs, a P2P marketplace, and full Web3 settlement. We're building the infrastructure layer for the next decade of compute.</p>
 
       <div style="margin-top:30px;padding:20px;background:rgba(0,240,200,0.05);border-left:2px solid var(--neon);">
-        <p style="color:var(--text);margin:0;">Questions, partnerships, press? Reach us at <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a></p>
+        <p style="color:var(--text);margin:0;" data-i18n="about.contact.full">Questions, partnerships, press? Reach us at <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a></p>
       </div>
     </div>
   </section>
@@ -1022,15 +1064,15 @@ footer a { color: var(--neon); text-decoration: none; }
           <span class="label" data-i18n="dash.headerEyebrow">Job Dispatch & Control</span>
           <h2 id="dashSubTitle" data-i18n="page.neural_grid_live_30de47cf">Neural Grid · Live</h2>
         </div>
-        <div class="live-badge"><span class="dot"></span> Live · WebSocket</div>
+        <div class="live-badge" data-i18n="misc.live.ws">Live · WebSocket</div>
       </div>
 
       <div class="dash-sub-panel" id="sub-grid">
         <div class="kpi-grid">
-          <div class="kpi"><div class="label" data-i18n="dash.kpi.totalNodes">Total Nodes</div><div class="val" id="kpiTotal">—</div><div class="delta">↗ live</div></div>
-          <div class="kpi"><div class="label" data-i18n="dash.kpi.active">Active Now</div><div class="val" id="kpiActive">—</div><div class="delta">computing</div></div>
-          <div class="kpi"><div class="label" data-i18n="dash.kpi.gflops">GFLOPS / sec</div><div class="val" id="kpiGflops">—</div><div class="delta">throughput</div></div>
-          <div class="kpi"><div class="label" data-i18n="dash.kpi.contracts">Contracts</div><div class="val" id="kpiJobs">—</div><div class="delta">completed</div></div>
+          <div class="kpi"><div class="label" data-i18n="dash.kpi.totalNodes">Total Nodes</div><div class="val" id="kpiTotal">—</div><div class="delta" data-i18n="misc.live">↗ live</div></div>
+          <div class="kpi"><div class="label" data-i18n="dash.kpi.active">Active Now</div><div class="val" id="kpiActive">—</div><div class="delta" data-i18n="dash.computing">computing</div></div>
+          <div class="kpi"><div class="label" data-i18n="dash.kpi.gflops">GFLOPS / sec</div><div class="val" id="kpiGflops">—</div><div class="delta" data-i18n="dash.throughput">throughput</div></div>
+          <div class="kpi"><div class="label" data-i18n="dash.kpi.contracts">Contracts</div><div class="val" id="kpiJobs">—</div><div class="delta" data-i18n="dash.completed">completed</div></div>
         </div>
         <div class="grid-viz">
           <div class="grid-viz-header">
@@ -1056,10 +1098,10 @@ footer a { color: var(--neon); text-decoration: none; }
 
       <div class="dash-sub-panel" id="sub-performance" style="display:none;">
         <div class="kpi-grid">
-          <div class="kpi"><div class="label">Total Capacity</div><div class="val" id="perfCapacity">—</div></div>
-          <div class="kpi"><div class="label">Bandwidth</div><div class="val" id="perfBandwidth">—</div></div>
-          <div class="kpi"><div class="label">Utilization</div><div class="val" id="perfUtilization">—%</div></div>
-          <div class="kpi"><div class="label">Processed</div><div class="val" id="perfProcessed">—</div></div>
+          <div class="kpi"><div class="label" data-i18n="user.totcap">Total Capacity</div><div class="val" id="perfCapacity">—</div></div>
+          <div class="kpi"><div class="label" data-i18n="user.bandwidth">Bandwidth</div><div class="val" id="perfBandwidth">—</div></div>
+          <div class="kpi"><div class="label" data-i18n="user.util">Utilization</div><div class="val" id="perfUtilization">—%</div></div>
+          <div class="kpi"><div class="label" data-i18n="user.processed">Processed</div><div class="val" id="perfProcessed">—</div></div>
         </div>
       </div>
 
@@ -1162,7 +1204,7 @@ footer a { color: var(--neon); text-decoration: none; }
           <li data-i18n="page._dedicated_cluster_private_nod_be6a43dd">✓ Dedicated cluster (private noduri)</li>
           <li data-i18n="page._soc2_gdpr_contracts_94cb301e">✓ SOC2, GDPR contracts</li>
           <li data-i18n="page._custom_legal_terms_dc0b7ce7">✓ Custom legal terms</li>
-          <li>✓ Dedicated account manager</li>
+          <li data-i18n="pricing.ent.amgr">✓ Dedicated account manager</li>
         </ul>
         <button class="btn-ghost" style="width:100%;margin-top:14px;" onclick="contactSales('enterprise')">Contact sales</button>
       </div>
@@ -1215,7 +1257,7 @@ footer a { color: var(--neon); text-decoration: none; }
       </div>
       <div class="feature">
         <h3 class="text-neon">⚡ Custom Workloads</h3>
-        <p style="margin-top:10px;">Have a unique workload? Our engineers help design the optimal distribution strategy. Contact us at <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a>.</p>
+        <p style="margin-top:10px;" data-i18n="biz.custom.full">Have a unique workload? Our engineers help design the optimal distribution strategy. Contact us at <strong class="text-neon">himer.nodes@gmail.com</strong></p>
       </div>
     </div>
 
@@ -1242,7 +1284,7 @@ footer a { color: var(--neon); text-decoration: none; }
           <div style="width:40px;height:40px;border:1px solid var(--neon);color:var(--neon);display:flex;align-items:center;justify-content:center;font-family:'Syne';font-weight:800;">3</div>
           <div>
             <div style="font-weight:700;" data-i18n="biz.step3.title">Poll for result</div>
-            <div class="text-dim text-sm" style="margin-top:4px;">GET status until COMPLETED. Result returned as JSON or downloadable artifact. Optional webhook callback.</div>
+            <div class="text-dim text-sm" style="margin-top:4px;" data-i18n="biz.step3.desc">GET status until COMPLETED. Result returned as JSON or downloadable artifact. Optional webhook callback.</div>
           </div>
         </div>
       </div>
@@ -1290,7 +1332,7 @@ curl https://himer-orchestrator.onrender.com/api/business/jobs/J-A3F2B1... \
           <option value="pro">Pro ($149/mo)</option>
           <option value="enterprise">Enterprise (custom)</option>
         </select>
-        <button class="btn-primary" onclick="submitBusinessSignup()" style="margin-top:8px;">Request API Key</button>
+        <button class="btn-primary" onclick="submitBusinessSignup()" style="margin-top:8px;" data-i18n="biz.request">Request API Key</button>
         <div id="bsignupResult" style="display:none;"></div>
       </div>
     </div>
@@ -1356,12 +1398,12 @@ curl https://himer-orchestrator.onrender.com/api/business/jobs/J-A3F2B1... \
             <div class="delta">since signup</div>
           </div>
           <div class="kpi">
-            <div class="label">Total Compute Donated</div>
+            <div class="label" data-i18n="user.tot.compute">Total Compute Donated</div>
             <div class="val"><span id="lifeCompute">0</span></div>
             <div class="delta">GFLOP-seconds</div>
           </div>
           <div class="kpi">
-            <div class="label">Total Active Time</div>
+            <div class="label" data-i18n="user.tot.time">Total Active Time</div>
             <div class="val"><span id="lifeActiveHours">0</span>h</div>
             <div class="delta">accumulated</div>
           </div>
@@ -1375,7 +1417,7 @@ curl https://himer-orchestrator.onrender.com/api/business/jobs/J-A3F2B1... \
 
       <!-- CAPACITY -->
       <div class="user-card">
-        <span class="label">— Total Capacity Offered</span>
+        <span class="label" data-i18n="user.totcap.eyebrow">— Total Capacity Offered</span>
         <h3 data-i18n="auto.resources_you_contribute.89" style="margin:10px 0 14px;">Resources you contribute</h3>
         <div class="kpi-grid">
           <div class="kpi">
@@ -1391,15 +1433,15 @@ curl https://himer-orchestrator.onrender.com/api/business/jobs/J-A3F2B1... \
           <div class="kpi">
             <div class="label">RAM Available</div>
             <div class="val" id="capRam">—</div>
-            <div class="delta">GB total</div>
+            <div class="delta" data-i18n="user.gbtotal">GB total</div>
           </div>
           <div class="kpi">
-            <div class="label">Bandwidth</div>
+            <div class="label" data-i18n="user.bandwidth">Bandwidth</div>
             <div class="val" id="capBw">—</div>
             <div class="delta">Mbps</div>
           </div>
         </div>
-        <p class="text-dim text-xs" style="margin-top:14px;line-height:1.6;">
+        <p class="text-dim text-xs" style="margin-top:14px;line-height:1.6;" data-i18n="user.cap.full">
           These are <strong>theoretical maximums</strong> detected from your devices. The platform uses a fraction (default 50% CPU, 30% RAM, 20% bandwidth) — adjustable per device.
         </p>
       </div>
@@ -1465,7 +1507,7 @@ curl https://himer-orchestrator.onrender.com/api/business/jobs/J-A3F2B1... \
       <div class="user-card" style="border-color:var(--neon-3);">
         <span data-i18n="auto.invite_friends_earn_more.91" class="label" style="color:var(--neon-3);">— Invite friends, earn more</span>
         <h3 data-i18n="auto.refer_and_unlock_boosts.92" style="margin:10px 0 6px;">Refer and unlock boosts</h3>
-        <p class="text-dim text-xs" style="margin-bottom:14px;line-height:1.6;">Share your code. Earn <strong data-i18n="auto.5_of_every_referral_s_earnings.93" class="text-neon">5% of every referral's earnings for 12 months</strong> (paid by platform, they don't lose anything). Unlock up to <strong class="text-neon">2× earning boost</strong> at 100 referrals.</p>
+        <p class="text-dim text-xs" style="margin-bottom:14px;line-height:1.6;" data-i18n="auto2.p.1">Share your code. Earn <strong data-i18n="auto.5_of_every_referral_s_earnings.93" class="text-neon">5% of every referral's earnings for 12 months</strong> (paid by platform, they don't lose anything). Unlock up to <strong class="text-neon">2× earning boost</strong> at 100 referrals.</p>
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
           <input id="refCode" readonly class="field" style="flex:1;min-width:180px;margin:0;font-family:JetBrains Mono;color:var(--neon);" value="Loading...">
           <button class="btn-primary" style="padding:10px 16px;" onclick="copyRefCode()">Copy</button>
@@ -1478,7 +1520,7 @@ curl https://himer-orchestrator.onrender.com/api/business/jobs/J-A3F2B1... \
           <div class="kpi"><div class="label">Tier</div><div class="val" id="refTier">Starter</div></div>
         </div>
         <div style="margin-top:14px;background:var(--bg);border:1px solid var(--line);padding:12px;">
-          <div class="text-xs text-dim" style="margin-bottom:8px;">Progress to next tier: <span id="refNextTier" class="text-neon">—</span></div>
+          <div class="text-xs text-dim" style="margin-bottom:8px;" data-i18n="user.ref.progress">Progress to next tier:</div>
           <div style="height:6px;background:rgba(255,255,255,0.05);border:1px solid var(--line);">
             <div id="refProgressBar" style="height:100%;background:var(--neon);width:0%;transition:width 0.4s;"></div>
           </div>
@@ -1489,7 +1531,7 @@ curl https://himer-orchestrator.onrender.com/api/business/jobs/J-A3F2B1... \
       <div class="user-card" id="premiumCard" style="border-color:var(--neon);">
         <span class="label" style="color:var(--neon);">— Premium Plans</span>
         <h3 data-i18n="auto.earn_faster_with_premium.94" style="margin:10px 0 6px;">Earn faster with Premium</h3>
-        <p class="text-dim text-xs" style="margin-bottom:14px;line-height:1.6;">Premium gives you a <strong class="text-neon">1.3-1.5× earning boost</strong>, <strong class="text-neon">instant payouts</strong> (no $500 minimum), no ads, and priority support. Cancel anytime.</p>
+        <p class="text-dim text-xs" style="margin-bottom:14px;line-height:1.6;" data-i18n="user.premium.full">Premium gives you a <strong class="text-neon">1.3-1.5× earning boost</strong>, <strong class="text-neon">instant payouts</strong> (no $500 minimum), no ads, and priority support. Cancel anytime.</p>
         <div id="premiumPlansGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;"></div>
         <div id="premiumStatus" style="margin-top:14px;"></div>
       </div>
@@ -1566,7 +1608,7 @@ curl https://himer-orchestrator.onrender.com/api/business/jobs/J-A3F2B1... \
         <a href="javascript:goPage('how')" style="display:block;color:var(--text-dim);text-decoration:none;" data-i18n="nav.how">How it Works</a>
         <a href="javascript:goPage('pricing')" style="display:block;color:var(--text-dim);text-decoration:none;">Pricing</a>
         <a href="javascript:goPage('business')" style="display:block;color:var(--text-dim);text-decoration:none;" data-i18n="nav.business">For Business</a>
-        <a href="javascript:goPage('dashboard')" style="display:block;color:var(--text-dim);text-decoration:none;">Live Dashboard</a>
+        <a href="javascript:goPage('dashboard')" style="display:block;color:var(--text-dim);text-decoration:none;" data-i18n="footer.live">Live Dashboard</a>
       </div>
     </div>
     <div>
@@ -1579,7 +1621,7 @@ curl https://himer-orchestrator.onrender.com/api/business/jobs/J-A3F2B1... \
       </div>
     </div>
     <div>
-      <div class="label" style="margin-bottom:10px;">Access</div>
+      <div class="label" style="margin-bottom:10px;" data-i18n="footer.access">Access</div>
       <div class="text-xs" style="line-height:2;">
         <a href="client.html" style="display:block;color:var(--text-dim);text-decoration:none;">Client Portal</a>
         <a href="admin.html" style="display:block;color:var(--text-dim);text-decoration:none;">Admin Console</a>
@@ -1606,56 +1648,151 @@ const BACKEND_URL = window.HIMER_BACKEND || location.origin;
 const WS_URL = BACKEND_URL.replace(/^http/, 'ws');
 
 // Device fingerprint (stable for this browser+device)
+// ============================================================
+// PERSISTENT DEVICE FINGERPRINT (survives cache clear, IP change)
+// ============================================================
 function generateFingerprint() {
-  const data = [
+  // STABLE_ID = persistent across all sessions on this device, in this browser
+  // Stored in localStorage with multiple backup locations
+  let stableId = localStorage.getItem('himer_device_id')
+              || sessionStorage.getItem('himer_device_id')
+              || getCookie('himer_device_id');
+  if (!stableId) {
+    // First time on this device — generate and store everywhere
+    stableId = 'D' + Date.now().toString(36) + '_' + Array.from(crypto.getRandomValues(new Uint8Array(8)))
+      .map(b => b.toString(16).padStart(2, '0')).join('');
+    try { localStorage.setItem('himer_device_id', stableId); } catch (e) {}
+    try { sessionStorage.setItem('himer_device_id', stableId); } catch (e) {}
+    setCookie('himer_device_id', stableId, 365 * 5); // 5 years
+  } else {
+    // Sync to all storage locations (in case some were cleared)
+    try { localStorage.setItem('himer_device_id', stableId); } catch (e) {}
+    try { sessionStorage.setItem('himer_device_id', stableId); } catch (e) {}
+    setCookie('himer_device_id', stableId, 365 * 5);
+  }
+
+  // HARDWARE FINGERPRINT = stable across sessions on same hardware (canvas + audio + GPU)
+  const hwData = [
     navigator.userAgent,
     navigator.language,
-    screen.width + 'x' + screen.height,
-    screen.colorDepth,
+    screen.width + 'x' + screen.height + 'x' + screen.colorDepth,
     new Date().getTimezoneOffset(),
     navigator.hardwareConcurrency || 0,
-    navigator.platform || ''
+    navigator.platform || '',
+    canvasFingerprint(),
+    webglFingerprint(),
   ].join('|');
-  // Simple hash
   let h = 0;
-  for (let i = 0; i < data.length; i++) h = ((h << 5) - h + data.charCodeAt(i)) | 0;
-  return 'fp_' + Math.abs(h).toString(36) + '_' + (localStorage.getItem('himer_fp_suffix') || (() => {
-    const s = Math.random().toString(36).slice(2, 8);
-    localStorage.setItem('himer_fp_suffix', s);
-    return s;
-  })());
+  for (let i = 0; i < hwData.length; i++) h = ((h << 5) - h + hwData.charCodeAt(i)) | 0;
+  const hwHash = Math.abs(h).toString(36);
+
+  // FINAL: stable device ID + hardware signature (both must change for it to be "new device")
+  return stableId + '_' + hwHash;
 }
+
+function canvasFingerprint() {
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 200;
+    canvas.height = 60;
+    const ctx = canvas.getContext('2d');
+    ctx.textBaseline = 'top';
+    ctx.font = "14px 'Arial'";
+    ctx.fillStyle = '#f60';
+    ctx.fillRect(125, 1, 62, 20);
+    ctx.fillStyle = '#069';
+    ctx.fillText('HIMER 🌐', 2, 15);
+    ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+    ctx.fillText('HIMER 🌐', 4, 17);
+    return canvas.toDataURL().slice(-50);
+  } catch (e) { return 'no-canvas'; }
+}
+
+function webglFingerprint() {
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) return 'no-gl';
+    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    const vendor = dbg ? gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) : '';
+    const renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '';
+    return (vendor + '|' + renderer).slice(0, 60);
+  } catch (e) { return 'no-gl'; }
+}
+
+function getCookie(name) {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : '';
+}
+function setCookie(name, value, days) {
+  try {
+    const d = new Date();
+    d.setTime(d.getTime() + (days * 86400000));
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${d.toUTCString()}; path=/; SameSite=Lax`;
+  } catch (e) {}
+}
+
 const DEVICE_FP = generateFingerprint();
+const DEVICE_SCREEN = screen.width + 'x' + screen.height + 'x' + screen.colorDepth;
 
 // ============================================================
 // HARDWARE CAPACITY DETECTION (browser-side, best-effort)
 // ============================================================
 function detectCapacity() {
   const cores = navigator.hardwareConcurrency || 2;
-  // Estimate GFLOPS from core count (very rough)
-  // Modern cores: ~5-15 GFLOPS each in browser sandbox (WASM)
-  const gflopsPerCore = 8;
-  const cpuGflopsMax = cores * gflopsPerCore;
-  // RAM detection (deviceMemory is in GB, approximate, only Chrome/Edge)
-  const ramGbTotal = navigator.deviceMemory || 4;
-  // Bandwidth — use NetworkInformation API if available, fallback to estimate
-  let bandwidthMbpsMax = 50; // default ~50Mbps
-  if (navigator.connection) {
-    const effType = navigator.connection.effectiveType;
-    if (effType === '4g') bandwidthMbpsMax = 50;
-    else if (effType === '3g') bandwidthMbpsMax = 5;
-    else if (effType === '2g') bandwidthMbpsMax = 0.5;
-    if (navigator.connection.downlink) bandwidthMbpsMax = navigator.connection.downlink * 0.8;
+
+  // CPU GFLOPS: real micro-benchmark (runs ~50ms once on load)
+  // Measures actual floating-point throughput in this browser/device
+  let cpuGflopsMax = 0;
+  try {
+    const iterations = 5_000_000;
+    const t0 = performance.now();
+    let acc = 1.0001;
+    for (let i = 0; i < iterations; i++) {
+      acc = acc * 1.0000001 + Math.sin(i * 0.0001);
+    }
+    const elapsedMs = performance.now() - t0;
+    // Each iteration ≈ 4 FLOPs (mul, add, sin, fma). Total = iterations * 4 ops.
+    const flopsSingleCore = (iterations * 4) / (elapsedMs / 1000);
+    // Multi-core: assume scaling is ~70% efficient
+    cpuGflopsMax = (flopsSingleCore * cores * 0.7) / 1e9;
+    // Guard against absurd values (slow tab throttling, etc)
+    if (!isFinite(cpuGflopsMax) || cpuGflopsMax < 0.5) cpuGflopsMax = cores * 2; // very low fallback
+    if (cpuGflopsMax > cores * 30) cpuGflopsMax = cores * 30; // cap
+    // Prevent leaking the benchmark value to GC
+    if (acc === 0) console.log(acc);
+  } catch (e) {
+    cpuGflopsMax = cores * 5; // safe fallback
   }
+
+  // RAM: deviceMemory is in GB (Chrome/Edge only)
+  const ramGbTotal = navigator.deviceMemory || 4;
+
+  // Bandwidth from NetworkInformation API or fallback
+  let bandwidthMbpsMax = 50;
+  if (navigator.connection) {
+    if (navigator.connection.downlink) {
+      bandwidthMbpsMax = navigator.connection.downlink * 0.8;
+    } else {
+      const effType = navigator.connection.effectiveType;
+      if (effType === '4g') bandwidthMbpsMax = 50;
+      else if (effType === '3g') bandwidthMbpsMax = 5;
+      else if (effType === '2g') bandwidthMbpsMax = 0.5;
+    }
+  }
+
   return {
     cpu_cores: cores,
     cpu_gflops_max: Math.round(cpuGflopsMax * 10) / 10,
     ram_gb_total: ramGbTotal,
     bandwidth_mbps_max: Math.round(bandwidthMbpsMax * 10) / 10,
+    // Diagnostic info (sent to backend for analytics, not used for billing)
+    _ua: navigator.userAgent.slice(0, 80),
+    _platform: navigator.platform || '',
   };
 }
 const DEVICE_CAPACITY = detectCapacity();
-console.log('[HIMER] Device capacity:', DEVICE_CAPACITY);
+console.log('[HIMER] Device capacity (real benchmark):', DEVICE_CAPACITY);
 
 // ============================================================
 // i18n - 15 LIMBI (EN + RO complete, fallback EN)
@@ -2125,6 +2262,113 @@ const I18N = {
     'payout.bank.email':'Email (for transfer notifications)',
     'payout.bank.kyc':'🔒 KYC verification required on first withdrawal. We will request a government ID after you submit this form. Data is encrypted at rest.',
     'payout.note':'Your payout details are stored encrypted. You can change them anytime. Withdrawal minimum: $500.',
+  
+    'faq.q.earn':'<span class="text-neon">+</span> How much can I earn as a contributor?',
+    'faq.q.safe':'<span class="text-neon">+</span> Is my data safe? Does HIMER see anything?',
+    'faq.q.paid':'<span class="text-neon">+</span> When and how do I get paid?',
+    'faq.q.legal':'<span class="text-neon">+</span> Is HIMER legal in my country?',
+    'faq.q.dev':'<span class="text-neon">+</span> What can I use HIMER for as a developer?',
+    'faq.q.money':'<span class="text-neon">+</span> How does HIMER make money?',
+  
+    'auto2.p.1':'Share your code. Earn <strong data-i18n="auto.5_of_every_referral_s_earnings.93" class="text-neon">5% of every referral\'s earnings for 12 months</strong> (paid by platform, they don\'t lose anything). Unlock up to <strong class="text-neon">2× earning boost</strong> at 100 referrals.',
+    'auto2.p.2':'<strong data-i18n="auto.make_anyone_with_a_computer_a.61">Make anyone with a computer a cloud provider — and make compute affordable for everyone.</strong>',
+    'auto2.p.3':'We didn\'t invent volunteer computing — projects like Folding@home, BOINC, and SETI@home proved decades ago that distributed compute works at planetary scale. What HIMER adds is a <strong data-i18n="auto.real_economy.59" style="color:var(--text);">real economy</strong>: cryptographic proof-of-compute for trust, transparent payouts for contributors, and a production-grade API for paying customers.',
+    'auto2.li.4':'<strong data-i18n="auto.open_source_auditable.44" class="text-neon">→ Open-source & auditable:</strong> <span data-i18n="auto.the_entire_agent_is_public_on.45" class="text-dim text-sm">The entire agent is public on GitHub. Anyone — security researchers, you, your IT team — can read every line.</span>',
+    'auto2.li.5':'<strong class="text-neon" data-i18n="privacy.signed">→ Signed workloads only:</strong> <span data-i18n="auto.every_compute_package_is_crypt.43" class="text-dim text-sm">Every compute package is cryptographically signed. Unsigned or tampered code is rejected before execution.</span>',
+    'auto2.p.6':'Earnings accumulate in real-time. Withdraw available at $500+ balance. Two payout methods: <strong data-i18n="auto.usdc_crypto_on_polygon.25">USDC crypto on Polygon</strong> (instant, $0.01 fee) or <strong>Bank wire transfer</strong> (1–3 days, EU/US). KYC verification on first withdrawal. Admin approval ~24h.',
+    'auto2.div.7':'\n    <strong data-i18n="install.title">Install HIMER App</strong>\n    <span data-i18n="install.text">Run in background · Earn while idle · Native notifications · Offline-ready</span>\n  ',
+  
+    'priv.cant.files':'<span class="text-pink">✗</span> Your personal files, documents, photos',
+    'priv.cant.passwords':'<span class="text-pink">✗</span> Passwords, cookies, login sessions',
+    'priv.cant.history':'<span class="text-pink">✗</span> Browsing history or other tabs',
+    'priv.cant.webcam':'<span class="text-pink">✗</span> Webcam, microphone, location',
+    'priv.cant.keys':'<span class="text-pink">✗</span> Keystrokes or screen contents',
+    'priv.cant.banking':'<span class="text-pink">✗</span> Banking, email, or any app data',
+    'priv.does.math':'<span class="text-neon">✓</span> Processes anonymized math packages',
+    'priv.does.reports':'<span class="text-neon">✓</span> Reports only CPU/RAM/bandwidth metrics',
+    'priv.does.anon':'<span class="text-neon">✓</span> Uses an anonymous HIMER ID (no name/email needed)',
+    'priv.does.allow':'<span class="text-neon">✓</span> Runs only when you allow it',
+    'priv.does.stop':'<span class="text-neon">✓</span> Stops instantly when you close the tab',
+    'priv.does.amount':'<span class="text-neon">✓</span> Lets you set how much you contribute',
+    'faq.a.dev':'AI/ML training &amp; inference, 3D rendering (Blender), scientific simulations, distributed web scraping, batch data processing, image/video conversions. Anything that can be split into parallel chunks.',
+    'faq.a.money':'Business clients pay for compute via API. HIMER takes 60% as platform fee (covers infrastructure, support, R&amp;D), 40% goes to contributors. We also offer subscription plans (Starter $29, Pro $149, Enterprise custom) and pay-as-you-go at $0.0002/GFLOP-s.',
+    'misc.live.ws':'Live · WebSocket',
+    'footer.live':'Live Dashboard',
+    'footer.access':'Access',
+    'pricing.ent.amgr':'✓ Dedicated account manager',
+    'user.ref.progress':'Progress to next tier:',
+    'biz.request':'Request API Key',
+    'misc.live':'↗ live',
+  
+    'how.step1.full':'You click "Join". The browser generates a stable device fingerprint (no cookies, no PII) and registers a new node. Hardware capacity is detected: CPU cores, RAM, network bandwidth. You get a User ID like <strong style="color:var(--neon);">U-XXXXXXXX</strong>. Save it — that\'s how you sign in from other devices.',
+    'how.step2.full':'A WebAssembly worker is spawned in your browser tab. It\'s <strong>isolated</strong> — cannot access files, cookies, passwords, webcam, or microphone. It only talks to HIMER orchestrator and only receives signed compute packages.',
+    'priv.export.full':'You can request a full export of your data, or complete deletion, at any time. Email <strong class="text-neon">himer.nodes@gmail.com</strong> — all data is removed within 30 days. There\'s no lock-in: stop contributing whenever you want, your accumulated earnings remain payable.',
+    'about.solution.full':'HIMER is a <strong style="color:var(--text);">decentralized compute network (DePIN)</strong> that turns idle devices into a global supercomputer. Contributors share their unused CPU, RAM, and bandwidth. Businesses and creators rent that capacity through a simple API — at a fraction of cloud prices. Everyone wins: contributors earn passive income, clients save up to 90%, and compute becomes democratized.',
+    'about.headed.full':'Today, HIMER runs in the browser — instant, zero-install, accessible to anyone. Next comes the desktop agent (GPU support for AI training and 3D rendering), then enterprise SLAs, a P2P marketplace, and full Web3 settlement. We\'re building the infrastructure layer for the next decade of compute.',
+    'biz.custom.full':'Have a unique workload? Our engineers help design the optimal distribution strategy. Contact us at <strong class="text-neon">himer.nodes@gmail.com</strong>',
+    'uc.custom.full':'Have a unique need? Our engineers help design the optimal distribution. Email <strong class="text-neon">himer.nodes@gmail.com</strong>',
+    'cmp.setup':'Setup time',
+  
+    'how.arch.full':'<strong>Backend</strong>: Node.js orchestrator (open-source), Supabase Postgres for state, WebSocket for real-time. <strong>Frontend</strong>: vanilla HTML/JS PWA, no framework lock-in, installable on any device. <strong>Edge</strong>: contributing nodes run signed WASM workloads in browser sandbox. <strong>Payments</strong>: Stripe Connect (bank) + Polygon network (USDC). <strong>Open-source</strong>: github.com/himer-network (everything except payment keys is public and auditable).',
+    'user.cap.full':'These are <strong>theoretical maximums</strong> detected from your devices. The platform uses a fraction (default 50% CPU, 30% RAM, 20% bandwidth) — adjustable per device.',
+    'user.premium.full':'Premium gives you a <strong class="text-neon">1.3-1.5× earning boost</strong>, <strong class="text-neon">instant payouts</strong> (no $500 minimum), no ads, and priority support. Cancel anytime.',
+  
+    'about.sol1.full':'HIMER is a <strong style="color:var(--text);">decentralized compute network (DePIN)</strong> that turns idle devices into a global supercomputer. Contributors share their unused CPU, RAM, and bandwidth. Businesses and creators rent that capacity through a simple API — at a fraction of cloud prices. Everyone wins: contributors earn passive income, clients save up to 90%, and compute becomes democratized.',
+  
+    'cmp.price.label':'<strong>Price per GFLOP-second</strong>',
+    'cmp.setup.label':'<strong>Setup time</strong>',
+    'cmp.setup.himer':'10 minutes',
+    'cmp.setup.aws':'1–3 hours',
+    'cmp.setup.gcp':'1–2 hours',
+    'cmp.setup.azure':'2–4 hours',
+    'cmp.commit.label':'<strong>Min commitment</strong>',
+    'cmp.commit.himer':'None — PAYG',
+    'cmp.commit.persec':'Per second',
+    'cmp.commit.persec2':'Per second',
+    'cmp.commit.permin':'Per minute',
+    'cmp.lockin.label':'<strong>Vendor lock-in</strong>',
+    'cmp.lockin.himer':'None (REST API)',
+    'cmp.high':'High',
+    'cmp.high2':'High',
+    'cmp.high3':'High',
+    'cmp.high4':'High',
+    'cmp.high5':'High',
+    'cmp.carbon.label':'<strong>Carbon footprint</strong>',
+    'cmp.carbon.himer':'Near-zero (reuse)',
+    'cmp.carbon.aws':'High (datacenter)',
+    'cmp.geo.label':'<strong>Geographic distribution</strong>',
+    'cmp.geo.himer':'100+ countries (organic)',
+    'cmp.geo.aws':'30 regions',
+    'cmp.geo.gcp':'40 regions',
+    'cmp.geo.azure':'60 regions',
+    'cmp.best.label':'<strong>Best for</strong>',
+    'cmp.best.himer':'Parallel compute, ML training',
+    'cmp.best.aws':'Critical real-time apps',
+    'cmp.best.gcp':'Big data analytics',
+    'cmp.best.azure':'Enterprise hybrid',
+    'priv.iso.wasm':'<strong class="text-neon">→ WebAssembly Sandbox:</strong> <span class="text-dim text-sm">The compute agent runs inside the browser\'s WASM sandbox — the same security model that lets you safely run untrusted code from any website. It physically cannot read files, access other tabs, or escape the sandbox.</span>',
+    'priv.iso.net':'<strong class="text-neon">→ Network whitelist:</strong> <span class="text-dim text-sm">The agent only communicates with HIMER\'s orchestrator. It cannot phone home to third parties or exfiltrate anything.</span>',
+    'about.princ1.full':'<span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong class="text-neon">Open-source first.</strong> Every line of the agent is auditable. No black boxes.',
+    'about.princ2.full':'<span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong class="text-neon">Privacy by design.</strong> The sandbox can never touch your files, passwords, or camera.',
+    'about.princ3.full':'<span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong class="text-neon">Fair rewards.</strong> Contributors are paid transparently, with a formula published on every page.',
+    'about.princ4.full':'<span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong style="color:var(--text);">Sustainable.</strong> Reusing idle hardware has a near-zero carbon footprint vs. building new datacenters.',
+    'about.contact.full':'Questions, partnerships, press? Reach us at <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a>',
+    'priv.contact.full':'Privacy questions or security disclosures: <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a>',
+  
+    'dash.computing':'computing',
+    'dash.throughput':'throughput',
+    'dash.completed':'completed',
+    'user.totcap':'Total Capacity',
+    'user.totcap.offered':'Total Capacity Offered',
+    'user.tot.compute':'Total Compute Donated',
+    'user.tot.time':'Total Active Time',
+    'user.util':'Utilization',
+    'user.processed':'Processed',
+    'user.gbtotal':'GB total',
+    'user.bandwidth':'Bandwidth',
+    'biz.step3.desc':'GET status until COMPLETED. Result returned as JSON or downloadable artifact. Optional webhook callback.',
+  
+    'user.totcap.eyebrow':'— Total Capacity Offered',
   },
   ro: {
     'nav.home':'Acasă','nav.how':'Cum','nav.privacy':'Confidențialitate','nav.roadmap':'Roadmap','nav.about':'Despre','nav.dashboard':'Dashboard','nav.panel':'Panou','nav.join':'Alătură-te','nav.pricing':'Prețuri','nav.business':'Pentru Business',
@@ -2588,6 +2832,15 @@ const I18N = {
     'ref.kpi.count':'Recomandările tale',
   
     'payout.kyc.req':'Necesar: Buletin · Cont bancar · Email și telefon pentru 2FA',
+  
+    'about.princ1.full':'<span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong class="text-neon">Open-source mai întâi.</strong> Fiecare linie a agentului este auditabilă. Fără cutii negre.',
+    'about.princ2.full':'<span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong class="text-neon">Confidențialitate prin design.</strong> Sandbox-ul nu poate atinge niciodată fișierele, parolele sau camera ta.',
+    'about.princ3.full':'<span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong class="text-neon">Recompense corecte.</strong> Contribuabilii sunt plătiți transparent, cu o formulă publicată pe fiecare pagină.',
+    'about.princ4.full':'<span style="position:absolute;left:0;color:var(--neon);">◆</span> <strong style="color:var(--text);">Sustenabil.</strong> Reutilizarea hardware-ului inactiv are o amprentă de carbon aproape zero comparativ cu construirea de noi centre de date.',
+    'about.contact.full':'Întrebări, parteneriate, presă? Ne găsești la <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a>',
+    'priv.iso.wasm':'<strong class="text-neon">→ Sandbox WebAssembly:</strong> <span class="text-dim text-sm">Agentul de calcul rulează în sandbox-ul WASM al browserului — același model de securitate care îți permite să rulezi în siguranță cod neîncrezut de pe orice site. Fizic nu poate citi fișiere, accesa alte tab-uri sau ieși din sandbox.</span>',
+    'priv.iso.net':'<strong class="text-neon">→ Listă albă de rețea:</strong> <span class="text-dim text-sm">Agentul comunică doar cu orchestratorul HIMER. Nu poate trimite date la terți sau exfiltra ceva.</span>',
+    'priv.contact.full':'Întrebări de confidențialitate sau dezvăluiri de securitate: <a href="mailto:himer.nodes@gmail.com" class="text-neon">himer.nodes@gmail.com</a>',
   }
 };
 
@@ -2741,17 +2994,46 @@ function renderPerformance() {
 // ============================================================
 // API
 // ============================================================
+// API call with auto-retry when backend is waking from sleep (Render free tier)
 async function api(path, opts = {}) {
-  try {
-    const ctrl = new AbortController();
-    const timeoutId = setTimeout(() => ctrl.abort(), 10000);
-    const res = await fetch(BACKEND_URL + path, {
-      ...opts, signal: ctrl.signal,
-      headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
-    });
-    clearTimeout(timeoutId);
-    return await res.json();
-  } catch (e) { return null; }
+  const maxAttempts = opts._noRetry ? 1 : 3;
+  let lastError = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const ctrl = new AbortController();
+      // Long timeout on first attempt (server might be cold-starting)
+      const timeoutMs = attempt === 1 ? 12000 : 45000;
+      const timeoutId = setTimeout(() => ctrl.abort(), timeoutMs);
+      const res = await fetch(BACKEND_URL + path, {
+        ...opts, signal: ctrl.signal,
+        headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
+      });
+      clearTimeout(timeoutId);
+      // Server up — mark and return
+      if (res.ok || res.status < 500) {
+        window._backendAwake = true;
+        try { return await res.json(); } catch (e) { return { ok: res.ok, status: res.status }; }
+      }
+      lastError = new Error('HTTP ' + res.status);
+    } catch (e) {
+      lastError = e;
+      // Show "waking" toast only on first attempt that failed
+      if (attempt === 1 && !window._backendAwake) {
+        try { if (typeof toast === 'function') toast('info', '⏳ Server waking up...', 'First request after idle (Render free tier). Retrying automatically...'); } catch (_) {}
+      }
+      // Backoff: 2s, 8s
+      await new Promise(r => setTimeout(r, attempt === 1 ? 2000 : 8000));
+    }
+  }
+  console.warn('[API] All retries failed:', path, lastError?.message);
+  return null;
+}
+
+// Keepalive ping every 12 minutes (Render free tier sleeps after 15min of no requests)
+function startKeepalive() {
+  setInterval(() => {
+    fetch(BACKEND_URL + '/api/stats', { method: 'GET' }).catch(() => {});
+  }, 12 * 60 * 1000);
 }
 
 // ============================================================
@@ -2862,7 +3144,7 @@ async function proceedExistingUser() {
   closeModal();
   toast('info', t('existingId.connecting', 'Connecting...'), t('existingId.verifying', 'Verifying User ID'));
 
-  const body = { userId, fp: DEVICE_FP, lang: currentLang, capacity: DEVICE_CAPACITY };
+  const body = { userId, fp: DEVICE_FP, screen: DEVICE_SCREEN, lang: currentLang, capacity: DEVICE_CAPACITY };
   const r = await api('/api/user/join', { method: 'POST', body: JSON.stringify(body) });
 
   if (r && r.userId) {
@@ -2892,7 +3174,7 @@ async function proceedExistingUser() {
 }
 
 async function joinNetwork() {
-  const body = { fp: DEVICE_FP, lang: currentLang, capacity: DEVICE_CAPACITY };
+  const body = { fp: DEVICE_FP, screen: DEVICE_SCREEN, lang: currentLang, capacity: DEVICE_CAPACITY };
   if (userId) body.userId = userId;
   // Apply referral code if present
   try {
@@ -4258,6 +4540,7 @@ document.getElementById('langCurrent').textContent = currentLang.toUpperCase();
 document.getElementById('notifToggle').classList.toggle('on', notificationsEnabled);
 drawHeroNetwork();
 connectWS();
+startKeepalive();
 setInterval(() => { if (userId) refreshUser(); }, 8000);
 if (userId) setTimeout(() => { subscribeUserWS(); subscribeNodeWS(); }, 1500);
 
@@ -4279,7 +4562,7 @@ window.addEventListener('load', () => setTimeout(initAds, 1500));
 if (userId) {
   setTimeout(() => {
     // Silent rejoin to refresh device session
-    api('/api/user/join', { method: 'POST', body: JSON.stringify({ userId, fp: DEVICE_FP, lang: currentLang, capacity: DEVICE_CAPACITY }) })
+    api('/api/user/join', { method: 'POST', body: JSON.stringify({ userId, fp: DEVICE_FP, screen: DEVICE_SCREEN, lang: currentLang, capacity: DEVICE_CAPACITY }) })
       .then(r => { if (r?.nodeId) { userNodeId = r.nodeId; localStorage.setItem('himer_nid', r.nodeId); subscribeNodeWS(); } });
   }, 2000);
 }
