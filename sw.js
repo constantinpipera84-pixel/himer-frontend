@@ -2,8 +2,8 @@
  * HIMER Service Worker
  * Strategy: network-first with cache fallback for shell pages
  */
-const CACHE_NAME = 'himer-v5-real';
-const SHELL_URLS = ['/', '/index.html', '/admin.html', '/client.html', '/manifest.json'];
+const CACHE_NAME = 'himer-v7-beta-credits';
+const SHELL_URLS = ['/', '/index.html', '/admin.html', '/client.html', '/manifest.json', '/i18n/en.json', '/i18n/ro.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
